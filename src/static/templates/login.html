@@ -1,0 +1,31 @@
+<div class="login__content">
+    <div class="bar">
+        <h1 class="header">BookMarx</h1>
+    </div>
+
+    <div class="card-input">
+        <div ng-show="vm.modeLogIn" class="inputform">
+            <h2 class="header">Log In</h2>
+            <input type="text" ng-model="login.username" placeholder="Username">
+            <input type="password" ng-model="login.password" placeholder="Password">
+            <div class="buttons">
+                <a class="submit" ng-click="vm.submitLogin(login)">Submit</a>
+                <a class="createaccount" ng-click="vm.goToSignUp()">Create Account?</a>
+            </div>
+        </div>
+        <div ng-show="vm.modeSignUp" class="inputform">
+            <h2 class="header">Sign In</h2>
+            <input type="text" ng-model="signup.username" placeholder="Username">
+            <input type="password" ng-model="signup.password1" placeholder="Password">
+            <input type="password" ng-model="signup.password2" placeholder="Confirm Password">
+            <input type="text" ng-model="signup.firstname" placeholder="First Name">
+            <input type="text" ng-model="signup.lastname" placeholder="Last Name">
+            <div class="buttons">
+                <a class="submit" ng-click="vm.submitSignUp(signup)">Submit</a>
+                <a class="createaccount" ng-click="vm.goToLogIn()">Cancel</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>

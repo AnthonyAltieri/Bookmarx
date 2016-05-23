@@ -1,0 +1,216 @@
+{
+  "checksum": {
+    "previous": "16878d90344334b2c19ece497a3541a3a7fd1adae8d838f7324bb2c3bd7c183b",
+    "current": "16878d90344334b2c19ece497a3541a3a7fd1adae8d838f7324bb2c3bd7c183b"
+  },
+  "fonts": [
+    "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/font/Flaticon.ttf",
+    "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/font/Flaticon.svg",
+    "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/font/Flaticon.woff",
+    "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/font/Flaticon.eot"
+  ],
+  "glyphs": {
+    "circular-arrow": {
+      "codepoint": 61696,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/circular-arrow.svg"
+    },
+    "circular-arrow-1": {
+      "codepoint": 61697,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/circular-arrow-1.svg"
+    },
+    "clock": {
+      "codepoint": 61698,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/clock.svg"
+    },
+    "cloud": {
+      "codepoint": 61699,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/cloud.svg"
+    },
+    "diagonal-arrow": {
+      "codepoint": 61700,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/diagonal-arrow.svg"
+    },
+    "diagonal-arrow-1": {
+      "codepoint": 61701,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/diagonal-arrow-1.svg"
+    },
+    "diagonal-arrow-2": {
+      "codepoint": 61702,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/diagonal-arrow-2.svg"
+    },
+    "diagonal-arrow-3": {
+      "codepoint": 61703,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/diagonal-arrow-3.svg"
+    },
+    "diagonal-line": {
+      "codepoint": 61704,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/diagonal-line.svg"
+    },
+    "download-arrow": {
+      "codepoint": 61705,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/download-arrow.svg"
+    },
+    "download-arrow-1": {
+      "codepoint": 61706,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/download-arrow-1.svg"
+    },
+    "download-arrow-2": {
+      "codepoint": 61707,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/download-arrow-2.svg"
+    },
+    "download-from-cloud": {
+      "codepoint": 61708,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/download-from-cloud.svg"
+    },
+    "edit": {
+      "codepoint": 61709,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/edit.svg"
+    },
+    "envelope": {
+      "codepoint": 61710,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/envelope.svg"
+    },
+    "exclamation": {
+      "codepoint": 61711,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/exclamation.svg"
+    },
+    "file": {
+      "codepoint": 61712,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/file.svg"
+    },
+    "heart": {
+      "codepoint": 61713,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/heart.svg"
+    },
+    "heart-upside-down": {
+      "codepoint": 61714,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/heart-upside-down.svg"
+    },
+    "home": {
+      "codepoint": 61715,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/home.svg"
+    },
+    "left-arrow": {
+      "codepoint": 61716,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/left-arrow.svg"
+    },
+    "letter-x": {
+      "codepoint": 61717,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/letter-x.svg"
+    },
+    "loupe": {
+      "codepoint": 61718,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/loupe.svg"
+    },
+    "minus-symbol": {
+      "codepoint": 61719,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/minus-symbol.svg"
+    },
+    "open-envelope": {
+      "codepoint": 61720,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/open-envelope.svg"
+    },
+    "open-lock": {
+      "codepoint": 61721,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/open-lock.svg"
+    },
+    "padlock": {
+      "codepoint": 61722,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/padlock.svg"
+    },
+    "paper-plane": {
+      "codepoint": 61723,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/paper-plane.svg"
+    },
+    "photo-camera": {
+      "codepoint": 61724,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/photo-camera.svg"
+    },
+    "photo-camera-1": {
+      "codepoint": 61725,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/photo-camera-1.svg"
+    },
+    "placeholder": {
+      "codepoint": 61726,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/placeholder.svg"
+    },
+    "play-button": {
+      "codepoint": 61727,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/play-button.svg"
+    },
+    "plus-symbol": {
+      "codepoint": 61728,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/plus-symbol.svg"
+    },
+    "reload": {
+      "codepoint": 61729,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/reload.svg"
+    },
+    "right-arrow": {
+      "codepoint": 61730,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/right-arrow.svg"
+    },
+    "settings": {
+      "codepoint": 61731,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/settings.svg"
+    },
+    "smartphone": {
+      "codepoint": 61732,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/smartphone.svg"
+    },
+    "star": {
+      "codepoint": 61733,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/star.svg"
+    },
+    "two-lines": {
+      "codepoint": 61734,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/two-lines.svg"
+    },
+    "up-arrow": {
+      "codepoint": 61735,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/up-arrow.svg"
+    },
+    "upload-to-cloud": {
+      "codepoint": 61736,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/upload-to-cloud.svg"
+    },
+    "user": {
+      "codepoint": 61737,
+      "source": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg/user.svg"
+    }
+  },
+  "options": {
+    "autowidth": false,
+    "config": false,
+    "css_selector": ".flaticon-{{glyph}}",
+    "debug": false,
+    "font_ascent": 448,
+    "font_descent": 64,
+    "font_design_size": 16,
+    "font_em": 512,
+    "font_name": "Flaticon",
+    "force": true,
+    "input": {
+      "templates": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg",
+      "vectors": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/svg"
+    },
+    "no_hash": true,
+    "output": {
+      "css": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/font",
+      "fonts": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/font",
+      "preview": "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/font"
+    },
+    "preprocessor_path": null,
+    "quiet": true,
+    "templates": [
+      "../../../../../sites/flaticon/libraries/webfont/templates/flaticon.html",
+      "../../../../../sites/flaticon/libraries/webfont/templates/_flaticon.scss",
+      "../../../../../sites/flaticon/libraries/webfont/templates/flaticon.css"
+    ]
+  },
+  "templates": [
+    "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/font/flaticon.html",
+    "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/font/_flaticon.scss",
+    "/var/www/static/flaticon/zip_packs/112147-simple-icon-set/font/flaticon.css"
+  ]
+}

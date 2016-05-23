@@ -1,0 +1,19 @@
+{
+  "name": "bookmarx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "angular-local-storage": "^0.2.7",
+    "angular-ui-router": "^0.3.0",
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "mysql": "^2.10.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

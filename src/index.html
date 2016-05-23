@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title>BookMarx</title>
+
+    <!-- Style -->
+    <link href="/static/style.css" rel="stylesheet" type="text/css">
+
+    <!-- Icons -->
+    <link href="/static/SimpleIconSet/font/flaticon.css" rel="stylesheet" type="text/css">
+    <link href="/static/RatingValidationIcons/font/flaticon.css" rel="stylesheet" type="text/css">
+
+    <!-- Angular -->
+    <script src="/static/js/angular.min.js"></script>
+    <!-- Ui-Router -->
+    <script src="/static/js/angular-ui-router.min.js"></script>
+
+    <!-- Application JS -->
+    <script type="text/javascript" src="/static/js/app.js"></script>
+
+    <!-- Local Storage -->
+    <script type="text/javascript" src="/static/node_modules/angular-local-storage/dist/angular-local-storage.min.js"></script>
+
+    <!-- Services -->
+    <script type="text/javascript" src="/static/js/services/FolderService.js"></script>
+    <script type="text/javascript" src="/static/js/services/ServerService.js"></script>
+    <script type="text/javascript" src="/static/js/services/UtilService.js"></script>
+
+
+    <!-- Controllers -->
+    <script type="text/javascript" src="/static/js/controllers/NavController.js"></script>
+    <script type="text/javascript" src="/static/js/controllers/DashboardController.js"></script>
+    <script type="text/javascript" src="/static/js/controllers/LogInController.js"></script>
+
+    <!-- Constants -->
+    <script type="text/javascript" src="/static/js/constants/Routes.js"></script>
+
+
+    <!-- Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700,600' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Yellowtail' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <div ng-controller="NavController" ng-hide="hideNav">
+        <nav id="nav">
+            <h1 class="title">BookMarx</h1>
+            <hr class="line">
+            <div class="container-items">
+                <a class="item" ng-click="addBookmark()">Add Bookmark<i class="flaticon-plus-symbol" id="item__icon-plus"></i></a>
+            </div>
+        </nav>
+        <div id="nav__slider" class="nav__slider nav__slider-hide">
+            <i class="flaticon-left-arrow nav__slider-back" ng-click="cancelAddBookmark()"></i>
+            <h2 class="nav__slider-title">Enter Bookmark Information</h2>
+            <form class="nav__slider-form">
+                <input class='nav__slider-input' type="text" ng-model="add.name" placeholder="Name">
+                <br/>
+                <input class='nav__slider-input' type="text" ng-model="add.url" placeholder="URL">
+                <br/>
+                <input class='nav__slider-input' type="text" ng-model="add.tag1" placeholder="Tag 1">
+                <br/>
+                <input class='nav__slider-input' type="text" ng-model="add.tag2" placeholder="Tag 2">
+                <br/>
+                <input class='nav__slider-input' type="text" ng-model="add.tag3" placeholder="Tag 3">
+                <br/>
+                <input class='nav__slider-input' type="text" ng-model="add.tag4" placeholder="Tag 4">
+                <br/>
+                <textarea class='nav__slider-input' placeholder="Description"
+                    id="nav__slider-input-description"></textarea>
+                <p class="nav__slider-text-folder">Select Folder</p>
+                <select class="nav__slider-select-folders" ng-model="add.folder">
+                    <option ng-repeat="folder in folders" value="{{folder.idx}}">{{folder.name}}</option>
+                </select>
+
+            </form>
+            <a class="nav__slider-save" ng-click="saveBookmark(add)">Save Bookmark</a>
+        </div>
+    </div>
+    <div id="content" class="no-nav" ui-view></div>
+</body>
+</html>

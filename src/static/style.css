@@ -1,0 +1,514 @@
+@import url(SimpleIconSet/font/flaticon.css);
+@import url(RatingValidationIcons/font/flaticon.css);
+input:focus {
+  outline: none; }
+
+textarea:focus {
+  outline: none; }
+
+body {
+  width: 100vw;
+  height: 100%; }
+
+.no-textsel, nav .item, .icon-clear:before, .icon-star:before, .card-bookmarks__item-tag, .tile-folder__create, .tile-folder__create .name, .login__content .card-input .submit, .login__content .card-input .createaccount, #overlay .card-addfolder .folder-add {
+  text-decoration: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none; }
+
+.no-draging {
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none; }
+
+.row {
+  display: flex;
+  flex-flow: row;
+  margin: 22px 0; }
+
+.row__center {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  margin: 22px 0; }
+
+.col-33 {
+  width: 33.33%; }
+
+.col-30 {
+  width: 30%; }
+
+.col-25 {
+  width: 25%; }
+
+.col-20 {
+  width: 20%; }
+
+body {
+  margin: 0;
+  background-color: #F2EEEA; }
+
+#content {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  padding-left: 320px; }
+
+.has-nav {
+  padding-left: 320px !important; }
+
+.no-nav {
+  padding-left: 0px !important; }
+
+nav {
+  display: flex;
+  flex-flow: column;
+  position: fixed;
+  z-index: 10;
+  background-color: #E87162;
+  box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+  @media (min-width: 767px) {
+    nav {
+      width: 320px;
+      height: 100vh; } }
+  @media (max-width: 990px) {
+    nav {
+      width: 100%;
+      height: 100%; } }
+  nav .title {
+    font-family: "Yellowtail", cursive;
+    font-size: 4.8em;
+    font-weight: 700;
+    margin: 0;
+    padding: 8px 0;
+    text-align: center;
+    color: #343838;
+    background-color: #E24A37; }
+  nav .line {
+    width: 100%;
+    height: 5px;
+    border: 0;
+    margin-top: 0;
+    background-color: #FAFAFA; }
+  nav .container-items {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    padding-top: 64px; }
+  nav .item {
+    width: 10em;
+    font-size: 1.4em;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 600;
+    text-align: center;
+    padding: 16px 22px;
+    margin: 0 auto;
+    color: #5F5E5D;
+    background-color: #F2EEEA;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border: 4px solid #F2EEEA;
+    border-radius: 6px;
+    cursor: pointer; }
+  nav #item__icon-plus:before {
+    font-family: Flaticon;
+    font-size: 1em !important;
+    font-weight: bold;
+    color: #5F5E5D; }
+  nav .item:active {
+    color: #5F5E5D;
+    background-color: #eeeae6;
+    border-color: #eeeae6 !important;
+    box-shadow: 0 0 !important; }
+
+.nav__slider-show {
+  left: 320px !important; }
+
+.nav__slider-hide {
+  left: 0px !important; }
+
+.nav__slider-back:hover {
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+
+.nav__slider-back:active {
+  box-shadow: 0 0 !important; }
+
+.nav__slider-input {
+  width: 80%;
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.1em;
+  color: #333;
+  display: block;
+  padding: 4px 8px;
+  border: 2px solid #5F5E5D;
+  margin: auto; }
+
+.nav__slider-save {
+  position: relative;
+  width: 200px;
+  left: 18px;
+  top: 160px;
+  font-size: 1.4em;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  text-align: center;
+  padding: 16px 52px;
+  color: #333;
+  background-color: #E24A37;
+  box-shadow: 0 0px 1px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border: 4px solid #E24A37;
+  border-radius: 6px;
+  cursor: pointer; }
+
+.nav__slider-text-folder {
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.3em;
+  display: inline-block;
+  margin-left: 26px;
+  margin-right: 12px; }
+
+.nav__slider-select-folders {
+  width: 120px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.4em; }
+
+.item:active {
+  color: #5F5E5D;
+  background-color: #eeeae6;
+  border-color: #eeeae6 !important;
+  box-shadow: 0 0 !important; }
+
+.nav__slider {
+  width: 320px;
+  height: 100vh;
+  background-color: #FAFAFA;
+  z-index: 1;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  overflow: auto;
+  transition-proptery: left;
+  transition-duration: 0.5s;
+  -webkit-transition-property: left;
+  -webkit-transition-duration: 0.5s;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+
+.nav__slider-show {
+  left: 320px !important; }
+
+.nav__slider-hide {
+  left: 0px !important; }
+
+.nav__slider-back:before {
+  font-size: 28px !important;
+  position: absolute;
+  color: #333;
+  top: 0.2em;
+  right: 0.2em;
+  z-index: 1;
+  padding: 12px;
+  cursor: pointer; }
+
+.nav__slider-form {
+  position: relative;
+  top: 144px; }
+
+#nav__slider-input-description {
+  height: 82px;
+  resize: none; }
+
+.nav__slider-title {
+  position: absolute;
+  top: 42px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 26px;
+  text-align: center;
+  color: #5F5E5D; }
+
+.stage {
+  margin-left: 320px;
+  padding: 12px 12px; }
+
+.card-input {
+  width: 80%;
+  background-color: #FAFAFA;
+  padding: 8px 18px;
+  box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  display: flex;
+  justify-content: space-around;
+  align-items: center; }
+  .card-input .card-input__field {
+    width: 100%;
+    height: 100%;
+    background-color: #FAFAFA;
+    color: #333;
+    font-family: "Open Sans", sans-serif;
+    font-size: 2em;
+    border: none; }
+  .card-input .card-input__field:focus {
+    outline: none; }
+  .card-input .card-input__clear {
+    cursor: pointer; }
+
+.card-bookmarks {
+  width: 90%;
+  background-color: #FAFAFA;
+  border-radius: 3px;
+  box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+
+.card-bookmarks__header {
+  height: 52px;
+  padding: 8px 0;
+  background: #343838;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-around; }
+
+.card-bookmarks__header-text {
+  height: 52px;
+  line-height: 52px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-family: "Open Sans", sans-serif;
+  font-size: 2em;
+  text-align: center;
+  color: white; }
+
+.card-bookmarks__content {
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-around; }
+
+.table-bookmarks {
+  width: 100%;
+  border-collapse: collapse; }
+  .table-bookmarks td {
+    font-family: "Open Sans", sans-serif;
+    font-size: 32px;
+    color: #333;
+    padding: 8px 18px;
+    text-align: center; }
+  .table-bookmarks tr:nth-child(even) {
+    background: #ccc; }
+  .table-bookmarks tr:nth-child(odd) {
+    background: #eee; }
+
+.icon-clear:before {
+  font-family: Flaticon;
+  font-size: 0.85em !important;
+  padding: 8px;
+  border-radius: 3px;
+  background-color: #343838;
+  color: #FAFAFA;
+  cursor: pointer; }
+
+.icon-star:before {
+  font-family: Flaticon;
+  font-size: 0.85em !important;
+  padding: 8px;
+  border-radius: 3px;
+  background-color: #343838;
+  color: #FAFAFA;
+  cursor: pointer; }
+
+.icon-star__selected:before {
+  color: #FFFE3B !important; }
+
+.card-bookmarks__item, .card-bookmarks__item-name {
+  font-size: 1.4em !important;
+  font-family: "Open Sans", sans-serif;
+  color: #343838; }
+
+.card-bookmarks__item-name {
+  font-weight: bold; }
+
+.card-bookmarks__item-tag {
+  font-size: 0.4em;
+  display: inline-block;
+  padding: 6px 8px;
+  margin: 0 8px;
+  border-radius: 5px;
+  background-color: #343838;
+  color: #FAFAFA; }
+
+.card-folders {
+  width: 87%;
+  background-color: #FAFAFA;
+  padding: 8px 18px;
+  box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+
+.header-folders {
+  width: 100%;
+  font-family: "Open Sans", sans-serif;
+  font-size: 2.5em;
+  margin-top: 12px;
+  padding-left: 24px;
+  color: #333; }
+
+.wrap-tile-folder {
+  display: inline-block;
+  cursor: pointer; }
+
+.tile-folder, .tile-folder__create {
+  background-color: #888;
+  display: inline-flex;
+  margin: 8px 12px;
+  border-radius: 12px;
+  flex-flow: column;
+  justify-content: center;
+  padding: 8px;
+  cursor: pointer; }
+  .tile-folder .name, .tile-folder__create .name {
+    padding: 4px 12px;
+    font-family: "Open Sans", sans-serif;
+    margin-top: 8px;
+    margin-bottom: 0;
+    color: #eee; }
+  .tile-folder .icon-file:before, .tile-folder__create .icon-file:before {
+    font-size: 2.2em !important;
+    text-align: center;
+    color: #eee;
+    display: block;
+    margin: 0; }
+
+.tile-folder-active {
+  background-color: #343838 !important; }
+
+.tile-folder__create {
+  background-color: #E87162; }
+
+.tile-folder__create:active {
+  background-color: #E24A37; }
+
+.login__content {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding-top: 82px; }
+  .login__content .bar {
+    width: 100%;
+    height: 82px;
+    position: fixed;
+    top: 0px;
+    background-color: #E24A37; }
+    .login__content .bar .header {
+      font-size: 64px;
+      font-family: "Yellowtail", cursive;
+      color: #5F5E5D;
+      margin: 0;
+      line-height: 82px;
+      text-align: center; }
+  .login__content .card-input {
+    width: 450px;
+    height: 500px;
+    padding: 8px 16px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 62px;
+    background-color: white;
+    box-shadow: 1px 2px 2px 0px #c2c2c2; }
+    .login__content .card-input .header {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 48px;
+      color: #333;
+      text-align: center; }
+    .login__content .card-input input {
+      padding: 8px 4px;
+      font-size: 16px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+    .login__content .card-input .inputform {
+      height: 100%;
+      width: 100%;
+      padding-left: 22px;
+      padding-right: 22px;
+      display: flex;
+      flex-flow: column;
+      justify-content: space-between; }
+    .login__content .card-input .submit, .login__content .card-input .createaccount {
+      width: 8.6em;
+      height: 48px;
+      font-size: 1.1em;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 600;
+      text-align: center;
+      padding: 8px 12px;
+      line-height: 48px;
+      margin: 0 auto;
+      color: #fafafa;
+      background-color: #E87162;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.11), 0 1px 5px 0 rgba(0, 0, 0, 0.19);
+      border: 4px solid #E87162;
+      border-radius: 6px;
+      cursor: pointer; }
+    .login__content .card-input .buttons {
+      display: flex;
+      flex-flow: row;
+      padding-bottom: 22px; }
+
+#overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 80;
+  display: flex;
+  flex-flow: column;
+  justify-content: center; }
+  @media (min-width: 767px) {
+    #overlay {
+      left: 320px; } }
+  #overlay .card-addfolder {
+    width: 380px;
+    height: 350px;
+    position: relative;
+    padding: 14px 20px;
+    margin: auto;
+    background-color: white;
+    box-shadow: 1px 2px 2px 0px #c2c2c2;
+    z-index: 100;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between; }
+    #overlay .card-addfolder .header {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 32px;
+      text-align: center; }
+    #overlay .card-addfolder input {
+      padding: 8px 4px;
+      font-size: 16px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+    #overlay .card-addfolder .folder-add {
+      width: 8.6em;
+      height: 48px;
+      font-size: 1.1em;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 600;
+      text-align: center;
+      padding: 8px 12px;
+      line-height: 48px;
+      margin: 0 auto;
+      color: #fafafa;
+      background-color: #E87162;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.11), 0 1px 5px 0 rgba(0, 0, 0, 0.19);
+      border: 4px solid #E87162;
+      border-radius: 6px;
+      cursor: pointer; }
+  #overlay .fill-parent {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1; }
+
+/*# sourceMappingURL=style.css.map */
