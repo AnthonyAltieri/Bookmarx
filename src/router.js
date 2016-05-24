@@ -39,7 +39,7 @@ router.post('/login', function(req, res) {
       // res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
       // res.header('Expires', '-1');
       // res.header('Pragma', 'no-cache');
-      req.session.user = req.body.username;
+      req.session.username = req.body.username;
       res.send({
         user: rows[0],
         msg: "Found the user",
@@ -101,7 +101,7 @@ router.post('/signUp', function(req, res) {
 
 router.post('/folder/get', function(req, res) {
 
-  if (!req.session.user) {
+  if (!req.session.username) {
     res.redirect("/");
   }
 
@@ -127,7 +127,7 @@ router.post('/folder/get', function(req, res) {
 });
 
 router.post('/user/bookmarks/get', function(req, res) {
-  if (!req.session.user) {
+  if (!req.session.username) {
     res.redirect("/");
   }
 
@@ -153,7 +153,7 @@ router.post('/user/bookmarks/get', function(req, res) {
 });
 
 router.post('/user/bookmarks/add', function(req, res) {
-  if (!req.session.user) {
+  if (!req.session.username) {
     res.redirect("/");
   }
 
@@ -222,7 +222,7 @@ router.post('/user/bookmarks/add', function(req, res) {
 });
 
 router.post('/folder/add', function(req, res) {
-  if (!req.session.user) {
+  if (!req.session.username) {
     res.redirect("/");
   }
 
@@ -254,7 +254,7 @@ router.post('/folder/add', function(req, res) {
 });
 
 router.post('/folder/delete', function(req, res) {
-  if (!req.session.user) {
+  if (!req.session.username) {
     res.redirect("/");
   }
 
@@ -298,7 +298,7 @@ router.post('/folder/delete', function(req, res) {
 });
 
 router.post('/bookmark/delete', function(req, res) {
-  if (!req.session.user) {
+  if (!req.session.username) {
     res.redirect("/");
   }
 
@@ -329,7 +329,7 @@ router.post('/bookmark/delete', function(req, res) {
 });
 
 router.post('/bookmark/star', function(req, res) {
-  if (!req.session.user) {
+  if (!req.session.username) {
     res.redirect("/");
   }
 
