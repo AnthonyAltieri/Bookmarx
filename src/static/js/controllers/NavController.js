@@ -30,7 +30,8 @@
       name: '',
       url: '',
       tags: '',
-      folder: ''
+      folder: '',
+      description: ''
     };
 
     $scope.navSlider = document.getElementById('nav__slider');
@@ -40,9 +41,7 @@
       $scope.navSlider.classList.add('nav__slider-hide');
       $rootScope.nav.isSliderShowing = false;
     }
-
-    function showNavSlider(navSlider) {
-      navSlider.classList.remove('nav__slider-hide');
+function showNavSlider(navSlider) { navSlider.classList.remove('nav__slider-hide');
       navSlider.classList.add('nav__slider-show');
       $rootScope.nav.isSliderShowing = true;
     }
@@ -55,8 +54,41 @@
     }
 
     function saveBookmark() {
-      var data = { bookmark: $scope.add };
+      if (!$scope.add.tag1 || $scope.add.tag1.trim('').length === 0) {
+        $scope.add.tag1 = 'null';
+      }
+      if (!$scope.add.tag2 || $scope.add.tag2.trim('').length === 0) {
+        $scope.add.tag2 = 'null';
+      }
+      if (!$scope.add.tag3 || $scope.add.tag3.trim('').length === 0) {
+        $scope.add.tag3 = 'null';
+      }
+      if (!$scope.add.tag4 || $scope.add.tag4.trim('').length === 0) {
+        $scope.add.tag4 = 'null';
+      }
+      if (!$scope.add.description || $scope.add.description.trim('').length === 0) {
+        $scope.add.description = 'none';
+      }
+      console.log('$scope.add');
+      console.log($scope.add);
+      var bookmark = {
+        name: $scope.add.name,
+        title: $scope.add.title,
+        description: $scope.add.description,
+        tag1: $scope.add.tag1,
+        tag2: $scope.add.tag2,
+        tag3: $scope.add.tag3,
+        tag4: $scope.add.tag4,
+        star: '0',
+        counter: 0
+      }
+      var data = { bookmark: bookmark };
       $rootScope.$broadcast('add-bookmark', data);
+      $scope.add.tag1 = '';
+      $scope.add.tag2 = '';
+      $scope.add.tag3 = '';
+      $scope.add.tag4 = '';
+      $scope.add.description = '';
     }
 
     function cancelAddBookmark() {
@@ -75,22 +107,38 @@
       $rootScope.$broadcast('hide-nav');
     }
 
-    $rootScope.$on('hide-nav', function() {
+    $rootScope.$on('hide-nav', function(event, data) {
       var content = document.getElementById('content');
       content.classList.remove('no-nav');
       content.classList.add('has-nav');
       $scope.hideNav = true;
     });
 
-    $rootScope.$on('show-nav', function() {
+    $rootScope.$on('show-nav', function(event, data) {
       var content = document.getElementById('content');
       content.classList.remove('has-nav');
       content.classList.add('no-nav');
       $scope.hideNav = false;
     });
 
-    $rootScope.$on('added-bookmark', function(data) {
+    $rootScope.$on('added-bookmark', function(event, data) {
       hideNavSlider($scope.navSlider);
+    })
+
+    $rootScope.$on('update-folders', function(event, data) {
+      console.log('in update-folders');
+      console.log('data');
+      console.log(data);
+      var folders = [];
+      for (var i = 0 ; i < data.folders.length ; i++) {
+        var folder = data.folders[i];
+        if (folder.name != 'all') {
+          folders.push(folder);
+        }
+      }
+      $scope.add.folders = folders;
+      console.log('just updated nav folders to');
+      console.log($scope.add);
     })
   }
 

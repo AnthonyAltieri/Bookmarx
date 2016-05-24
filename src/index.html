@@ -47,13 +47,17 @@
             <hr class="line">
             <div class="container-items">
                 <a class="item" ng-click="addBookmark()">Add Bookmark<i class="flaticon-plus-symbol" id="item__icon-plus"></i></a>
+                <br/>
+                <a class="item" ng-click="importBookmark()">Import Bookmark<i class="flaticon-upload-to-cloud" id="icon-cloud"></i></a>
+                <br/>
+                <input type="file" id="choose-bookmark">
             </div>
         </nav>
         <div id="nav__slider" class="nav__slider nav__slider-hide">
             <i class="flaticon-left-arrow nav__slider-back" ng-click="cancelAddBookmark()"></i>
             <h2 class="nav__slider-title">Enter Bookmark Information</h2>
             <form class="nav__slider-form">
-                <input class='nav__slider-input' type="text" ng-model="add.name" placeholder="Name">
+                <input class='nav__slider-input' type="text" ng-model="add.title" placeholder="Title">
                 <br/>
                 <input class='nav__slider-input' type="text" ng-model="add.url" placeholder="URL">
                 <br/>
@@ -68,12 +72,17 @@
                 <textarea class='nav__slider-input' placeholder="Description"
                     id="nav__slider-input-description"></textarea>
                 <p class="nav__slider-text-folder">Select Folder</p>
-                <select class="nav__slider-select-folders" ng-model="add.folder">
-                    <option ng-repeat="folder in folders" value="{{folder.idx}}">{{folder.name}}</option>
-                </select>
+                <br/>
+                <div class="container-select">
+                    <select class="nav__slider-select-folders" ng-model="add.folder">
+                        <option ng-repeat="folder in add.folders" value="{{folder.name}}">{{folder.name}}</option>
+                    </select>
+                </div>
 
             </form>
-            <a class="nav__slider-save" ng-click="saveBookmark(add)">Save Bookmark</a>
+            <div class="container-save">
+                <a class="nav__slider-save" ng-click="saveBookmark(add)">Save Bookmark</a>
+            </div>
         </div>
     </div>
     <div id="content" class="no-nav" ui-view></div>

@@ -122,7 +122,9 @@
     $scope.$on(ROUTE.LOGIN_SUCCESS, function(event, data) {
       console.log(event);
       console.log('msg: ' + data.msg);
-      localStorageService.set('username', data.username);
+      console.log('data');
+      console.log(data);
+      localStorageService.cookie.set('username', data.user.username);
       $rootScope.$broadcast('show-nav');
       $state.go('dashboard');
     });

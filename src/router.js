@@ -4,9 +4,8 @@ var path = require('path');
 var router = express.Router();
 var db = require('./db.js');
 var QueryService = require('./QueryService.js');
-var qs = new QueryService(db);
 var utilService = require('./UtilService.js');
-
+var qs = new QueryService(db, utilService);
 
 router.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '/index.html'));
@@ -20,6 +19,7 @@ router.post('/login', function(req, res) {
   utilService.checkUndefined(req.body.password);
   var filter = [];
   filter.push(['username', '=', req.body.username]);
+  filter.push('and');
   filter.push(['password', '=', req.body.password]);
   qs.select(['*'], ['user'], filter, function(err, rows) {
     console.log('in callback');
@@ -97,7 +97,7 @@ router.post('/folder/get', function(req, res) {
     console.log(rows);
 
     var data = { rows: rows };
-    res.send(rows);
+    res.send(data);
   });
 });
 
@@ -116,7 +116,7 @@ router.post('/user/bookmarks/get', function(req, res) {
     console.log(rows);
 
     var data = { rows: rows };
-    res.send(rows);
+    res.send(data);
   });
 });
 
@@ -131,22 +131,24 @@ router.post('/user/bookmarks/add', function(req, res) {
   // return null
   var filter = [];
   filter.push(['username', '=', username]);
+  filter.push('and');
   filter.push(['title', '=', bookmark.title]);
   qs.select(['*'], 'bookmark', filter, function(err, rows) {
     if (err) throw err;
+    console.log('rows select');
+    console.log(rows);
     if (rows.length > 0) {
       res.send(null);
     } else {
       var columns = ['username', 'title', 'url', 'description', 'star', 'tag1', 'tag2',
                     'tag3', 'tag4', 'creationDate', 'lastVisit', 'counter', 'folder'];
 
-      var values = [boookmark.username, bookmark.title, bookmark.url, bookmark.description,
-                    null];
+      var values = [username, bookmark.title, bookmark.url, bookmark.description, 0];
 
-      values.add(bookmark.tag1);
-      values.add(bookmark.tag2);
-      values.add(bookmark.tag3);
-      values.add(bookmark.tag4);
+      values.push(bookmark.tag1);
+      values.push(bookmark.tag2);
+      values.push(bookmark.tag3);
+      values.push(bookmark.tag4);
 
       var date = new Date();
       var datestring = '';
@@ -156,14 +158,20 @@ router.post('/user/bookmarks/add', function(req, res) {
 
       values.push(datestring); // creationDate
       values.push(datestring); // lastVisit
-      values.push(0) // counter
+      values.push(0); // counter
       values.push(bookmark.folder);
+
+      console.log('bookmark');
+      console.log(bookmark);
 
       qs.insert('bookmark', columns, values, function(err, result) {
         if (err) throw err;
         if (result.affectedRows === 1) {
           // Everything went according to plan
-          res.send(bookmark);
+          var data = {bookmark: bookmark};
+          console.log('trying to send data bookmark add');
+          console.log(data);
+          res.send(data);
         } else {
           console.log('something went wrong affectedRows should have been 1');
         }
@@ -171,6 +179,127 @@ router.post('/user/bookmarks/add', function(req, res) {
 
     }
   })
+
+});
+
+router.post('/folder/add', function(req, res) {
+  var username = req.body.username;
+  var name = req.body.name;
+
+  var columns = ['name', 'username'];
+  var values = [name, username];
+  qs.insert('folder', columns, values, function(err, result) {
+    if (err) throw err;
+    if (result.affectedRows === 1) {
+      // Everything went according to plan
+      var folder = {
+        name: name,
+        username: username,
+        bookmarks: [],
+      };
+      var data = {folder: folder};
+      res.send(data);
+    } else {
+      console.log('something went wrong affectedRows should have been 1');
+    }
+
+  });
+
+});
+
+router.post('/folder/delete', function(req, res) {
+  utilService.checkUndefined(req.body);
+  utilService.checkUndefined(req.body.username);
+  utilService.checkUndefined(req.body.name);
+  var username = req.body.username;
+  var name = req.body.name;
+
+  var filter = [];
+  filter.push(['username', '=', username]);
+  filter.push('and');
+  filter.push(['name', '=', name]);
+  qs.delete('folder', filter, function(err, result) {
+    if (err) throw err;
+    if (result.affectedRows === 1) {
+      // Everything went according to plan
+      filter = [];
+      filter.push(['username', '=', username]);
+      filter.push('and');
+      filter.push(['folder', '=', name]);
+      qs.delete('bookmark', filter, function(err, result) {
+        if (err) throw err;
+        var folderDeleted = {
+          name: name,
+          username: username
+        };
+        var data = {folder: folderDeleted};
+        res.send(data);
+      });
+    } else {
+      console.log('something went wrong there should have only been'
+        + 'one folder deleted');
+    }
+
+  })
+
+});
+
+router.post('/bookmark/delete', function(req, res) {
+  utilService.checkUndefined(req.body);
+  utilService.checkUndefined(req.body.bookmark);
+  utilService.checkUndefined(req.body.username);
+  var bookmark = req.body.bookmark;
+  var username = req.body.username;
+
+  var filter = [];
+  filter.push(['username', '=', username]);
+  filter.push('and');
+  filter.push(['title', '=', bookmark.title]);
+  qs.delete('bookmark', filter, function(err, result) {
+    if (err) throw err;
+
+    if (result.affectedRows === 1) {
+      // Everything went according to plan
+
+      var data = {bookmark: bookmark};
+      res.send(data);
+    }
+  })
+
+});
+
+router.post('/bookmark/star', function(req, res) {
+  utilService.checkUndefined(req.body);
+  utilService.checkUndefined(req.body.bookmark);
+  utilService.checkUndefined(req.body.username);
+  var bookmark = req.body.bookmark;
+  var username = req.body.username;
+
+  var columnvalues = [];
+  console.log('in bookmark/star');
+  console.log(bookmark);
+  if (bookmark.star === '1') {
+    columnvalues.push(['star', '=', '0'])
+  } else {
+    columnvalues.push(['star', '=', '1'])
+  }
+  var filter = [];
+  console.log('columnvalues');
+  console.log(columnvalues);
+  filter.push(['username', '=', username]);
+  filter.push('and');
+  filter.push(['title', '=', bookmark.title]);
+  qs.update('bookmark', columnvalues, filter, function(err, result) {
+    if (err) throw err;
+
+    if (result.affectedRows === 1) {
+      // Everything went according to plan
+
+      var data = {bookmark: bookmark}
+      res.send(data);
+    }
+  });
+
 
 });
 

@@ -3,20 +3,26 @@
         <div class="card-addfolder">
             <h1 class="header">Add Folder</h1>
             <input type="text" ng-model="folder.name" placeholder="Folder name">
-            <a class="folder-add">Add</a>
+            <a class="folder-add" ng-click="vm.addFolder(folder.name)">Add</a>
         </div>
         <div class="fill-parent" ng-click="vm.clickOverlay()"></div>
     </div>
     <div class="row__center">
         <div class="card-input">
-            <input type="text" placeholder="Filter" class="card-input__field" ng-model="filter">
-            <i class="card-input__clear flaticon-letter-x" id="filter" ng-click="clearFilter()"></i>
+            <input type="text" placeholder="Filter" class="card-input__field" ng-model="user.filter">
+            <i class="card-input__clear flaticon-letter-x" id="filter" ng-click="vm.clearFilter()"></i>
         </div>
     </div>
     <div class="row__center">
         <div class="card-folders">
-            <h2 class="header-folders">Folders</h2>
-            <div ng-repeat="folder in folders" ng-click="selectFolder(folder)" class="wrap-tile-folder">
+            <div class="folder-bar">
+                <h2 class="header-folders">Folders</h2>
+                <a class="folder-headerbtn">Export Folder</a>
+                <a class="folder-headerbtn" id="delete-folder" ng-click="vm.deleteFolder()">Delete Folder</a>
+                <a class="folder-headerbtn" id="import-folder" ng-click="vm.importFolder()">Import Folder</a>
+                <input type="file" id="choose-folder">
+            </div>
+            <div ng-repeat="folder in vm.user.folders" ng-click="vm.selectFolder(folder)" class="wrap-tile-folder">
                 <div class="tile-folder" ng-class="{'tile-folder-active' : folder.isActive}">
                     <i class="flaticon-file icon-file"></i>
                     <p class="name">{{folder.name}}</p>
@@ -31,29 +37,36 @@
     <div class="row__center">
         <div class="card-bookmarks">
             <div class="card-bookmarks__header">
-                <h2 class="card-bookmarks__header-text col-20">Name</h2>
-                <h2 class="card-bookmarks__header-text col-30">Tag(s)</h2>
-                <h2 class="card-bookmarks__header-text col-30">URL</h2>
+                <h2 class="card-bookmarks__header-text col-10">Name</h2>
+                <h2 class="card-bookmarks__header-text col-30">Description</h2>
+                <h2 class="card-bookmarks__header-text col-20">Tag(s)</h2>
+                <h2 class="card-bookmarks__header-text col-20">URL</h2>
                 <h2 class="card-bookmarks__header-text col-20">Actions</h2>
             </div>
             <div class="card-bookmarks__content">
                 <table class="table-bookmarks">
-                    <tr ng-repeat="bookmark in activeFolder.bookmarks">
-                        <td class="col-20 card-bookmarks__item-name">{{bookmark.name}}</td>
-                        <td class="col-30">
+                    <tr ng-repeat="bookmark in vm.user.activeFolder.bookmarks">
+                        <td class="col-10 card-bookmarks__item-name">{{bookmark.title}}</td>
+                        <td class="col-30 card-bookmarks__description">{{bookmark.description}}</td>
+                        <td class="col-20">
                             <div class="row">
                                 <a class="card-bookmarks__item-tag" ng-repeat="tag in bookmark.tags">
                                     {{tag}}
                                 </a>
                             </div>
                         </td>
-                        <td class="col-30 card-bookmarks__item">{{bookmark.url}}</td>
+                        <td class="col-20 card-bookmarks__item">{{bookmark.url}}</td>
                         <td class="col-20">
                             <div class="container-actions">
-                                <i class="icon-star flaticon-star" id="icon-star"
-                                   ng-class="{'selected:before' : bookmark.starActive }"
-                                   ng-click="clickStar(bookmark)"></i>
-                                <i class="flaticon-letter-x icon-clear"></i>
+                                <i class="icon-star flaticon-star selected"
+                                   ng-hide="bookmark.star === '1' || bookmark.star === 1"
+                                   ng-click="vm.clickStar(bookmark)"></i>
+                                <i class="icon-star__selected flaticon-star"
+                                   ng-show="bookmark.star === '1' || bookmark.star === 1"
+                                   ng-click="vm.clickStar(bookmark)"></i>
+                                <i class="flaticon-letter-x icon-clear" ng-click="vm.deleteBookmark(bookmark)"></i>
+                                <a class="exportbtn" ng-hide="vm.user.activeFolder === null"
+                                   ng-click="vm.exportFolder()">export</a>
                             </div>
                         </td>
                     </tr>

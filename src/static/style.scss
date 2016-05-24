@@ -1,11 +1,11 @@
 $desktop: "(min-width: 767px)";
-$mobile: "(max-width: 990px)";
+//$mobile: "(max-width: 990px)";
 
 @import "SimpleIconSet/font/flaticon.css";
 @import "RatingValidationIcons/font/flaticon.css";
 
 
-$nav__desktop-width: 320px;
+$nav__desktop-width: 280px;
 
 $nav__font-title: 'Yellowtail', cursive;
 $nav__font-item: 'Open Sans', sans-serif;
@@ -62,6 +62,9 @@ body {
   margin: 22px 0;
 }
 
+.col-10 {
+  width: 10%;
+}
 .col-33 {
   width: 33.33%;
 }
@@ -108,18 +111,18 @@ nav {
 
   }
 
-  @media #{$mobile} {
-    width: 100%;
-    height: 100%;
-
-  }
+  //@media #{$mobile} {
+  //  width: 100%;
+  //  height: 100%;
+  //
+  //}
 
   background-color: $nav__color-background;
   box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
   .title {
     font-family: $nav__font-title;
-    font-size: 4.8em;
+    font-size: 3.8em;
     font-weight: 700;
     margin: 0;
     padding: 8px 0;
@@ -144,8 +147,8 @@ nav {
   }
 
   .item {
-    width: 10em;
-    font-size: 1.4em;
+    width: 12em;
+    font-size: 1.0em;
     font-family: $nav__font-item;
     font-weight: 600;
     text-align: center;
@@ -168,6 +171,13 @@ nav {
     color: $nav__color-item;
   }
 
+  #item__icon-upload:before {
+    font-family: Flaticon;
+    font-size: 1em !important;
+    font-weight: bold;
+    color: $nav__color-item;
+  }
+
 
   .item:active {
     color: $nav__color-item;
@@ -177,8 +187,13 @@ nav {
   }
 }
 
+#choose-bookmark {
+  margin: 0 auto;
+
+}
+
 .nav__slider-show {
-  left: 320px !important;
+  left: $nav__desktop-width !important;
 }
 
 .nav__slider-hide {
@@ -208,10 +223,8 @@ nav {
 
 .nav__slider-save {
   position: relative;
-  width: 200px;
-  left: 18px;
-  top: 160px;
-  font-size: 1.4em;
+  top: 164px;
+  margin: 0 auto;
   font-family: $nav__font-item;
   font-weight: 600;
   text-align: center;
@@ -224,12 +237,34 @@ nav {
   cursor: pointer;
 }
 
+.nav__slider-save:hover {
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.nav__slider-save:active {
+  box-shadow: none !important;
+
+}
+
 .nav__slider-text-folder {
   font-family: $font-default;
-  font-size: 1.3em;
+  font-size: 1.1em;
   display: inline-block;
-  margin-left: 26px;
-  margin-right: 12px;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 4px;
+
+}
+.container-select {
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+}
+.container-save {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
 
 }
 
@@ -249,7 +284,7 @@ nav {
 }
 
 .nav__slider {
-  width: 320px;
+  width: $nav__desktop-width;
   height: 100vh;
   background-color: #FAFAFA;
   z-index: 1;
@@ -269,14 +304,6 @@ nav {
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.nav__slider-show {
-  left: 320px !important;
-}
-
-.nav__slider-hide {
-  left: 0px !important;
-
-}
 
 .nav__slider-back:before {
   font-size: 28px !important;
@@ -292,7 +319,7 @@ nav {
 
 .nav__slider-form {
   position: relative;
-  top: 144px;
+  top: 132px;
 }
 #nav__slider-input-description {
   height: 82px;
@@ -300,7 +327,7 @@ nav {
 }
 .nav__slider-title {
   position: absolute;
-  top: 42px;
+  top: 30px;
   font-family: $font-default;
   font-size: 26px;
   text-align: center;
@@ -308,7 +335,7 @@ nav {
 }
 
 .stage {
-  margin-left: 320px;
+  margin-left: $nav__desktop-width;
   padding: 12px 12px;
 
 }
@@ -356,6 +383,7 @@ nav {
   border-radius: 3px;
   display: flex;
   justify-content: space-around;
+  padding-left: 12px;
 }
 
 .card-bookmarks__header-text {
@@ -364,7 +392,7 @@ nav {
   margin-top: 0;
   margin-bottom: 0;
   font-family: $font-default;
-  font-size: 2em;
+  font-size: 1.3em;
   text-align: center;
   color: white;
 }
@@ -372,7 +400,7 @@ nav {
 .card-bookmarks__content {
   border-radius: 3px;
   display: flex;
-  justify-content: space-around;
+  flex-flow: row;
 }
 .table-bookmarks {
   width: 100%;
@@ -380,9 +408,9 @@ nav {
 
   td {
     font-family: $font-default;
-    font-size: 32px;
+    font-size: 18px;
     color: #333;
-    padding: 8px 18px;
+    padding: 10px 14px;
     text-align: center;
   }
 
@@ -394,34 +422,86 @@ nav {
   }
 
 }
+
+.container-actions {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+}
 .icon-clear:before {
-  font-family: Flaticon;
-  font-size: 0.85em !important;
+  display: inline-block;
+  font-size: 0.8em !important;
   padding: 8px;
   border-radius: 3px;
   background-color: $color-grey;
   color: #FAFAFA;
   cursor: pointer;
+  margin: 0;
+  position: relative;
+  top: 2px;
+  left: -10px;
   @extend .no-textsel
 }
 
 .icon-star:before {
-  font-family: Flaticon;
-  font-size: 0.85em !important;
+  display: inline-block;
+  font-size: 0.8em !important;
   padding: 8px;
   border-radius: 3px;
   background-color: $color-grey;
   color: #FAFAFA;
   cursor: pointer;
+  margin: 0;
+  position: relative;
+  left: 0;
+  top: 2px;
+
+
   @extend .no-textsel
 
 }
 .icon-star__selected:before {
   color: #FFFE3B !important;
+  display: inline-block;
+  font-size: 0.8em !important;
+  padding: 8px;
+  border-radius: 3px;
+  background-color: $color-grey;
+  cursor: pointer;
+  margin: 0;
+  position: relative;
+  left: 0;
+  top: 2px;
+
+
+  @extend .no-textsel
+}
+.exportbtn {
+  display: inline-block;
+  background-color: $color-grey;
+  border: 1px solid $color-grey;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #fafafa;
+  height: 28px;
+  line-height: 28px;
+  padding-left: 6px;
+  padding-right: 6px;
+  position: relative;
+  width: 36px;
+  top: 3px;
+  cursor: pointer;
+  @extend .no-textsel;
+}
+
+.folder-bar {
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
 }
 
 .card-bookmarks__item {
-  font-size: 1.4em !important;
+  font-size: 1.0em !important;
   font-family: $font-default;
   color: $color-grey;
 }
@@ -429,8 +509,13 @@ nav {
   @extend .card-bookmarks__item;
   font-weight: bold;
 }
+.card-bookmarks__description {
+  @extend .card-bookmarks__item;
+  font-size: 12px !important;
+  text-align: left;
+}
 .card-bookmarks__item-tag {
-  font-size: 0.4em;
+  font-size: 0.55em;
   display: inline-block;
   padding: 6px 8px;
   margin: 0 8px;
@@ -447,11 +532,39 @@ nav {
   box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.folder-headerbtn {
+  background-color: $color-grey;
+  border: $color-grey;
+  border-radius: 4px;
+  height: 50px;
+  line-height: 50px;
+  padding-left: 12px;
+  padding-right: 12px;
+  color: #fafafa;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin-top: 16px;
+  cursor: pointer;
+  @extend .no-textsel;
+}
+
+.folder-headerbtn:hover {
+  box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.folder-headerbtn:active {
+  box-shadow: none;
+}
+
+#delete-folder {
+  background-color: red;
+  margin-left: 12px;
+}
+
 .header-folders {
-  width: 100%;
   font-family: $font-default;
-  font-size: 2.5em;
+  font-size: 2.2em;
   margin-top: 12px;
+  margin-right: 42px;
   padding-left: 24px;
   color: #333;
 }
@@ -460,6 +573,7 @@ nav {
   cursor: pointer;
 }
 .tile-folder {
+  min-width: 82px;
   background-color: #888;
   display: inline-flex;
   margin: 8px 12px;
@@ -476,6 +590,7 @@ nav {
     margin-top: 8px;
     margin-bottom: 0;
     color: #eee;
+    text-align: center;
   }
 
   .icon-file:before {
@@ -485,8 +600,12 @@ nav {
     display: block;
     margin: 0;
   }
-
-
+}
+.tile-folder:hover {
+  box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.tile-folder:active {
+  box-shadow: none;
 }
 
 .tile-folder-active {
@@ -683,5 +802,17 @@ nav {
     height: 100%;
     z-index: 1;
   }
+}
+
+#import-folder {
+  margin-left: 12px;
+  margin-right: 12px;
+  background-color: #1E88E5;
+}
+
+#choose-folder {
+  width: 172px;
+  margin-top: 33px;
+  height: 20px;
 }
 

@@ -1,5 +1,4 @@
 'use strict';
-
 const INSERT = 'INSERT';
 const SELECT = 'SELECT';
 const DELETE = 'DELETE';
@@ -12,12 +11,13 @@ module.exports = class QueryService {
    * between you and the MySQL database that we have set up in db.js
    * @param db - A MYSQL database instance from db.js
    */
-  constructor(database) {
+  constructor(database, utilService) {
     if(typeof database === 'undefined' || typeof database.query === 'undefined'){
       throw 'Error: Invalid Database';
     }
     this._db = database;
     this._db.init();
+    this._utilService = utilService;
   }
 
   /**
@@ -144,6 +144,11 @@ module.exports = class QueryService {
   }
 
   update(tableName, columnvalues, filters, callback) {
+    console.log('inside update');
+    console.log('columnvalues');
+    console.log(columnvalues);
+    console.log('filters');
+    console.log(filters);
     let queryString = 'UPDATE';
     queryString += ' ';
     queryString += tableName;
@@ -152,9 +157,11 @@ module.exports = class QueryService {
     queryString += ' ';
     for (let i = 0 ; i < columnvalues.length ; i++) {
       // Every odd index will have a 3 tupule
-      let isTupule = i % 2;
+      let isTupule = !(i % 2);
       if (isTupule) {
         const columnvalue = columnvalues[i];
+        console.log(columnvalues);
+
         queryString += columnvalue[0];
         queryString += ' ';
         queryString += columnvalue[1];
@@ -173,12 +180,14 @@ module.exports = class QueryService {
     queryString += ' ';
     for (let i = 0 ; i < filters.length ; i++) {
       // Every odd index will have a 3 tupule
-      let isTupule = i % 2;
+      let isTupule = !(i % 2);
       if (isTupule) {
         const filter = filters[i];
+        console.log(filter);
+
         queryString += filter[0];
         queryString += ' ';
-        queryString += fiter[1];
+        queryString += filter[1];
         queryString += ' ';
         queryString += ("'" + filter[2] + "'");
       } else {
@@ -189,8 +198,9 @@ module.exports = class QueryService {
         }
       }
     }
-    console.log('Insert qs: ' + queryString);
-    this._db.query(querystring, callback);
+    queryString += ';';
+    console.log('update qs: ' + queryString);
+    this._db.query(queryString, callback);
   }
 
 
