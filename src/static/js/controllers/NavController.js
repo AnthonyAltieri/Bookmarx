@@ -5,7 +5,7 @@
     .module('app')
     .controller('NavController', NavController);
 
-  NavController.$inject = ['$rootScope', '$scope','FolderService'];
+  NavController.$inject = ['$rootScope', '$scope'];
 
   function NavController($rootScope, $scope, FolderService) {
     console.log('In NavigationController');

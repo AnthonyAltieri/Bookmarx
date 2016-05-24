@@ -1,5 +1,5 @@
 var CryptService = [];
-var bcrypt = require('./md5');
+var md5 = require('./md5');
 
 CryptService.hash = hash;
 

@@ -3,7 +3,7 @@
 angular.module('BookMarx.controllers', [])
 
 .controller('NavCtrl', function ($rootScope, $scope, initFolders) {
-    const vm = this;
+    vm = this;
 
 
     $rootScope.nav = {};
