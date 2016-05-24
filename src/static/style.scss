@@ -14,8 +14,9 @@ $color-grey: #343838;
 $color-background: #F2EEEA;
 $nav__color-background: #E87162;
 $nav__color-background-bright: #E24A37;
-$nav__color-item: #5F5E5D;
 $nav__color-background-active: #eeeae6;
+$nav__color-item: #5F5E5D;
+$nav_color-background-active: #eeeae6;
 $nav__color-title: #F2EEEA;
 $card-bookmarks__header-height: 52px;
 
@@ -141,7 +142,7 @@ nav {
     font-size: 3.2em;
     font-weight: 700;
     margin: 0;
-    padding: 8px 0;
+    padding: 8px 4px;
     text-align: center;
     color: $color-grey;
     background-color: $nav__color-background-bright;
@@ -423,6 +424,7 @@ nav {
   border-collapse: collapse;
 
   td {
+    width: 100%;
     font-family: $font-default;
     font-size: 18px;
     color: #333;
@@ -527,8 +529,10 @@ nav {
 }
 
 .card-bookmarks__item {
-  font-size: .85em !important;
+  font-size: .7em !important;
   font-family: $font-default;
+  padding-left: 4px;
+  padding-right: 4px;
   color: $color-grey;
 }
 .card-bookmarks__item-name {

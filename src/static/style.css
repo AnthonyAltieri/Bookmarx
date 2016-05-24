@@ -98,7 +98,7 @@ nav {
     font-size: 3.2em;
     font-weight: 700;
     margin: 0;
-    padding: 8px 0;
+    padding: 8px 4px;
     text-align: center;
     color: #343838;
     background-color: #E24A37; }
@@ -319,6 +319,7 @@ nav {
   width: 100%;
   border-collapse: collapse; }
   .table-bookmarks td {
+    width: 100%;
     font-family: "Open Sans", sans-serif;
     font-size: 18px;
     color: #333;
@@ -403,8 +404,10 @@ nav {
   justify-content: flex-start; }
 
 .card-bookmarks__item, .card-bookmarks__item-name, .card-bookmarks__description {
-  font-size: .85em !important;
+  font-size: .7em !important;
   font-family: "Open Sans", sans-serif;
+  padding-left: 4px;
+  padding-right: 4px;
   color: #343838; }
 
 .card-bookmarks__item-name {

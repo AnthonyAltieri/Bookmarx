@@ -53,22 +53,23 @@ router.post('/logout', function(req, res) {
 })
 
 router.post('/signUp', function(req, res) {
+  console.log('in /signup');
   utilService.checkUndefined(req.body);
   var username = req.body.username;
   utilService.checkUndefined(username);
-  var password1 = req.body.password1
-  utilService.checkUndefined(password1);
-  var password2 = req.body.password1
-  utilService.checkUndefined(password2);
-  var firstname = req.body.firstname;
-  utilService.checkUndefined(firstname);
+  var password = req.body.password;
+  utilService.checkUndefined(password);
+  var name = req.body.name;
+  utilService.checkUndefined(name);
   var lastname = req.body.lastname;
   utilService.checkUndefined(lastname);
 
   var filter = [];
   filter.push(['username', '=', req.body.username]);
 
-  var cryptedPassword = cryptService.hash(req.body.username, req.body.password1);
+  console.log('about to hash');
+  var cryptedPassword = cryptService.hash(req.body.username, req.body.password);
+  console.log('cryptedPassword: ' + cryptedPassword);
 
   qs.select(['*'], ['user'], filter, function(err, rows) {
     if (err) throw rows;
@@ -81,7 +82,7 @@ router.post('/signUp', function(req, res) {
     } else {
       // username is available
       var columns = ['username', 'password', 'name', 'lastname'];
-      var values = [username, cryptedPassword, firstname, lastname];
+      var values = [username, cryptedPassword, name, lastname];
       qs.insert('user', columns, values, function(err, rows) {
         if (err) throw err;
         req.user.session = req.body.username;

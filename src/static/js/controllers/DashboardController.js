@@ -46,8 +46,6 @@
       ROUTE.GET_FOLDERS_FAIL
     );
 
-
-
     // Function Implementation
     function clearSearch() {
       vm.search = '';
@@ -382,15 +380,15 @@
         var focusFolder = vm.user.folderHM[folderName];
         console.log('focusFolder');
         console.log(focusFolder);
-        for ( var i = 0 ; i < focusFolder.bookmarks.length ; i++) {
-          var focus = focusFolder.bookmarks[i];
-          if (focus.title === bookmark.title) {
-            focusFolder.bookmarks.splice(i, 1);
-            break;
+        if (focusFolder) {
+          for ( var i = 0 ; i < focusFolder.bookmarks.length ; i++) {
+            var focus = focusFolder.bookmarks[i];
+            if (focus.title === bookmark.title) {
+              focusFolder.bookmarks.splice(i, 1);
+              break;
+            }
           }
         }
-        console.log('focusFolder');
-        console.log(focusFolder);
       }
     });
     $scope.$on(ROUTE.DELETE_BOOKMARK_FAIL, function(event, data) {

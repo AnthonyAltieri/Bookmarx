@@ -8,11 +8,11 @@ CryptService.comparePassword = comparePassword;
 var salt = "ourSalt";
 
 function hash(username, password) {
-  return bcrypt.hashSync(password+username+salt);
+  return bcrypt.hashSync(password + username + salt);
 }
 
 function comparePassword(username, password, hash) {
-  return bcrypt.compareSync(password+username+salt, hash);
+  return bcrypt.compareSync(password + username + salt, hash);
 }
 
-module.export = CryptService;
+module.exports = CryptService;

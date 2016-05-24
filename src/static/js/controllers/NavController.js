@@ -79,6 +79,7 @@ function showNavSlider(navSlider) { navSlider.classList.remove('nav__slider-hide
         tag2: $scope.add.tag2,
         tag3: $scope.add.tag3,
         tag4: $scope.add.tag4,
+        folder: $scope.add.folder,
         star: '0',
         counter: 0
       }

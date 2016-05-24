@@ -8,7 +8,7 @@
   LogInController.$inject = ['$scope', '$rootScope', '$state', 'ServerService', 'localStorageService'];
 
   function LogInController($scope, $rootScope, $state, ServerService, localStorageService) {
-    const vm = this;
+    var vm = this;
 
     vm.modeLogIn = true;
     vm.modeSignUp = false;
@@ -127,9 +127,15 @@
       console.log('msg: ' + data.msg);
       console.log('data');
       console.log(data);
-      localStorageService.cookie.set('username', data.user.username);
-      $rootScope.$broadcast('show-nav');
-      $state.go('dashboard');
+      if (data.success) {
+        localStorageService.cookie.set('username', data.user.username);
+        $rootScope.$broadcast('show-nav');
+        $state.go('dashboard');
+      } else {
+        // Couldn't find the user
+        // TODO: toast or something
+        return;
+      }
     });
     $scope.$on(ROUTE.LOGIN_FAIL, function(event, data) {
       console.log(event);
@@ -139,11 +145,11 @@
     $scope.$on(ROUTE.SIGNUP_SUCCESS, function(event, data) {
       console.log(event);
       console.log('msg: ' + data.msg);
-    })
+    });
     $scope.$on(ROUTE.SIGNUP_FAIL, function(event, data) {
       console.log(event);
       console.log('msg: ' + data.msg);
-    })
+    });
 
   }
 })();
