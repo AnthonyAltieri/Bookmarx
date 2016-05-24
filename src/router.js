@@ -14,19 +14,18 @@ router.get('/', function(req, res) {
 
 // API
 router.post('/login', function(req, res) {
-  // TODO: EncryptionService
+  // if (req.session) req.session.destroy();
+
   utilService.checkUndefined(req.body);
   utilService.checkUndefined(req.body.username);
   utilService.checkUndefined(req.body.password);
-
+  
   var cryptedPassword = cryptService.hash(req.body.username, req.body.password);
-
   var filter = [];
   filter.push(['username', '=', req.body.username]);
   filter.push('and');
   filter.push(['password', '=', cryptedPassword]);
   qs.select(['*'], ['user'], filter, function(err, rows) {
-    console.log('in callback');
     if (err) throw err;
 
     // If there was not just 1 person found, this attempt has been unsuccessful
@@ -37,6 +36,9 @@ router.post('/login', function(req, res) {
         success: false
       })
     } else {
+      // res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      // res.header('Expires', '-1');
+      // res.header('Pragma', 'no-cache');
       req.session.user = req.body.username;
       res.send({
         user: rows[0],
@@ -53,7 +55,8 @@ router.post('/logout', function(req, res) {
 })
 
 router.post('/signUp', function(req, res) {
-  console.log('in /signup');
+  // if (req.session) req.session.destroy();
+  
   utilService.checkUndefined(req.body);
   var username = req.body.username;
   utilService.checkUndefined(username);
@@ -98,9 +101,9 @@ router.post('/signUp', function(req, res) {
 
 router.post('/folder/get', function(req, res) {
 
-  // if (!req.session) {
-  //   res.redirect("/");
-  // }
+  if (!req.session.user) {
+    res.redirect("/");
+  }
 
   utilService.checkUndefined(req.body);
   var username = req.body.username;
@@ -116,14 +119,17 @@ router.post('/folder/get', function(req, res) {
     console.log(rows);
 
     var data = { rows: rows };
+    // res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    //   res.header('Expires', '-1');
+    //   res.header('Pragma', 'no-cache');
     res.send(data);
   });
 });
 
 router.post('/user/bookmarks/get', function(req, res) {
-  // if (!req.session) {
-  //   res.redirect("/");
-  // }
+  if (!req.session.user) {
+    res.redirect("/");
+  }
 
   utilService.checkUndefined(req.body);
   var username = req.body.username;
@@ -139,14 +145,17 @@ router.post('/user/bookmarks/get', function(req, res) {
     console.log(rows);
 
     var data = { rows: rows };
+    // res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    //   res.header('Expires', '-1');
+    //   res.header('Pragma', 'no-cache');
     res.send(data);
   });
 });
 
 router.post('/user/bookmarks/add', function(req, res) {
-  // if (!req.session) {
-  //   res.redirect("/");
-  // }
+  if (!req.session.user) {
+    res.redirect("/");
+  }
 
   utilService.checkUndefined(req.body);
   var username = req.body.username;
@@ -165,6 +174,9 @@ router.post('/user/bookmarks/add', function(req, res) {
     console.log('rows select');
     console.log(rows);
     if (rows.length > 0) {
+      // res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      // res.header('Expires', '-1');
+      // res.header('Pragma', 'no-cache');
       res.send(null);
     } else {
       var columns = ['username', 'title', 'url', 'description', 'star', 'tag1', 'tag2',
@@ -210,9 +222,9 @@ router.post('/user/bookmarks/add', function(req, res) {
 });
 
 router.post('/folder/add', function(req, res) {
-  // if (!req.session) {
-  //   res.redirect("/");
-  // }
+  if (!req.session.user) {
+    res.redirect("/");
+  }
 
   var username = req.body.username;
   var name = req.body.name;
@@ -229,6 +241,9 @@ router.post('/folder/add', function(req, res) {
         bookmarks: [],
       };
       var data = {folder: folder};
+      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.header('Expires', '-1');
+      res.header('Pragma', 'no-cache');
       res.send(data);
     } else {
       console.log('something went wrong affectedRows should have been 1');
@@ -239,9 +254,9 @@ router.post('/folder/add', function(req, res) {
 });
 
 router.post('/folder/delete', function(req, res) {
-  // if (!req.session) {
-  //   res.redirect("/");
-  // }
+  if (!req.session.user) {
+    res.redirect("/");
+  }
 
   utilService.checkUndefined(req.body);
   utilService.checkUndefined(req.body.username);
@@ -268,6 +283,9 @@ router.post('/folder/delete', function(req, res) {
           username: username
         };
         var data = {folder: folderDeleted};
+        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.header('Expires', '-1');
+      res.header('Pragma', 'no-cache');
         res.send(data);
       });
     } else {
@@ -280,9 +298,9 @@ router.post('/folder/delete', function(req, res) {
 });
 
 router.post('/bookmark/delete', function(req, res) {
-  // if (!req.session) {
-  //   res.redirect("/");
-  // }
+  if (!req.session.user) {
+    res.redirect("/");
+  }
 
   utilService.checkUndefined(req.body);
   utilService.checkUndefined(req.body.bookmark);
@@ -301,6 +319,9 @@ router.post('/bookmark/delete', function(req, res) {
       // Everything went according to plan
 
       var data = {bookmark: bookmark};
+      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.header('Expires', '-1');
+      res.header('Pragma', 'no-cache');
       res.send(data);
     }
   })
@@ -308,9 +329,9 @@ router.post('/bookmark/delete', function(req, res) {
 });
 
 router.post('/bookmark/star', function(req, res) {
-  // if (!req.session) {
-  //   res.redirect("/");
-  // }
+  if (!req.session.user) {
+    res.redirect("/");
+  }
 
   utilService.checkUndefined(req.body);
   utilService.checkUndefined(req.body.bookmark);
@@ -338,7 +359,10 @@ router.post('/bookmark/star', function(req, res) {
     if (result.affectedRows === 1) {
       // Everything went according to plan
 
-      var data = {bookmark: bookmark}
+      var data = {bookmark: bookmark};
+      // res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      // res.header('Expires', '-1');
+      // res.header('Pragma', 'no-cache');
       res.send(data);
     }
   });
