@@ -6,12 +6,14 @@ var app = express();
 var path = require('path');
 var session = require('express-session');
 
+
 var mySession = session({
   secret: 'N0deJS1sAw3some',
   resave: true,
   saveUninitialized: true,
   cookie: { secure: false }
 });
+
 
 app.use(mySession);
 

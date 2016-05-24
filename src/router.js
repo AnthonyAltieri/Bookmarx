@@ -37,7 +37,7 @@ router.post('/login', function(req, res) {
         success: false
       })
     } else {
-      // req.user.session = req.body.username;
+      req.session.user = req.body.username;
       res.send({
         user: rows[0],
         msg: "Found the user",
@@ -85,13 +85,11 @@ router.post('/signUp', function(req, res) {
       var values = [username, cryptedPassword, name, lastname];
       qs.insert('user', columns, values, function(err, rows) {
         if (err) throw err;
-        // req.user.session = req.body.username;
-        console.log("before send");
+        req.user.session = req.body.username;
         res.send({
           msg: ('Created account for user: ' + username),
           success: true
         })
-        console.log("after send");
 
       })
     }
