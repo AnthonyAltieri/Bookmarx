@@ -1,4 +1,4 @@
-var db = require('../../../../School/CSE136/cse136_team10/db.js');
+var db = require('./db.js');
 var fs = require('fs');
 var path = require('path');
 
@@ -91,7 +91,7 @@ module.exports.exportBookmark = function(username, title, callback) {
  */
 module.exports.importBookmark = function(username, filename) {
   console.log('inside importBookmark, filename = ' + filename);
-  var pathToFile = __dirname + '/../public/uploads/' + filename;
+  var pathToFile = __dirname + '/public/uploads/' + filename;
   fs.readFile(pathToFile, function(err, data) {
     if (err) {
       if (fs.existsSync(pathToFile)){
@@ -177,6 +177,9 @@ module.exports.importBookmark = function(username, filename) {
 
 module.exports.exportFolder = function(username, folder, callback) {
   db.init();
+  if (!folder || folder === '') {
+    callback(false);
+  }
   console.log('in exportFolder()');
   var selectQueryString = "SELECT * FROM bookmark WHERE username = '" + username + "' AND "
     + "folder = '" + folder + "';";
@@ -192,18 +195,19 @@ module.exports.exportFolder = function(username, folder, callback) {
       return;
     }
     var filename = username + folder + ' export';
-    var pathToFile = __dirname + '/../public/exports/' + filename;
+    var pathToFile = __dirname + '/public/exports/' + filename;
+    console.log('pathToFile = ' + pathToFile);
     // Delete file if it already exists
     if (fs.existsSync(pathToFile)) {
       fs.unlinkSync(pathToFile);
     }
-    fs.appendFileSync(pathToFile, 'FOLDER:[' + folder + ']:');
+    fs.writeFileSync(pathToFile, 'FOLDER:[' + folder + ']:');
     console.log('about to write file at path = ' + pathToFile);
     for (var i = 0 ; i < rows.length ; i++) {
       var bookmark = rows[i];
       fs.appendFileSync(pathToFile, bookmarkToRowString(bookmark));
     }
-    callback();
+    callback(true);
   });
 };
 
@@ -211,7 +215,7 @@ module.exports.importFolder = function(username, filename, callback) {
   db.init();
   // check to see if the user exists
   var selectQueryString = "SELECT * FROM user WHERE username = '" + username + "';";
-  var pathToFile = __dirname + '/../public/uploads/' + filename;
+  var pathToFile = __dirname + '/public/uploads/' + filename;
   console.log('in importFolder');
   console.log('pathToFile = ' + pathToFile);
   console.log('about to query datbase with qs: ' + selectQueryString);
@@ -235,7 +239,7 @@ module.exports.importFolder = function(username, filename, callback) {
     if (splitContent.length != 3 || splitContent[0] != 'FOLDER') {
       console.error('Error: this is an invalid file');
       if (fs.existsSync(pathToFile)) {
-        fs.unlink(pathToFile);
+        fs.unlinkSync(pathToFile);
       }
       return;
     }
@@ -243,7 +247,7 @@ module.exports.importFolder = function(username, filename, callback) {
     if (typeof folderName === 'undefined') {
       console.error('ERROR: file incorrect');
       if (fs.existsSync(pathToFile)) {
-        fs.unlink(pathToFile);
+        fs.unlinkSync(pathToFile);
       }
       return;
     }
@@ -263,13 +267,16 @@ module.exports.importFolder = function(username, filename, callback) {
         counter++;
         if (result) console.log('Deleted ' + result.affectedRows + 'rows');
         if (counter === bookmarkRowStrings.length - 1) {
-          var addFolderQuery = "INSERT INTO folder (username, name) VALUES ('" + username + "', " + folderName
+          var addFolderQuery = "INSERT INTO folder (username, name) VALUES ('" + username + "', '" + folderName
             + "');";
+          console.log('addFolderQuery: ' + addFolderQuery);
           db.query(addFolderQuery, function(err, result) {
             if (err) {
+              console.log('err');
+              console.log(err);
               console.error('ERROR: failed to add folder');
+              return;
             }
-
           })
           for (var x = 0 ; x < bookmarkRowStrings.length - 1 ; x++) {
             bookmark = rowStringToBookmark(bookmarkRowStrings[x]);
@@ -290,21 +297,18 @@ module.exports.importFolder = function(username, filename, callback) {
             insertQueryString += " '" + bookmark.lastVisit + "',";
             insertQueryString += " '" + bookmark.counter + "',";
             insertQueryString += " '" + bookmark.folder + "');";
+            console.log('insertQueryString: ' + insertQueryString);
             db.query(insertQueryString, function(err, result) {
               if (err){
                 if (fs.existsSync(pathToFile)) {
-                  fs.unlink(pathToFile);
+                  fs.unlinkSync(pathToFile);
                 }
                 console.log('ERROR: ' + err.toString());
                 callback();
                 return;
               }
               if (i === bookmarkRowStrings.length - 1) {
-                if (fs.existsSync(pathToFile)) {
-                  fs.unlink(pathToFile);
-                }
                 callback();
-                return;
               }
             });
           }

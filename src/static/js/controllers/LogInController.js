@@ -12,14 +12,19 @@
     localStorageService.cookie.set('checkForCookiesAndJavascript', 'cse136');
     var cookie = localStorageService.cookie.get('checkForCookiesAndJavascript');
     var cookieCheck = {cookiesEnabled: false}
-    if (cookie) {
-      cookieCheck.cookiesEnabled = true;
-    } else {
-      ServerService.sendPost(cookieCheck,
-        ROUTE.ENABLE_COOKIE_PAGE,
-        ROUTE.ENABLE_COOKIE_PAGE_SUCCESS,
-        ROUTE.ENABLE_COOKIE_PAGE_FAIL
-      );
+    console.log('cookie: ' + cookie);
+    //if (cookie) {
+    //  cookieCheck.cookiesEnabled = true;
+    //} else {
+    //  ServerService.sendPost(cookieCheck,
+    //    ROUTE.ENABLE_COOKIE_PAGE,
+    //    ROUTE.ENABLE_COOKIE_PAGE_SUCCESS,
+    //    ROUTE.ENABLE_COOKIE_PAGE_FAIL
+    //  );
+    //}
+
+    if (localStorageService.cookie.get('goToDashboard')) {
+      $state.go('dashboard');
     }
 
     var vm = this;

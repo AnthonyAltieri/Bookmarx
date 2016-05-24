@@ -1,20 +1,24 @@
 'use strict';
-var INSERT = 'INSERT';
-var SELECT = 'SELECT';
-var DELETE = 'DELETE';
-var AND = 'AND';
-var OR = 'OR';
+const INSERT = 'INSERT';
+const SELECT = 'SELECT';
+const DELETE = 'DELETE';
+const AND = 'AND';
+const OR = 'OR';
 
-module.exports = function QueryService(database, utilService) {
-  var qs = {};
-  qs._db = database;
-  qs._db.init();
-  qs._utilService = utilService;
-  qs.select = select;
-  qs.insert = insert;
-  qs.delete = deleteQuery;
-  qs.update = update;
-
+module.exports = class QueryService {
+  /**
+   * The constructor to create a Query object which acts as a decorator
+   * between you and the MySQL database that we have set up in db.js
+   * @param db - A MYSQL database instance from db.js
+   */
+  constructor(database, utilService) {
+    if(typeof database === 'undefined' || typeof database.query === 'undefined'){
+      throw 'Error: Invalid Database';
+    }
+    this._db = database;
+    this._db.init();
+    this._utilService = utilService;
+  }
 
   /**
    * Performs a select on a MYSQL database
@@ -23,17 +27,17 @@ module.exports = function QueryService(database, utilService) {
    * @param filters - An array starting with a 3 tupule of strings in an array that is [columnName, operator, value]
    *                  and then a boolean value, either 'and' or 'or', before another tupule. Any superfluous boolean
    *                  operators will be ignored
-   * @param callback - The callback that is called when the query is compvared
+   * @param callback - The callback that is called when the query is completed
    */
-  function select(columns, tableName, filters, callback) {
+  select(columns, tableName, filters, callback) {
     if (typeof columns === 'undefined') throw 'Error: Invalid column';
     if (typeof tableName === 'undefined') throw 'Error: Invalid table name(s)';
     if (typeof filters === 'undefined') throw 'Error: Invalid filter';
-    var queryString = '';
+    let queryString = '';
     queryString += SELECT;
     queryString += ' ';
     // add column(s)
-    for (var i = 0 ; i < columns.length ; i++) {
+    for (let i = 0 ; i < columns.length ; i++) {
       queryString += columns[i];
       // Prepare for more variables if needed
       if (i < columns.length - 1) {
@@ -45,11 +49,11 @@ module.exports = function QueryService(database, utilService) {
     queryString += 'FROM ' + tableName;
     if (filters != null) {
       queryString += ' WHERE ';
-      for (var i = 0 ; i < filters.length ; i++) {
+      for (let i = 0 ; i < filters.length ; i++) {
         // Every odd index will have a 3 tupule
-        var isTupule = !(i % 2);
+        let isTupule = !(i % 2);
         if (isTupule) {
-          var filter = filters[i];
+          const filter = filters[i];
           console.log(filter);
 
           queryString += filter[0];
@@ -60,7 +64,7 @@ module.exports = function QueryService(database, utilService) {
         } else {
           // Never end with a boolean operator
           if (i != filters.length - 1){
-            var booleanOperator = filters[i];
+            let booleanOperator = filters[i];
             queryString += (' ' + booleanOperator + ' ');
           }
         }
@@ -71,20 +75,20 @@ module.exports = function QueryService(database, utilService) {
     this._db.query(queryString, callback)
   }
 
-  function deleteQuery(tableName, filters, callback) {
+  delete(tableName, filters, callback) {
     if (typeof tableName === 'undefined') throw 'Error: Invalid table name(s)';
     if (typeof filters === 'undefined') throw 'Error: Invalid specifications';
-    var queryString = 'DELETE FROM';
+    let queryString = 'DELETE FROM';
     queryString += ' ';
     queryString += tableName;
     queryString += ' ';
     queryString += 'WHERE';
     queryString += ' ';
-    for (var i = 0 ; i < filters.length ; i++) {
+    for (let i = 0 ; i < filters.length ; i++) {
       // Every odd index will have a 3 tupule
-      var isTupule = !(i % 2);
+      let isTupule = !(i % 2);
       if (isTupule) {
-        var filter = filters[i];
+        const filter = filters[i];
         console.log(filter);
 
         queryString += filter[0];
@@ -95,26 +99,26 @@ module.exports = function QueryService(database, utilService) {
       } else {
         // Never end with a boolean operator
         if (i != filters.length - 1){
-          var booleanOperator = filters[i];
+          let booleanOperator = filters[i];
           queryString += (' ' + booleanOperator + ' ');
         }
       }
     }
     queryString += ';';
-    console.log('devare qs: ' + queryString);
+    console.log('delete qs: ' + queryString);
     this._db.query(queryString, callback);
   }
 
-  function insert(tableName, columns, values, callback) {
+  insert(tableName, columns, values, callback) {
     if (typeof tableName === 'undefined') throw 'Error: Invalid table name(s)';
     if (typeof columns === 'undefined') throw 'Error: Invalid columns';
     if (typeof values === 'undefined') throw 'Error: Invalid values';
-    var queryString = 'INSERT INTO';
+    let queryString = 'INSERT INTO';
     queryString += ' ';
     queryString += tableName;
     queryString += ' ';
     queryString += '(';
-    for (var i = 0 ; i < columns.length ; i++) {
+    for (let i = 0 ; i < columns.length ; i++) {
       queryString += columns[i];
       if (i < columns.length - 1) {
         queryString += ' ';
@@ -126,7 +130,7 @@ module.exports = function QueryService(database, utilService) {
     queryString += 'VALUES';
     queryString += ' ';
     queryString += '(';
-    for (var i = 0 ; i < values.length ; i++) {
+    for (let i = 0 ; i < values.length ; i++) {
       queryString += ("'" + values[i] + "'");
       if (i < values.length - 1) {
         queryString += ' ';
@@ -139,42 +143,46 @@ module.exports = function QueryService(database, utilService) {
     this._db.query(queryString, callback);
   }
 
-  function update(tableName, columnvalues, filters, callback) {
+  update(tableName, columnvalues, filters, callback) {
     console.log('inside update');
     console.log('columnvalues');
     console.log(columnvalues);
     console.log('filters');
     console.log(filters);
-    var queryString = 'UPDATE';
+    let queryString = 'UPDATE';
     queryString += ' ';
     queryString += tableName;
     queryString += ' ';
     queryString += 'SET';
     queryString += ' ';
-    for (var i = 0 ; i < columnvalues.length ; i++) {
-      var columnvalue = columnvalues[i];
-      console.log(columnvalues);
+    for (let i = 0 ; i < columnvalues.length ; i++) {
+      // Every odd index will have a 3 tupule
+      let isTupule = !(i % 2);
+      if (isTupule) {
+        const columnvalue = columnvalues[i];
+        console.log(columnvalues);
 
-      queryString += columnvalue[0];
-      queryString += ' ';
-      queryString += columnvalue[1];
-      queryString += ' ';
-      queryString += ("'" + columnvalue[2] + "'");
-
-      if (i < columnvalues.length - 1) {
-        // not on last iteration
-        queryString += ' , '
+        queryString += columnvalue[0];
+        queryString += ' ';
+        queryString += columnvalue[1];
+        queryString += ' ';
+        queryString += ("'" + columnvalue[2] + "'");
+      } else {
+        // Never end with a boolean operator
+        if (i != columnvalues.length - 1){
+          let booleanOperator = columnvalues[i];
+          queryString += (' ' + booleanOperator + ' ');
+        }
       }
-
     }
     queryString += ' ';
     queryString += 'WHERE';
     queryString += ' ';
-    for (var i = 0 ; i < filters.length ; i++) {
+    for (let i = 0 ; i < filters.length ; i++) {
       // Every odd index will have a 3 tupule
-      var isTupule = !(i % 2);
+      let isTupule = !(i % 2);
       if (isTupule) {
-        var filter = filters[i];
+        const filter = filters[i];
         console.log(filter);
 
         queryString += filter[0];
@@ -185,7 +193,7 @@ module.exports = function QueryService(database, utilService) {
       } else {
         // Never end with a boolean operator
         if (i != filters.length - 1){
-          var booleanOperator = filters[i];
+          let booleanOperator = filters[i];
           queryString += (' ' + booleanOperator + ' ');
         }
       }
@@ -195,6 +203,27 @@ module.exports = function QueryService(database, utilService) {
     this._db.query(queryString, callback);
   }
 
-  return qs;
 
+
+  /**
+   * Static helper method to check an object against a type
+   * @param object - the object being checked
+   * @param type - the type that the object is being checked for
+   * @returns - true if the item matches the type and false otherwise
+   */
+  static typeCheck(object, type) {
+    return (typeof object === type);
+  }
+
+  /**
+   * Static helper method to check if an object is undefined
+   * @param object - the object being checked
+   * @returns - true if object is undefined and false otherwise
+   */
+  static isUndefined(object) {
+    return this.typeCheck(object, 'undefined')
+  }
 }
+
+
+

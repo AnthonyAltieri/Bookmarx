@@ -5,6 +5,10 @@ var bodyParser = require('body-parser');
 var app = express();
 var path = require('path');
 var session = require('express-session');
+var multer = require('multer');
+var upload = multer({
+  dest: './public/uploads/'
+}).single('filename');
 
 
 var mySession = session({
@@ -16,6 +20,7 @@ var mySession = session({
 
 
 app.use(mySession);
+
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());

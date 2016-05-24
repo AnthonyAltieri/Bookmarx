@@ -54,8 +54,9 @@ function showNavSlider(navSlider) { navSlider.classList.remove('nav__slider-hide
     }
 
     function saveBookmark() {
-      if (!$scope.add.url || $scope.add.url.trim('').length === 0 || !validUrl($scope.add.url)) {
+      if (!$scope.add.url || $scope.add.url.trim('').length === 0 || !checkURL($scope.add.url)) {
         humane.log('You must have a valid url (example: http://google.com)');
+        return;
       }
       if (!$scope.add.tag1 || $scope.add.tag1.trim('').length === 0) {
         $scope.add.tag1 = 'null';
@@ -83,6 +84,7 @@ function showNavSlider(navSlider) { navSlider.classList.remove('nav__slider-hide
         tag3: $scope.add.tag3,
         tag4: $scope.add.tag4,
         folder: $scope.add.folder,
+        url: $scope.add.url,
         star: '0',
         counter: 0
       };
@@ -121,8 +123,17 @@ function showNavSlider(navSlider) { navSlider.classList.remove('nav__slider-hide
       return ('' + year + '-' + month + '-' + day);
     }
 
-    function validUrl() {
-      return /^(ftp|https?):\/\/+(www\.)?[a-z0-9\-\.]{3,}\.[a-z]{3}$/.test(validUrl().arguments[0]);
+
+    function checkURL(url) {
+      var chars = url.split('');
+      if (chars[0].toLowerCase() != 'h' && chars[1].toLowerCase() != 't' && chars[2].toLowerCase() != 't'
+          && chars[3].toLowerCase() != 'p') {
+        return false;
+      }
+      var urlExpression = /((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z0-9\&\.\/\?\:@\-_=#])*/;
+      var urlRegex = new RegExp(urlExpression);
+
+      return urlRegex.test(url);
     }
 
     $rootScope.$on('hide-nav', function(event, data) {

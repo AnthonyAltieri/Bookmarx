@@ -1,6 +1,6 @@
 'use strict';
 
-var QueryService = require('./QueryService.js');
+var QueryService = require('./QueryServiceOld.js');
 var db = require('./db.js');
 
 var qs = new QueryService(db);

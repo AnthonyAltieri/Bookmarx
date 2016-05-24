@@ -6,15 +6,18 @@
     .controller('DashboardController', DashboardController);
 
 
-  DashboardController.$inject = ['$rootScope', '$scope', '$state','localStorageService', 'ServerService'];
+  DashboardController.$inject = ['$rootScope', '$scope', '$state', '$interval', 'localStorageService',
+                                 'ServerService'];
 
-  function DashboardController($rootScope, $scope, $state, localStorageService, ServerService) {
+  function DashboardController($rootScope, $scope, $state, $interval, localStorageService, ServerService) {
     var vm = this;
 
-    if (localStorageService.get('username') === null) {
-      humane.log('Something went wrong, try to log in again', {addCls: 'humane-flatty-error'});
+    if (localStorageService.cookie.get('username') === null) {
+      humane.log('Please log in again', {addCls: 'humane-flatty-error'});
       $state.go('login');
     }
+
+    $rootScope.$broadcast('show-nav');
 
     // Functions
     vm.clearSearch = clearSearch;
@@ -26,6 +29,10 @@
     vm.deleteFolder = deleteFolder;
     vm.deleteBookmark = deleteBookmark;
     vm.goToBookmark = goToBookmark;
+    vm.exportFolder = exportFolder;
+    vm.exportBookmark = exportBookmark;
+    vm.editBookmark = editBookmark;
+    vm.saveChanges = saveChanges;
 
     // Objects
     vm.user = {};
@@ -34,12 +41,14 @@
     vm.user.activeFolder = null;
     vm.user.folders = [];
     vm.user.folderHM = {};
+    vm.bookmarkEdit = {};
 
     console.log('user');
     console.log(vm.user);
 
     // UI Flag Inits
     vm.showOverlay = false;
+    vm.editBookmarkMode = false;
 
 
     ServerService.sendPost({username: vm.user.name},
@@ -85,9 +94,16 @@
       vm.showOverlay = true;
     }
 
-    function clickOverlay() {
+    function clickOverlay(changedTitle) {
       if (vm.showOverlay) {
         vm.showOverlay = false;
+      }
+      if (vm.editBookmarkMode) {
+        if (changedTitle) {
+          vm.editBookmarkMode = false;
+        } else {
+          vm.bookmarkEdit.title = vm.bookmarkEdit.oldTitle;
+        }
       }
     }
 
@@ -152,12 +168,103 @@
 
     function goToBookmark(bookmark) {
       console.log('goToBookmark');
+      var data = {
+        bookmark: bookmark
+      };
+      ServerService.sendPost(data,
+        ROUTE.USED_BOOKMARK,
+        ROUTE.USED_BOOKMARK_SUCCESS,
+        ROUTE.USED_BOOKMARK_FAIL
+      );
       var url = bookmark.url;
       window.location.href = url;
     }
 
+    function exportFolder() {
+      if (vm.user.activeFolder.name === 'all') {
+        humane.log('You cannot export all', {addCls: 'humane-flatty-error'});
+        return;
+      }
+      var data = {
+        name: vm.user.activeFolder.name
+      };
+      ServerService.sendPost(data,
+        ROUTE.EXPORT_FOLDER,
+        ROUTE.EXPORT_FOLDER_SUCCESS,
+        ROUTE.EXPORT_BOOKMARK_FAIL
+      );
+    }
+
+    function exportBookmark(bookmark) {
+      var data = {
+        title: bookmark.title,
+      };
+      ServerService.sendPost(data,
+        ROUTE.EXPORT_BOOKMARK,
+        ROUTE.EXPORT_BOOKMARK_SUCCESS,
+        ROUTE.EXPORT_FOLDER_FAIL
+      );
+    }
+
+    function importBookmark(file) {
+      console.log(file);
+      //ServerService.sendPost({},
+      //  ROUTE.IMPORT_BOOKMARK,
+      //  ROUTE.IMPORT_BOOKMARK_SUCCESS,
+      //  ROUTE.IMPORT_BOOKMARK_FAIL
+      //);
+    }
+
+    function editBookmark(bookmark) {
+      vm.showOverlay = true;
+      vm.editBookmarkMode = true;
+      if (!bookmark.description || bookmark.description.trim().length === 0) {
+        bookmark.description = '';
+      }
+      if (!isValidTag(bookmark.tag1)) {
+        bookmark.tag1 = '';
+      }
+      if (!isValidTag(bookmark.tag2)) {
+        bookmark.tag2 = '';
+      }
+      if (!isValidTag(bookmark.tag3)) {
+        bookmark.tag3 = '';
+      }
+      if (!isValidTag(bookmark.tag4)) {
+        bookmark.tag4 = '';
+      }
+      vm.bookmarkEdit = bookmark;
+      vm.bookmarkEdit.oldTitle = bookmark.title;
+    }
+
+    function saveChanges() {
+      console.log('saveChanges');
+      var bookmark = vm.bookmarkEdit;
+      console.log('using this bookmark');
+      console.log(bookmark);
+      var data = {bookmark: bookmark};
+      ServerService.sendPost(data,
+        ROUTE.UPDATE_BOOKMARK,
+        ROUTE.UPDATE_BOOKMARK_SUCCESS,
+        ROUTE.UPDATE_BOOKMARK_FAIL
+      )
+    }
+
+    function isValidTag(tag) {
+      return !(!tag || tag.trim('').length === 0 || tag === 'null' || tag === 'NULL'
+      || tag === null);
+
+    }
+
+
+
     // Watchers
     $scope.$on(ROUTE.GET_FOLDERS_SUCCESS, function(event, data) {
+      if (data.error) {
+        humane.log('Server error try again later', {addCls: 'humane-flatty-error'})
+        $state.go('login');
+        return;
+      }
       console.log('data');
       console.log(data);
       var rows = data.rows;
@@ -190,6 +297,11 @@
     });
 
     $scope.$on(ROUTE.GET_BOOKMARKS_SUCCESS , function(event, data) {
+      if (data.error) {
+        humane.log('Server error try again later', {addCls: 'humane-flatty-error'})
+        $state.go('login');
+        return;
+      }
       console.log('in get_bookmark_success')
       console.log('data');
       console.log(data);
@@ -213,6 +325,10 @@
           bookmark.tags.push(bookmark.tag4);
         }
 
+        // Make sure star is a string
+        var star = parseInt(bookmark.star) + '';
+        bookmark.star = star;
+
         // Create a string for searching
         var searchstring = bookmark.title;
         for (i = 0 ; i < bookmark.tags.length ; i++) {
@@ -221,8 +337,8 @@
         bookmark.searchstring = searchstring;
 
         // Make the dates pretty
-        bookmark.creationDate = prettyDate(bookmark.creationDate);
-        bookmark.lastVisit = prettyDate(bookmark.lastVisit);
+        bookmark.creationDate = bookmark.creationDate.split('T')[0];
+        bookmark.lastVisit = bookmark.lastVisit.split('T')[0];
 
         // Add the bookmark to it's respective folders
         if (bookmark.folder === null) {
@@ -262,6 +378,11 @@
     });
 
     $scope.$on(ROUTE.ADD_BOOKMARK_SUCCESS, function(event, data) {
+      if (data.error) {
+        humane.log('Server error try again later', {addCls: 'humane-flatty-error'})
+        $state.go('login');
+        return;
+      }
       var bookmark = data.bookmark;
       if (!bookmark) {
         humane.log('This title has been already used, try another', {addCls: 'humane-flatty-error'});
@@ -290,6 +411,10 @@
         bookmark.tags.push(bookmark.tag4);
       }
 
+      // Make sure star is a string
+      var star = parseInt(bookmark.star) + '';
+      bookmark.star = star;
+
       // Create a string for searching
       var searchstring = bookmark.title;
       for (var i = 0 ; i < bookmark.tags.length ; i++) {
@@ -299,17 +424,17 @@
 
       // Make the dates pretty
       var date = new Date();
-      var prettyDate = '' + (date.getYear() + 1900) + '-' + date.getMonth() + '-' +
+      var prettyDateString = '' + (date.getYear() + 1900) + '-' + date.getMonth() + '-' +
         date.getDay();
       if (!bookmark.creationDate) {
-        bookmark.creationDate = prettyDate;
+        bookmark.creationDate = prettyDateString;
       } else {
-        bookmark.creationDate = prettyDate(bookmark.creationDate);
+        bookmark.creationDate = bookmark.creationDate.split('T')[0];
       }
       if (!bookmark.lastVisit) {
-        bookmark.lastVisit= prettyDate;
+        bookmark.lastVisit = prettyDateString;
       } else {
-        bookmark.creationDate = prettyDate(bookmark.creationDate);
+        bookmark.lastVisit = bookmark.lastVisit.split('T')[0];
       }
       if (bookmark.folder === 'null') {
         vm.user.noFolderBookmarks.push(bookmark);
@@ -331,6 +456,10 @@
     });
 
     $scope.$on(ROUTE.ADD_FOLDER_SUCCESS, function(event, data) {
+      if (data.error) {
+        humane.log('Server error try again later', {addCls: 'humane-flatty-error'})
+        return;
+      }
       var folder = data.folder;
       vm.user.folderHM[folder.name] = folder;
       vm.user.folders.push(folder);
@@ -340,6 +469,11 @@
     });
 
     $scope.$on(ROUTE.DELETE_FOLDER_SUCCESS, function(event, data) {
+      if (data.error) {
+        humane.log('Server error try again later', {addCls: 'humane-flatty-error'})
+        $state.go('login');
+        return;
+      }
       console.log('in DELETE_FOLDER_SUCC');
       console.log('data');
       console.log(data);
@@ -369,6 +503,11 @@
     });
 
     $scope.$on(ROUTE.DELETE_BOOKMARK_SUCCESS, function(event, data) {
+      if (data.error) {
+        humane.log('Server error try again later', {addCls: 'humane-flatty-error'})
+        $state.go('login');
+        return;
+      }
       console.log('in DELETE_BOOKMARK_SUCC');
       console.log('data');
       console.log(data);
@@ -404,22 +543,122 @@
     });
 
     $scope.$on(ROUTE.STAR_BOOKMARK_SUCCESS, function(event, data) {
+      if (data.error) {
+        humane.log('Server error try again later', {addCls: 'humane-flatty-error'})
+        $state.go('login');
+        return;
+      }
       console.log('in star bookmark success');
       var bookmark = data.bookmark;
       console.log('bookmark');
       console.log(bookmark);
       var allFolder = vm.user.folderHM['all'];
-      for (var i = 0 ; i < allFolder.bookmarks.length ; i++) {
-        if (bookmark.title === allFolder.bookmarks[i].title) {
-          console.log('the boomark used to be');
-          console.log(allFolder.bookmarks[i]);
-          allFolder.bookmarks[i].star = (bookmark.star === '0') ? '1' : '0';
-          break;
+      if (allFolder) {
+        for (var i = 0 ; i < allFolder.bookmarks.length ; i++) {
+          if (bookmark.title === allFolder.bookmarks[i].title) {
+            console.log('the boomark used to be');
+            console.log(allFolder.bookmarks[i]);
+            allFolder.bookmarks[i].star = (bookmark.star === '0') ? '1' : '0';
+            break;
+          }
         }
       }
     });
     $scope.$on(ROUTE.STAR_BOOKMARK_FAIL, function(event, data) {
     });
+
+    $scope.$on(ROUTE.USED_BOOKMARK_SUCCESS, function(event, data) {
+      var bookmark = data.bookmark;
+      var focusFolder = bookmark.folder;
+      if (!focusFolder) {
+        var allFolder = vm.user.folderHM['all'];
+        for (var i = 0 ; i < allFolder.bookmarks.lengh ; i++) {
+          var curBookmark = allFolder.bookmarks[i];
+          if (bookmark.title === curBookmark.title) {
+            curBookmark.counter = bookmark.counter;
+            curBookmark.lastVisit = bookmark.lastVisit;
+            break;
+          }
+        }
+      } else {
+        var folder = vm.user.folderHM[focusFolder];
+        for (var i = 0 ; i < folder.bookmarks.length ; i++) {
+          var curBookmark = folder.bookmarks[i];
+          if (bookmark.title === curBookmark.title) {
+            curBookmark.counter = bookmark.counter;
+            curBookmark.lastVisit = bookmark.lastVisit;
+            break;
+          }
+        }
+      }
+    });
+    $scope.$on(ROUTE.USED_BOOKMARK_FAIL, function(event, data) {
+    });
+
+    $scope.$on(ROUTE.CHECK_SESSION_SUCCESS, function(event, data) {
+      if (data.error) {
+        humane.log('Session interrupted, please log back on', {addCls: 'humane-flatty-error'});
+        $state.go('login');
+      }
+    });
+    $scope.$on(ROUTE.CHECK_SESSION_FAIL, function(event, data) {
+    })
+
+    $scope.$on(ROUTE.UPDATE_BOOKMARK_SUCCESS, function(event, data) {
+      console.log('in update_bookmark_success');
+      if (!data) {
+        humane.log('That title is invalid or has already been used, try another one', {addCls:'humane-flatty-error'});
+        vm.clickOverlay(false)
+        console.log('vm.bookmarkEdit');
+        console.log(vm.bookmarkEdit);
+      } else {
+        var bookmark = data.bookmark;
+        var focusFolder = bookmark.folder;
+        if (!focusFolder) {
+          var allFolder = vm.user.folderHM['all'];
+          for (var i = 0 ; i < allFolder.bookmarks.lengh ; i++) {
+            var curBookmark = allFolder.bookmarks[i];
+            if (bookmark.title === curBookmark.title) {
+              curBookmark = bookmark;
+              break;
+            }
+          }
+        } else {
+          var folder = vm.user.folderHM[focusFolder];
+          for (var i = 0 ; i < folder.bookmarks.length ; i++) {
+            var curBookmark = folder.bookmarks[i];
+            if (bookmark.title === curBookmark.title) {
+              curBookmark = bookmark;
+              break;
+            }
+          }
+        }
+        bookmark.tags = [];
+        if (bookmark.tag1 !=  'null' && bookmark.tag1.trim('').length != 0) {
+          bookmark.tags.push(bookmark.tag1);
+        }
+        if (bookmark.tag2 !=  'null' && bookmark.tag2.trim('').length != 0) {
+          bookmark.tags.push(bookmark.tag2);
+        }
+        if (bookmark.tag3 !=  'null' && bookmark.tag3.trim('').length != 0) {
+          bookmark.tags.push(bookmark.tag3);
+        }
+        if (bookmark.tag4 !=  'null' && bookmark.tag4.trim('').length != 0) {
+          bookmark.tags.push(bookmark.tag4);
+        }
+        var searchString = '';
+        searchString += bookmark.title;
+        searchString += ' ';
+        for (var i = 0 ; i < bookmark.tags.length ; i++) {
+          searchString += (bookmark.tags[i] + ' ');
+        }
+        bookmark.searchstring = searchString;
+        vm.clickOverlay(true)
+      }
+    });
+
+    $scope.$on(ROUTE.UPDATE_BOOKMARK_FAIL, function(event, data) {
+    })
 
   }
 })();
