@@ -1,18 +1,9 @@
 var CryptService = [];
-
-var bcrypt = require('bcryptjs');
+var bcrypt = require('./md5');
 
 CryptService.hash = hash;
-CryptService.comparePassword = comparePassword;
-
-var salt = "ourSalt";
 
 function hash(username, password) {
-  return bcrypt.hashSync(password + username + salt);
+  return md5(password, username);
 }
-
-function comparePassword(username, password, hash) {
-  return bcrypt.compareSync(password + username + salt, hash);
-}
-
 module.exports = CryptService;
