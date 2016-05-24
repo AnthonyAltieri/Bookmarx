@@ -6,8 +6,11 @@
   "dependencies": {
     "angular-local-storage": "^0.2.7",
     "angular-ui-router": "^0.3.0",
+    "bcrypt": "^0.8.6",
+    "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.1",
     "express": "^4.13.4",
+    "express-session": "^1.13.0",
     "mysql": "^2.10.2"
   },
   "devDependencies": {},

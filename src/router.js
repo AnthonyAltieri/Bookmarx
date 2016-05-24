@@ -6,6 +6,7 @@ var db = require('./db.js');
 var QueryService = require('./QueryService.js');
 var utilService = require('./UtilService.js');
 var qs = new QueryService(db, utilService);
+var cryptService = require('./CryptService.js');
 
 router.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '/index.html'));
@@ -17,10 +18,13 @@ router.post('/login', function(req, res) {
   utilService.checkUndefined(req.body);
   utilService.checkUndefined(req.body.username);
   utilService.checkUndefined(req.body.password);
+
+  var cryptedPassword = cryptService.hash(req.body.username, req.body.password);
+
   var filter = [];
   filter.push(['username', '=', req.body.username]);
   filter.push('and');
-  filter.push(['password', '=', req.body.password]);
+  filter.push(['password', '=', cryptedPassword]);
   qs.select(['*'], ['user'], filter, function(err, rows) {
     console.log('in callback');
     if (err) throw err;
@@ -33,6 +37,7 @@ router.post('/login', function(req, res) {
         success: false
       })
     } else {
+      req.user.session = req.body.username;
       res.send({
         user: rows[0],
         msg: "Found the user",
@@ -41,6 +46,11 @@ router.post('/login', function(req, res) {
     }
   });
 });
+
+router.post('/logout', function(req, res) {
+  req.session.destroy();
+  res.redirect('/');
+})
 
 router.post('/signUp', function(req, res) {
   utilService.checkUndefined(req.body);
@@ -58,6 +68,8 @@ router.post('/signUp', function(req, res) {
   var filter = [];
   filter.push(['username', '=', req.body.username]);
 
+  var cryptedPassword = cryptService.hash(req.body.username, req.body.password1);
+
   qs.select(['*'], ['user'], filter, function(err, rows) {
     if (err) throw rows;
     // This username is taken
@@ -69,9 +81,10 @@ router.post('/signUp', function(req, res) {
     } else {
       // username is available
       var columns = ['username', 'password', 'name', 'lastname'];
-      var values = [username, password1, firstname, lastname];
+      var values = [username, cryptedPassword, firstname, lastname];
       qs.insert('user', columns, values, function(err, rows) {
         if (err) throw err;
+        req.user.session = req.body.username;
         res.send({
           msg: ('Created account for user: ' + username),
           success: true
@@ -83,6 +96,11 @@ router.post('/signUp', function(req, res) {
 });
 
 router.post('/folder/get', function(req, res) {
+
+  if (!req.session) {
+    res.redirect("/");
+  }
+
   utilService.checkUndefined(req.body);
   var username = req.body.username;
   utilService.checkUndefined(username);
@@ -102,6 +120,10 @@ router.post('/folder/get', function(req, res) {
 });
 
 router.post('/user/bookmarks/get', function(req, res) {
+  if (!req.session) {
+    res.redirect("/");
+  }
+
   utilService.checkUndefined(req.body);
   var username = req.body.username;
   utilService.checkUndefined(username);
@@ -121,6 +143,10 @@ router.post('/user/bookmarks/get', function(req, res) {
 });
 
 router.post('/user/bookmarks/add', function(req, res) {
+  if (!req.session) {
+    res.redirect("/");
+  }
+
   utilService.checkUndefined(req.body);
   var username = req.body.username;
   utilService.checkUndefined(username);
@@ -183,6 +209,10 @@ router.post('/user/bookmarks/add', function(req, res) {
 });
 
 router.post('/folder/add', function(req, res) {
+  if (!req.session) {
+    res.redirect("/");
+  }
+
   var username = req.body.username;
   var name = req.body.name;
 
@@ -208,6 +238,10 @@ router.post('/folder/add', function(req, res) {
 });
 
 router.post('/folder/delete', function(req, res) {
+  if (!req.session) {
+    res.redirect("/");
+  }
+
   utilService.checkUndefined(req.body);
   utilService.checkUndefined(req.body.username);
   utilService.checkUndefined(req.body.name);
@@ -245,6 +279,10 @@ router.post('/folder/delete', function(req, res) {
 });
 
 router.post('/bookmark/delete', function(req, res) {
+  if (!req.session) {
+    res.redirect("/");
+  }
+
   utilService.checkUndefined(req.body);
   utilService.checkUndefined(req.body.bookmark);
   utilService.checkUndefined(req.body.username);
@@ -269,6 +307,10 @@ router.post('/bookmark/delete', function(req, res) {
 });
 
 router.post('/bookmark/star', function(req, res) {
+  if (!req.session) {
+    res.redirect("/");
+  }
+
   utilService.checkUndefined(req.body);
   utilService.checkUndefined(req.body.bookmark);
   utilService.checkUndefined(req.body.username);
@@ -299,9 +341,9 @@ router.post('/bookmark/star', function(req, res) {
       res.send(data);
     }
   });
-
-
 });
+
+
 
 
 
