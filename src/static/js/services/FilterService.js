@@ -53,7 +53,7 @@
       var i;
       for (i = 0 ; i < bookmarks.length ; i++) {
         var bookmark = bookmarks[i];
-        urlToBookmarkHM[bookmark.url] = bookmark;
+        urlToBookmarkHM[bookmark.url + bookmark.title] = bookmark;
         urls.push(bookmark.url);
       }
       urls.sort();
@@ -71,8 +71,8 @@
       var i;
       for (i = 0 ; i < bookmarks.length ; i++) {
         var bookmark = bookmarks[i];
-        urlToBookmarkHM[bookmark.url] = bookmark;
-        urls.push(bookmark.url);
+        urlToBookmarkHM[bookmark.url + bookmark.title] = bookmark;
+        urls.push(bookmark.url + bookmark.title);
       }
       urls.sort();
       for (i = urls.length - 1 ; i >= 0 ; i--) {

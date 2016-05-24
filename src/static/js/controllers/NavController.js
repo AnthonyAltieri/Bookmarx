@@ -107,6 +107,14 @@ function showNavSlider(navSlider) { navSlider.classList.remove('nav__slider-hide
       $rootScope.$broadcast('hide-nav');
     }
 
+    function prettyDate(date) {
+      var year = date.getYear() + 1900;
+      var month = date.getMonth();
+      var day = date.getDay();
+
+      return ('' + year + '-' + month + '-' + day);
+    }
+
     $rootScope.$on('hide-nav', function(event, data) {
       var content = document.getElementById('content');
       content.classList.remove('no-nav');

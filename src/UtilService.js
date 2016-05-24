@@ -30,5 +30,13 @@ function checkString(s) {
   return ((s.trim() === "") || (s.trim() === "null") || (s.trim() === "NULL"));
 }
 
+function prettyDate(date) {
+  var year = date.getYear() + 1900;
+  var month = date.getMonth();
+  var day = date.getDay();
+
+  return ('' + year + '-' + month + '-' + day);
+}
+
 
 module.exports = UtilService;

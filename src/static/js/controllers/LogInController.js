@@ -33,6 +33,9 @@
     };
     activateModeLogIn();
 
+    // Hide navbar
+    $rootScope.$broadcast('hide-nav');
+
     function submitLogin(input) {
       var form = {
         username: input.username,

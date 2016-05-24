@@ -5,7 +5,7 @@ $desktop: "(min-width: 767px)";
 @import "RatingValidationIcons/font/flaticon.css";
 
 
-$nav__desktop-width: 280px;
+$nav__desktop-width: 244px;
 
 $nav__font-title: 'Yellowtail', cursive;
 $nav__font-item: 'Open Sans', sans-serif;
@@ -63,20 +63,35 @@ body {
 }
 
 .col-10 {
-  width: 10%;
+  width: 10% !important;
+  min-width: 10% !important;
+  max-width: 10% !important;
+  padding: 0 !important;
 }
 .col-33 {
-  width: 33.33%;
+  width: 33.33% !important;
+  min-width: 33.33% !important;
+  max-width: 33.33% !important;
+  padding: 0 !important;
 }
 .col-30 {
-  width: 30%;
+  width: 30% !important;
+  min-width: 30% !important;
+  max-width: 30% !important;
+  padding: 0 !important;
 }
 
 .col-25 {
-  width: 25%;
+  width: 25% !important;
+  min-width: 25% !important;
+  max-width: 25% !important;
+  padding: 0 !important;
 }
 .col-20 {
-  width: 20%;
+  width: 20% !important;
+  min-width: 20% !important;
+  max-width: 20% !important;
+  padding: 0 !important;
 }
 
 body {
@@ -87,6 +102,7 @@ body {
 #content {
   height: 100%;
   width: 100%;
+  min-width: 990px;
   position: fixed;
   padding-left: $nav__desktop-width;
 }
@@ -105,11 +121,11 @@ nav {
   position: fixed;
   z-index: 10;
 
-  @media #{$desktop} {
+  //@media #{$desktop} {
     width: $nav__desktop-width;
     height: 100vh;
 
-  }
+  //}
 
   //@media #{$mobile} {
   //  width: 100%;
@@ -122,7 +138,7 @@ nav {
 
   .title {
     font-family: $nav__font-title;
-    font-size: 3.8em;
+    font-size: 3.2em;
     font-weight: 700;
     margin: 0;
     padding: 8px 0;
@@ -147,12 +163,12 @@ nav {
   }
 
   .item {
-    width: 12em;
-    font-size: 1.0em;
+    width: 16em;
+    font-size: 0.7em;
     font-family: $nav__font-item;
     font-weight: 600;
     text-align: center;
-    padding: 16px 22px;
+    padding: 16px 7px;
     margin: 0 auto;
     color: $nav__color-item;
     background-color: $color-background;
@@ -188,6 +204,7 @@ nav {
 }
 
 #choose-bookmark {
+  width: 80%;
   margin: 0 auto;
 
 }
@@ -378,12 +395,10 @@ nav {
 
 .card-bookmarks__header {
   height: $card-bookmarks__header-height;
-  padding: 8px 0;
   background: $color-grey;
   border-radius: 3px;
   display: flex;
   justify-content: space-around;
-  padding-left: 12px;
 }
 
 .card-bookmarks__header-text {
@@ -392,12 +407,13 @@ nav {
   margin-top: 0;
   margin-bottom: 0;
   font-family: $font-default;
-  font-size: 1.3em;
+  font-size: .8em;
   text-align: center;
   color: white;
 }
 
 .card-bookmarks__content {
+  width: 100%;
   border-radius: 3px;
   display: flex;
   flex-flow: row;
@@ -412,6 +428,16 @@ nav {
     color: #333;
     padding: 10px 14px;
     text-align: center;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+  }
+
+  tr {
+    width: 100.05% ;
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
   }
 
   tr:nth-child(even) {
@@ -430,8 +456,8 @@ nav {
 }
 .icon-clear:before {
   display: inline-block;
-  font-size: 0.8em !important;
-  padding: 8px;
+  font-size: 0.7em !important;
+  padding: 6px;
   border-radius: 3px;
   background-color: $color-grey;
   color: #FAFAFA;
@@ -445,8 +471,8 @@ nav {
 
 .icon-star:before {
   display: inline-block;
-  font-size: 0.8em !important;
-  padding: 8px;
+  font-size: 0.7em !important;
+  padding: 6px;
   border-radius: 3px;
   background-color: $color-grey;
   color: #FAFAFA;
@@ -463,8 +489,8 @@ nav {
 .icon-star__selected:before {
   color: #FFFE3B !important;
   display: inline-block;
-  font-size: 0.8em !important;
-  padding: 8px;
+  font-size: 0.7em !important;
+  padding: 6px;
   border-radius: 3px;
   background-color: $color-grey;
   cursor: pointer;
@@ -481,12 +507,12 @@ nav {
   background-color: $color-grey;
   border: 1px solid $color-grey;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 9px;
   color: #fafafa;
   height: 28px;
   line-height: 28px;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-left: 3px;
+  padding-right: 3px;
   position: relative;
   width: 36px;
   top: 3px;
@@ -501,7 +527,7 @@ nav {
 }
 
 .card-bookmarks__item {
-  font-size: 1.0em !important;
+  font-size: .85em !important;
   font-family: $font-default;
   color: $color-grey;
 }
@@ -515,14 +541,20 @@ nav {
   text-align: left;
 }
 .card-bookmarks__item-tag {
-  font-size: 0.55em;
+  font-size: 0.40em;
   display: inline-block;
-  padding: 6px 8px;
-  margin: 0 8px;
+  padding: 4px 6px;
+  margin: 2px 4px;
   border-radius: 5px;
   background-color: $color-grey;
   color: #FAFAFA;
   @extend .no-textsel
+}
+.row-tag {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  margin: 2px 0 !important;
 }
 
 .card-folders {
@@ -734,9 +766,9 @@ nav {
   bottom: 0;
   right: 0;
 
-  @media #{$desktop} {
+  //@media #{$desktop} {
     left: $nav__desktop-width;
-  }
+  //}
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.25);
   z-index: 80;
@@ -816,3 +848,7 @@ nav {
   height: 20px;
 }
 
+.bookmark-date {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+}

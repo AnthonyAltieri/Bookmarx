@@ -9,8 +9,8 @@
     </div>
     <div class="row__center">
         <div class="card-input">
-            <input type="text" placeholder="Filter" class="card-input__field" ng-model="user.filter">
-            <i class="card-input__clear flaticon-letter-x" id="filter" ng-click="vm.clearFilter()"></i>
+            <input type="text" placeholder="Filter" class="card-input__field" ng-model="vm.search">
+            <i class="card-input__clear flaticon-letter-x" id="filter" ng-click="vm.clearSearch()"></i>
         </div>
     </div>
     <div class="row__center">
@@ -38,24 +38,36 @@
         <div class="card-bookmarks">
             <div class="card-bookmarks__header">
                 <h2 class="card-bookmarks__header-text col-10">Name</h2>
-                <h2 class="card-bookmarks__header-text col-30">Description</h2>
-                <h2 class="card-bookmarks__header-text col-20">Tag(s)</h2>
-                <h2 class="card-bookmarks__header-text col-20">URL</h2>
+                <h2 class="card-bookmarks__header-text col-20">Description</h2>
+                <h2 class="card-bookmarks__header-text col-10">Tag(s)</h2>
+                <h2 class="card-bookmarks__header-text col-10">Last Visit</h2>
+                <h2 class="card-bookmarks__header-text col-10">Created</h2>
+                <h2 class="card-bookmarks__header-text col-10">Counter</h2>
+                <h2 class="card-bookmarks__header-text col-10">URL</h2>
                 <h2 class="card-bookmarks__header-text col-20">Actions</h2>
             </div>
             <div class="card-bookmarks__content">
                 <table class="table-bookmarks">
-                    <tr ng-repeat="bookmark in vm.user.activeFolder.bookmarks">
+                    <tr ng-repeat="bookmark in vm.user.activeFolder.bookmarks | filter : {searchstring : vm.search}">
                         <td class="col-10 card-bookmarks__item-name">{{bookmark.title}}</td>
-                        <td class="col-30 card-bookmarks__description">{{bookmark.description}}</td>
-                        <td class="col-20">
-                            <div class="row">
+                        <td class="col-20 card-bookmarks__description">{{bookmark.description}}</td>
+                        <td class="col-10">
+                            <div class="row row-tag">
                                 <a class="card-bookmarks__item-tag" ng-repeat="tag in bookmark.tags">
                                     {{tag}}
                                 </a>
                             </div>
                         </td>
-                        <td class="col-20 card-bookmarks__item">{{bookmark.url}}</td>
+                        <td class="col-10">
+                            <p class="bookmark-date">{{bookmark.lastVisit}}</p>
+                        </td>
+                        <td class="col-10">
+                            <p class="bookmark-date">{{bookmark.creationDate}}</p>
+                        </td>
+                        <td class="col-10">
+                            <p class="bookmark-counter">{{bookmark.counter}}</p>
+                        </td>
+                        <td class="col-10 card-bookmarks__item">{{bookmark.url}}</td>
                         <td class="col-20">
                             <div class="container-actions">
                                 <i class="icon-star flaticon-star selected"
@@ -70,7 +82,6 @@
                             </div>
                         </td>
                     </tr>
-
                 </table>
             </div>
         </div>

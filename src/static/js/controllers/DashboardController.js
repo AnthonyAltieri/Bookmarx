@@ -6,9 +6,9 @@
     .controller('DashboardController', DashboardController);
 
 
-  DashboardController.$inject = ['$rootScope', '$scope', 'FolderService', 'localStorageService', 'ServerService'];
+  DashboardController.$inject = ['$rootScope', '$scope', 'localStorageService', 'ServerService'];
 
-  function DashboardController($rootScope, $scope, FolderService, localStorageService, ServerService) {
+  function DashboardController($rootScope, $scope, localStorageService, ServerService) {
     var vm = this;
 
     if (localStorageService.get('username') === null) {
@@ -16,7 +16,7 @@
     }
 
     // Functions
-    vm.clearFilter = clearFilter;
+    vm.clearSearch = clearSearch;
     vm.clickStar = clickStar;
     vm.selectFolder = selectFolder;
     vm.beginCreateFolder = beginCreateFolder;
@@ -49,8 +49,8 @@
 
 
     // Function Implementation
-    function clearFilter() {
-      vm.filter = '';
+    function clearSearch() {
+      vm.search = '';
       document.getElementById('filter').focus();
     }
 
@@ -141,6 +141,14 @@
       );
     }
 
+    function prettyDate(date) {
+      console.log('about to make this date pretty');
+      console.log(date);
+      console.log('here is the pretty one');
+      console.log(date.split('T')[0]);
+      return date.split('T')[0];
+    }
+
     // Watchers
     $scope.$on(ROUTE.GET_FOLDERS_SUCCESS, function(event, data) {
       console.log('data');
@@ -197,11 +205,19 @@
         if (bookmark.tag4 !=  'null' && bookmark.tag4.trim('').length != 0) {
           bookmark.tags.push(bookmark.tag4);
         }
+
+        // Create a string for searching
         var searchstring = bookmark.title;
         for (i = 0 ; i < bookmark.tags.length ; i++) {
           searchstring += (' ' + bookmark.tags[i] + ' ');
         }
         bookmark.searchstring = searchstring;
+
+        // Make the dates pretty
+        bookmark.creationDate = prettyDate(bookmark.creationDate);
+        bookmark.lastVisit = prettyDate(bookmark.lastVisit);
+
+        // Add the bookmark to it's respective folders
         if (bookmark.folder === null) {
           vm.noFolderBookmarks.push(bookmark);
         } else {
@@ -214,6 +230,8 @@
         }
         vm.user.folderHM['all'].bookmarks.push(bookmark);
       }
+
+      // Send a packet containing the new folders to the NavController
       var packet = {folders: vm.user.folders};
       $rootScope.$broadcast('update-folders', packet);
     });
@@ -264,19 +282,36 @@
       if (bookmark.tag4 !=  'null' && bookmark.tag4 != null) {
         bookmark.tags.push(bookmark.tag4);
       }
+
+      // Create a string for searching
       var searchstring = bookmark.title;
       for (var i = 0 ; i < bookmark.tags.length ; i++) {
         searchstring += (' ' + bookmark.tags[i] + ' ');
       }
       bookmark.searchstring = searchstring;
+
+      // Make the dates pretty
+      var date = new Date();
+      var prettyDate = '' + (date.getYear() + 1900) + '-' + date.getMonth() + '-' +
+        date.getDay();
+      if (!bookmark.creationDate) {
+        bookmark.creationDate = prettyDate;
+      } else {
+        bookmark.creationDate = prettyDate(bookmark.creationDate);
+      }
+      if (!bookmark.lastVisit) {
+        bookmark.lastVisit= prettyDate;
+      } else {
+        bookmark.creationDate = prettyDate(bookmark.creationDate);
+      }
       if (bookmark.folder === 'null') {
         vm.user.noFolderBookmarks.push(bookmark);
       } else {
         if (typeof vm.user.folderHM[bookmark.folder] === 'undefined'
             || vm.user.folderHM[bookmark.name] === null) {
           // This should never happen but silently fail
-          console.log('this should never happen')
-          console.log('with folder name: ' + bookmark.folder)
+          console.log('this should never happen');
+          console.log('with folder name: ' + bookmark.folder);
           console.log('with vm.user.folderHM');
           console.log(vm.user.folderHM);
         } else {
@@ -293,7 +328,7 @@
       vm.user.folderHM[folder.name] = folder;
       vm.user.folders.push(folder);
       vm.clickOverlay();
-      var packet = {folders: vm.user.folders}
+      var packet = {folders: vm.user.folders};
       $rootScope.$broadcast('update-folders', packet);
     });
 
@@ -362,7 +397,7 @@
     });
 
     $scope.$on(ROUTE.STAR_BOOKMARK_SUCCESS, function(event, data) {
-      console.log('in star bookmark success')
+      console.log('in star bookmark success');
       var bookmark = data.bookmark;
       console.log('bookmark');
       console.log(bookmark);
