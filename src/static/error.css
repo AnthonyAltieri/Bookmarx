@@ -1,0 +1,24 @@
+body {
+    height: 100vh;
+    width: 100vw;
+    background-color: #fafafa;
+}
+
+.error-box {
+    width: 400px;
+    height: 400px;
+    margin: 126px auto;
+    padding: 0 12px;
+
+    background-color: #333;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+}
+.error {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 32px;
+    color: white;
+    width: 100%;
+    text-align: center;
+}

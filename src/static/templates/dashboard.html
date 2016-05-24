@@ -49,7 +49,7 @@
             <div class="card-bookmarks__content">
                 <table class="table-bookmarks">
                     <tr ng-repeat="bookmark in vm.user.activeFolder.bookmarks | filter : {searchstring : vm.search}">
-                        <td class="col-10 card-bookmarks__item-name">{{bookmark.title}}</td>
+                        <td class="col-10 card-bookmarks__item-name" ng-click="vm.goToBookmark(bookmark)">{{bookmark.title}}</td>
                         <td class="col-20 card-bookmarks__description">{{bookmark.description}}</td>
                         <td class="col-10">
                             <div class="row row-tag">

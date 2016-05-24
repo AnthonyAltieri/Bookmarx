@@ -6,13 +6,14 @@
     .controller('DashboardController', DashboardController);
 
 
-  DashboardController.$inject = ['$rootScope', '$scope', 'localStorageService', 'ServerService'];
+  DashboardController.$inject = ['$rootScope', '$scope', '$state','localStorageService', 'ServerService'];
 
-  function DashboardController($rootScope, $scope, localStorageService, ServerService) {
+  function DashboardController($rootScope, $scope, $state, localStorageService, ServerService) {
     var vm = this;
 
     if (localStorageService.get('username') === null) {
-      // TODO: logout
+      humane.log('Something went wrong, try to log in again', {addCls: 'humane-flatty-error'});
+      $state.go('login');
     }
 
     // Functions
@@ -24,6 +25,7 @@
     vm.addFolder = addFolder;
     vm.deleteFolder = deleteFolder;
     vm.deleteBookmark = deleteBookmark;
+    vm.goToBookmark = goToBookmark;
 
     // Objects
     vm.user = {};
@@ -56,7 +58,7 @@
       var data = {
         bookmark: bookmark,
         username: localStorageService.cookie.get('username')
-      }
+      };
 
       ServerService.sendPost(data,
         ROUTE.STAR_BOOKMARK,
@@ -91,7 +93,7 @@
 
     function addFolder(name) {
       if (!name || name.trim('').length === 0) {
-        // TODO: make more robust
+        humane.log('You need some content for your name', {addCls:'humane-flatty-error'});
         console.log('needs to have content');
         return;
       }
@@ -99,7 +101,8 @@
       data.username = localStorageService.cookie.get('username');
       data.name = name;
       if (!data.username) {
-        // TODO: Send to login
+        humane.log('Something went wrong, log in again', {addCls: 'humane-flatty-error'});
+        $state.go('login');
       }
       ServerService.sendPost(data,
         ROUTE.ADD_FOLDER,
@@ -110,7 +113,7 @@
 
     function deleteFolder() {
       if (vm.user.activeFolder.name === 'all') {
-        //TODO: make more robust
+        humane.log("You can't delete all", {addCls: 'humane-flatty-error'});
         // Can't delete all
         return;
       }
@@ -147,6 +150,12 @@
       return date.split('T')[0];
     }
 
+    function goToBookmark(bookmark) {
+      console.log('goToBookmark');
+      var url = bookmark.url;
+      window.location.href = url;
+    }
+
     // Watchers
     $scope.$on(ROUTE.GET_FOLDERS_SUCCESS, function(event, data) {
       console.log('data');
@@ -176,8 +185,8 @@
       );
     });
     $scope.$on(ROUTE.GET_FOLDERS_FAIL, function() {
-      // TODO: make this more robust, possibly log the user out
-      console.log('Failed to retrieve folders');
+      humane.log('Failed to retrieve folders, try to log in again', {addCls: 'humane-flatty-error'});
+      $state.go('login');
     });
 
     $scope.$on(ROUTE.GET_BOOKMARKS_SUCCESS , function(event, data) {
@@ -235,8 +244,8 @@
     });
 
     $scope.$on(ROUTE.GET_BOOKMARKS_FAIL, function(event, data) {
-      // TODO: make this more robust, possibly log the user out
-      console.log('Failed to retrieve bookmarks');
+      humane.log('Failed to retrieve bookmarks, please log in again', {addCls: 'humane-flatty-error'});
+      $state.go('login');
     });
 
     $rootScope.$on('add-bookmark', function(event, obj) {
@@ -255,7 +264,7 @@
     $scope.$on(ROUTE.ADD_BOOKMARK_SUCCESS, function(event, data) {
       var bookmark = data.bookmark;
       if (!bookmark) {
-        // TODO: handle this better
+        humane.log('This title has been already used, try another', {addCls: 'humane-flatty-error'});
         console.log('title taken');
         return;
       }

@@ -101,11 +101,12 @@ body {
 }
 
 #content {
-  height: 100%;
+  height: 100vh;
   width: 100%;
   min-width: 990px;
   position: fixed;
   padding-left: $nav__desktop-width;
+  overflow: auto;
 }
 
 .has-nav {

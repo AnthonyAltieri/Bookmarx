@@ -89,7 +89,8 @@ router.post('/signUp', function(req, res) {
         console.log("before send");
         res.send({
           msg: ('Created account for user: ' + username),
-          success: true
+          success: true,
+          username: username
         })
         console.log("after send");
 
@@ -344,6 +345,16 @@ router.post('/bookmark/star', function(req, res) {
       res.send(data);
     }
   });
+});
+
+router.post('/cookie/enableit', function(req, res) {
+  var cookiesEnabled = req.body.cookiesEnabled;
+  if (cookiesEnabled) {
+    // Do nothing
+  } else {
+    res.sendFile(path.join(__dirname, '/static/templates/EnableCookies.html'))
+  }
+
 });
 
 

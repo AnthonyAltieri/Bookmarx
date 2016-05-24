@@ -54,6 +54,9 @@ function showNavSlider(navSlider) { navSlider.classList.remove('nav__slider-hide
     }
 
     function saveBookmark() {
+      if (!$scope.add.url || $scope.add.url.trim('').length === 0 || !validUrl($scope.add.url)) {
+        humane.log('You must have a valid url (example: http://google.com)');
+      }
       if (!$scope.add.tag1 || $scope.add.tag1.trim('').length === 0) {
         $scope.add.tag1 = 'null';
       }
@@ -82,13 +85,15 @@ function showNavSlider(navSlider) { navSlider.classList.remove('nav__slider-hide
         folder: $scope.add.folder,
         star: '0',
         counter: 0
-      }
+      };
       var data = { bookmark: bookmark };
       $rootScope.$broadcast('add-bookmark', data);
       $scope.add.tag1 = '';
       $scope.add.tag2 = '';
       $scope.add.tag3 = '';
       $scope.add.tag4 = '';
+      $scope.add.title = '';
+      $scope.add.url = '';
       $scope.add.description = '';
     }
 
@@ -114,6 +119,10 @@ function showNavSlider(navSlider) { navSlider.classList.remove('nav__slider-hide
       var day = date.getDay();
 
       return ('' + year + '-' + month + '-' + day);
+    }
+
+    function validUrl() {
+      return /^(ftp|https?):\/\/+(www\.)?[a-z0-9\-\.]{3,}\.[a-z]{3}$/.test(validUrl().arguments[0]);
     }
 
     $rootScope.$on('hide-nav', function(event, data) {
