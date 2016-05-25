@@ -76,13 +76,23 @@
     <div class="row__center">
         <div class="card-bookmarks">
             <div class="card-bookmarks__header">
-                <h2 class="card-bookmarks__header-text col-10">Name</h2>
+                <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortTitle()">
+                    Title
+                </h2>
                 <h2 class="card-bookmarks__header-text col-20">Description</h2>
                 <h2 class="card-bookmarks__header-text col-10">Tag(s)</h2>
-                <h2 class="card-bookmarks__header-text col-10">Last Visit</h2>
-                <h2 class="card-bookmarks__header-text col-10">Created</h2>
-                <h2 class="card-bookmarks__header-text col-10">Counter</h2>
-                <h2 class="card-bookmarks__header-text col-10">URL</h2>
+                <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortLastVisit()">
+                    Last Visit
+                </h2>
+                <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortCreationDate()">
+                    Created
+                </h2>
+                <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortCounter()">
+                    Counter
+                </h2>
+                <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortUrl()">
+                    URL
+                </h2>
                 <h2 class="card-bookmarks__header-text col-20">Actions</h2>
             </div>
             <div class="card-bookmarks__content">

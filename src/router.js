@@ -412,7 +412,6 @@ router.post('/bookmark/use', function(req, res) {
 
   var columnvalues = [];
   columnvalues.push(['counter', '=', newCount]);
-  columnvalues.push('and');
   columnvalues.push(['lastVisit', '=', dateString]);
 
   var filters = [];
@@ -457,6 +456,22 @@ router.post('/bookmark/export', function(req, res) {
 });
 
 router.post('/bookmark/import', function(req, res) {
+  upload(req, res, function(err) {
+    if (err) throw err;
+    if (!req.file) {
+      res.redirect('/#/dashboard');
+      return;
+    }
+    if (!req.session || !req.session.username) {
+      res.redirect('/#/login');
+      return;
+    }
+    var filename = req.file.filename;
+    var username = req.session.username;
+    BookmarkIOService.importBookmark(username, filename);
+  });
+  res.redirect('/#/dashboard');
+
 
 });
 

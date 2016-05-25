@@ -41,7 +41,8 @@
       $scope.navSlider.classList.add('nav__slider-hide');
       $rootScope.nav.isSliderShowing = false;
     }
-function showNavSlider(navSlider) { navSlider.classList.remove('nav__slider-hide');
+    function showNavSlider(navSlider) {
+      navSlider.classList.remove('nav__slider-hide');
       navSlider.classList.add('nav__slider-show');
       $rootScope.nav.isSliderShowing = true;
     }

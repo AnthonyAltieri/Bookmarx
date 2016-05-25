@@ -7,9 +7,10 @@
 
 
   DashboardController.$inject = ['$rootScope', '$scope', '$state', '$interval', 'localStorageService',
-                                 'ServerService'];
+                                 'ServerService', 'FilterService'];
 
-  function DashboardController($rootScope, $scope, $state, $interval, localStorageService, ServerService) {
+  function DashboardController($rootScope, $scope, $state, $interval, localStorageService, ServerService,
+                               FilterService) {
     var vm = this;
 
     if (localStorageService.cookie.get('username') === null) {
@@ -33,6 +34,13 @@
     vm.exportBookmark = exportBookmark;
     vm.editBookmark = editBookmark;
     vm.saveChanges = saveChanges;
+    vm.sortTitle = sortTitle;
+    vm.sortUrl = sortUrl;
+    vm.sortLastVisit = sortLastVisit;
+    vm.sortCreationDate = sortCreationDate;
+    vm.sortCounter = sortCounter;
+
+
 
     // Objects
     vm.user = {};
@@ -42,6 +50,17 @@
     vm.user.folders = [];
     vm.user.folderHM = {};
     vm.bookmarkEdit = {};
+
+    // true = a->z ; false = z->a
+    vm.user.lastTitleSort = false;
+    // true = a->z ; false = z->a
+    vm.user.lastUrlSort = false;
+    // true = 0->9 ; false = 9->0
+    vm.user.lastSortLastVisit = false;
+    // true = 0->9 ; false = 9->0
+    vm.user.lastSortCreationDate = false;
+    // true = 0->9 ; false = 9->0
+    vm.user.lastSortCounter = false;
 
     console.log('user');
     console.log(vm.user);
@@ -256,6 +275,59 @@
 
     }
 
+    function sortTitle() {
+      // Last sort was a->z
+      if (vm.user.lastTitleSort) {
+        vm.user.lastTitleSort = false;
+        vm.user.activeFolder.bookmarks = FilterService.aToZTitle(vm.user.activeFolder.bookmarks);
+      } else {
+        vm.user.lastTitleSort = true;
+        vm.user.activeFolder.bookmarks = FilterService.zToATitle(vm.user.activeFolder.bookmarks);
+      }
+    }
+
+    function sortUrl() {
+      // Last sort was a->z
+      if (vm.user.lastUrlSort) {
+        vm.user.lastUrlSort= false;
+        vm.user.activeFolder.bookmarks = FilterService.aToZUrl(vm.user.activeFolder.bookmarks);
+      } else {
+        vm.user.lastUrlSort= true;
+        vm.user.activeFolder.bookmarks = FilterService.zToAUrl(vm.user.activeFolder.bookmarks);
+      }
+    }
+
+    function sortLastVisit() {
+      // Last sort was 0->9
+      if (vm.user.lastSortLastVisit) {
+        vm.user.lastSortLastVisit = false;
+        vm.user.activeFolder.bookmarks = FilterService.zeroToNineLSortLastVisit(vm.user.activeFolder.bookmarks);
+      } else {
+        vm.user.lastSortLastVisit = true;
+        vm.user.activeFolder.bookmarks = FilterService.nineToZeroLSortLastVisit(vm.user.activeFolder.bookmarks);
+      }
+    }
+
+    function sortCreationDate() {
+      if (vm.user.lastSortCreationDate) {
+        vm.user.lastSortCreationDate = false;
+        vm.user.activeFolder.bookmarks = FilterService.zeroToNineSortCreationDate(vm.user.activeFolder.bookmarks);
+      } else {
+        vm.user.lastSortCreationDate = true;
+        vm.user.activeFolder.bookmarks = FilterService.nineToZeroSortCreationDate(vm.user.activeFolder.bookmarks);
+      }
+    }
+
+    function sortCounter() {
+      if (vm.user.lastSortCounter) {
+        vm.user.lastSortCounter = false;
+        vm.user.activeFolder.bookmarks = FilterService.zeroToNineSortCounter(vm.user.activeFolder.bookmarks);
+
+      } else {
+        vm.user.lastSortCounter = true;
+        vm.user.activeFolder.bookmarks = FilterService.nineToZeroSortCounter(vm.user.activeFolder.bookmarks);
+      }
+    }
 
 
     // Watchers

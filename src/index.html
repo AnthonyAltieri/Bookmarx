@@ -33,6 +33,7 @@
     <script type="text/javascript" src="/static/js/services/FolderService.js"></script>
     <script type="text/javascript" src="/static/js/services/ServerService.js"></script>
     <script type="text/javascript" src="/static/js/services/UtilService.js"></script>
+    <script type="text/javascript" src="/static/js/services/FilterService.js"></script>
 
 
     <!-- Controllers -->
@@ -62,6 +63,11 @@
                 <a class="item" ng-click="importBookmark()">Import Bookmark<i class="flaticon-upload-to-cloud" id="icon-cloud"></i></a>
                 <br/>
                 <input type="file" id="choose-bookmark">
+                <br/>
+                <form method="post" action="/bookmark/import" enctype="multipart/form-data" id="import-form-bookmark">
+                    <input class="item" type="submit" value="Import">
+                    <input class="import-choose-bookmark" type="file" name="filename">
+                </form>
             </div>
         </nav>
         <div id="nav__slider" class="nav__slider nav__slider-hide">

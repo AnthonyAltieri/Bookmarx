@@ -27,6 +27,14 @@
       $state.go('dashboard');
     }
 
+    // TODO: uncomment on server
+    //var splitUrl = location.href.split('//');
+    //var rhs = splitUrl[1];
+    //console.log('rhs: ' + rhs)
+    //if (rhs[0] === 'w' && rhs[1] === 'w' && rhs[2] === 'w' && rhs[3] === '.') {
+    //  location.href = 'http://anthonyraltieri.com';
+    //}
+
     var vm = this;
 
     vm.modeLogIn = true;
@@ -43,6 +51,7 @@
       username: '',
       password: ''
     };
+
     vm.signup = {
       username: '',
       password1: '',
