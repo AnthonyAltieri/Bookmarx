@@ -13,7 +13,15 @@
                                FilterService) {
     var vm = this;
 
-    if (localStorageService.cookie.get('username') === null) {
+    // Get all cookies
+    var cookiesArray = document.cookie.split(';');
+    vm.cookies = {};
+    for (var i = 0 ; i < cookiesArray.length ; i++) {
+      var keyvalue = cookiesArray[i].split('=');
+      vm.cookies[keyvalue[0].trim()] = keyvalue[1].trim();
+    }
+
+    if (!vm.cookies.username) {
       humane.log('Please log in again', {addCls: 'humane-flatty-error'});
       $state.go('login');
     }
@@ -39,17 +47,22 @@
     vm.sortLastVisit = sortLastVisit;
     vm.sortCreationDate = sortCreationDate;
     vm.sortCounter = sortCounter;
+    vm.onInputChosen = onInputChosen;
+    vm.onInputBookmarkChosen = onInputBookmarkChosen;
 
 
 
     // Objects
     vm.user = {};
-    vm.user.name = localStorageService.cookie.get('username');
+    vm.user.name = vm.cookies.username;
     vm.user.noFolderBookmarks = [];
     vm.user.activeFolder = null;
     vm.user.folders = [];
     vm.user.folderHM = {};
     vm.bookmarkEdit = {};
+    vm.bookmarkEditOriginal = {};
+    vm.showRealFolderInput = false;
+    vm.showRealBookmarkInput = false;
 
     // true = a->z ; false = z->a
     vm.user.lastTitleSort = false;
@@ -70,11 +83,27 @@
     vm.editBookmarkMode = false;
 
 
-    ServerService.sendPost({username: vm.user.name},
-      ROUTE.GET_FOLDERS,
-      ROUTE.GET_FOLDERS_SUCCESS,
-      ROUTE.GET_FOLDERS_FAIL
-    );
+    console.log('vm.cookies');
+    console.log(vm.cookies);
+    if (!vm.cookies.username) {
+      humane.log('You have been logged out, log back in', {addCls: 'humane-flatty-error'});
+      $state.go('login');
+      return;
+    }
+
+    console.log('vm.cookie.beenhere');
+    console.log(vm.cookies.beenhere);
+    console.log('!vm.cookies.beenhere : ' + (!vm.cookies.beenhere));
+    if (!vm.cookies.beenhere) {
+      console.log('have not been here');
+      ServerService.sendPost({username: vm.user.name},
+        ROUTE.GET_FOLDERS,
+        ROUTE.GET_FOLDERS_SUCCESS,
+        ROUTE.GET_FOLDERS_FAIL
+      );
+    }
+    document.cookie = document.cookie + '; beenhere=true';
+
 
     // Function Implementation
     function clearSearch() {
@@ -85,7 +114,7 @@
     function clickStar(bookmark) {
       var data = {
         bookmark: bookmark,
-        username: localStorageService.cookie.get('username')
+        username: vm.cookies.username
       };
 
       ServerService.sendPost(data,
@@ -113,16 +142,20 @@
       vm.showOverlay = true;
     }
 
-    function clickOverlay(changedTitle) {
+
+    function clickOverlay() {
       if (vm.showOverlay) {
         vm.showOverlay = false;
       }
       if (vm.editBookmarkMode) {
-        if (changedTitle) {
-          vm.editBookmarkMode = false;
-        } else {
-          vm.bookmarkEdit.title = vm.bookmarkEdit.oldTitle;
+        var diffKeys = diffKeysBookmark(vm.bookmarkEdit, vm.bookmarkEditOriginal);
+        console.log('difKeys');
+        console.log(diffKeys);
+        for (var i = 0 ; i < diffKeys.length ; i++){
+          var key = diffKeys[i];
+          vm.bookmarkEdit[key] = vm.bookmarkEditOriginal[key];
         }
+        vm.editBookmarkMode = false;
       }
     }
 
@@ -133,7 +166,7 @@
         return;
       }
       var data = {};
-      data.username = localStorageService.cookie.get('username');
+      data.username = vm.cookies.username;
       data.name = name;
       if (!data.username) {
         humane.log('Something went wrong, log in again', {addCls: 'humane-flatty-error'});
@@ -152,7 +185,7 @@
         // Can't delete all
         return;
       }
-      var username = localStorageService.cookie.get('username');
+      var username = vm.cookies.username;
       var data = {
         name: vm.user.activeFolder.name,
         username: username
@@ -167,7 +200,7 @@
     function deleteBookmark(bookmark) {
       var data = {
         bookmark: bookmark,
-        username: localStorageService.cookie.get('username')
+        username: vm.cookies.username
       };
 
       ServerService.sendPost(data,
@@ -252,8 +285,22 @@
       if (!isValidTag(bookmark.tag4)) {
         bookmark.tag4 = '';
       }
+      vm.bookmarkEditOriginal = JSON.parse(JSON.stringify(bookmark));
       vm.bookmarkEdit = bookmark;
       vm.bookmarkEdit.oldTitle = bookmark.title;
+    }
+
+    function diffKeysBookmark(b1, b2) {
+      var diffVals = [];
+      if (b1.title != b2.title) diffVals.push('title');
+      if (b1.url!= b2.url) diffVals.push('url');
+      if (b1.description!= b2.description) diffVals.push('description');
+      if (b1.tag1 != b2.tag1) diffVals.push('tag1');
+      if (b1.tag2 != b2.tag2) diffVals.push('tag2');
+      if (b1.tag3 != b2.tag3) diffVals.push('tag3');
+      if (b1.tag4 != b2.tag4) diffVals.push('tag4');
+      if (b1.folder != b2.folder) diffVals.push('folder');
+      return diffVals;
     }
 
     function saveChanges() {
@@ -262,12 +309,23 @@
       console.log('using this bookmark');
       console.log(bookmark);
       var data = {bookmark: bookmark};
+      vm.editBookmarkMode = false;
       ServerService.sendPost(data,
         ROUTE.UPDATE_BOOKMARK,
         ROUTE.UPDATE_BOOKMARK_SUCCESS,
         ROUTE.UPDATE_BOOKMARK_FAIL
       )
     }
+
+    //$interval(function() {
+    //  var data = {username: vm.cookies.username}
+    //  ServerService.sendPost(data,
+    //    ROUTE.CHECK_SESSION,
+    //    ROUTE.CHECK_SESSION_SUCCESS,
+    //    ROUTE.CHECK_SESSION_FAIL
+    //  );
+    //
+    //}, 10000);
 
     function isValidTag(tag) {
       return !(!tag || tag.trim('').length === 0 || tag === 'null' || tag === 'NULL'
@@ -329,10 +387,21 @@
       }
     }
 
+    function onInputChosen() {
+      vm.showRealFolderInput = true;
+
+    }
+
+    function onInputBookmarkChosen() {
+      vm.showRealBookmarkInput = true;
+    }
+
 
     // Watchers
     $scope.$on(ROUTE.GET_FOLDERS_SUCCESS, function(event, data) {
-      if (data.error) {
+      if (!data || data.error) {
+        console.log('data');
+        console.log(data);
         humane.log('Server error try again later', {addCls: 'humane-flatty-error'})
         $state.go('login');
         return;
@@ -380,8 +449,10 @@
       console.log('vm.user.folders');
       console.log(vm.user.folders);
       var rows = data.rows;
-      var i;
-      for (i = 0 ; i < rows.length ; i++) {
+      console.log('rows.length');
+      console.log(rows.length);
+      for (var i = 0 ; i < rows.length ; i++) {
+        console.log('i : ' + i);
         var bookmark = rows[i];
         bookmark.tags = [];
         if (bookmark.tag1 !=  'null' && bookmark.tag1.trim('').length != 0) {
@@ -403,8 +474,8 @@
 
         // Create a string for searching
         var searchstring = bookmark.title;
-        for (i = 0 ; i < bookmark.tags.length ; i++) {
-          searchstring += (' ' + bookmark.tags[i] + ' ');
+        for (var x = 0 ; x < bookmark.tags.length ; x++) {
+          searchstring += (' ' + bookmark.tags[x] + ' ');
         }
         bookmark.searchstring = searchstring;
 
@@ -664,17 +735,8 @@
         }
       }
     });
-    $scope.$on(ROUTE.USED_BOOKMARK_FAIL, function(event, data) {
-    });
 
-    $scope.$on(ROUTE.CHECK_SESSION_SUCCESS, function(event, data) {
-      if (data.error) {
-        humane.log('Session interrupted, please log back on', {addCls: 'humane-flatty-error'});
-        $state.go('login');
-      }
-    });
-    $scope.$on(ROUTE.CHECK_SESSION_FAIL, function(event, data) {
-    })
+
 
     $scope.$on(ROUTE.UPDATE_BOOKMARK_SUCCESS, function(event, data) {
       console.log('in update_bookmark_success');
@@ -685,26 +747,34 @@
         console.log(vm.bookmarkEdit);
       } else {
         var bookmark = data.bookmark;
-        var focusFolder = bookmark.folder;
-        if (!focusFolder) {
-          var allFolder = vm.user.folderHM['all'];
-          for (var i = 0 ; i < allFolder.bookmarks.lengh ; i++) {
-            var curBookmark = allFolder.bookmarks[i];
-            if (bookmark.title === curBookmark.title) {
-              curBookmark = bookmark;
-              break;
+
+        console.log('vm.bE.f');
+        console.log(vm.bookmarkEdit.folder);
+        console.log('vm.bEO.f');
+        console.log(vm.bookmarkEditOriginal.folder);
+        var sameFolder = (vm.bookmarkEdit.folder === vm.bookmarkEditOriginal.folder);
+        if (!sameFolder) {
+          var oldFolder = vm.user.folderHM[vm.bookmarkEditOriginal.folder];
+          var newFolder = vm.user.folderHM[vm.bookmarkEdit.folder];
+          if (oldFolder && oldFolder != 'all' && oldFolder != '') {
+            for (var i = 0; i < oldFolder.bookmarks.length; i++) {
+              var focusBM = oldFolder.bookmarks[i];
+              if (focusBM.title === bookmark.title) {
+                oldFolder.bookmarks.splice(i, 1);
+                break;
+              }
             }
           }
-        } else {
-          var folder = vm.user.folderHM[focusFolder];
-          for (var i = 0 ; i < folder.bookmarks.length ; i++) {
-            var curBookmark = folder.bookmarks[i];
-            if (bookmark.title === curBookmark.title) {
-              curBookmark = bookmark;
-              break;
-            }
+          if (newFolder && newFolder.name != 'all' && newFolder != ''){
+            newFolder.bookmarks.push(bookmark);
           }
         }
+        console.log('newFolder');
+        console.log(newFolder);
+        console.log('oldFolder');
+        console.log(oldFolder);
+
+
         bookmark.tags = [];
         if (bookmark.tag1 !=  'null' && bookmark.tag1.trim('').length != 0) {
           bookmark.tags.push(bookmark.tag1);

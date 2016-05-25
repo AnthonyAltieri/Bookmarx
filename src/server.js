@@ -15,7 +15,8 @@ var mySession = session({
   secret: 'I@am@w3s0m3',
   resave: true,
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: { secure: false },
+  maxAge: 900000
 });
 
 

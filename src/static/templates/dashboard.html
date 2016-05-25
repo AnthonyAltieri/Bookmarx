@@ -14,7 +14,9 @@
                 ng-model="vm.bookmarkEdit.description">{{vm.bookmarkEdit.description}}</textarea>
             <div class="row-edit-tags">
                 <input type="text" placeholder="Tag1" class="edit-tags"
-                       value="{{vm.bookmarkEdit.tag1}}" ng-model="vm.bookmarkEdit.tag1">
+                       value="{{vm.bookmarkEdit.tag1}}"
+                       ng-model="vm.bookmarkEdit.tag1"
+                    >
                 <input type="text" placeholder="Tag2" class="edit-tags"
                        value="{{vm.bookmarkEdit.tag2}}" ng-model="vm.bookmarkEdit.tag2">
                 <input type="text" placeholder="Tag3" class="edit-tags"
@@ -56,10 +58,14 @@
                 || vm.user.activeFolder.bookmarks.length === 0">Export</a>
                 <a class="folder-headerbtn" id="delete-folder" ng-click="vm.deleteFolder()">Delete Folder</a>
                 <!--<a class="folder-headerbtn" id="import-folder" ng-click="vm.importFolder(file.toImport)">Import Folder</a>-->
+
                 <form method="post" action="/folder/import" enctype="multipart/form-data" id="import-form-folder">
-                    <input class="import-folder" type="submit" value="Import">
-                    <input class="import-folder-btn" type="file" name="filename">
+                    <input class="import-folder" type="submit" value="Import" ng-show="vm.showRealFolderInput">
+                    <input class="import-folder no-textsel" value="Import" ng-hide="vm.showRealFolderInput">
+                    <input class="import-folder-btn" type="file" name="filename"  ng-click="vm.onInputChosen()"
+                        readonly>
                 </form>
+
             </div>
             <div ng-repeat="folder in vm.user.folders" ng-click="vm.selectFolder(folder)" class="wrap-tile-folder">
                 <div class="tile-folder" ng-class="{'tile-folder-active' : folder.isActive}">
@@ -79,7 +85,7 @@
                 <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortTitle()">
                     Title
                 </h2>
-                <h2 class="card-bookmarks__header-text col-20">Description</h2>
+                <h2 class="card-bookmarks__header-text col-10">Description</h2>
                 <h2 class="card-bookmarks__header-text col-10">Tag(s)</h2>
                 <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortLastVisit()">
                     Last Visit
@@ -90,7 +96,7 @@
                 <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortCounter()">
                     Counter
                 </h2>
-                <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortUrl()">
+                <h2 class="card-bookmarks__header-text col-20" ng-click="vm.sortUrl()">
                     URL
                 </h2>
                 <h2 class="card-bookmarks__header-text col-20">Actions</h2>
@@ -99,7 +105,7 @@
                 <table class="table-bookmarks">
                     <tr ng-repeat="bookmark in vm.user.activeFolder.bookmarks | filter : {searchstring : vm.search}">
                         <td class="col-10 card-bookmarks__item-name" ng-click="vm.goToBookmark(bookmark)">{{bookmark.title}}</td>
-                        <td class="col-20 card-bookmarks__description">{{bookmark.description}}</td>
+                        <td class="col-10 card-bookmarks__description">{{bookmark.description}}</td>
                         <td class="col-10">
                             <div class="row row-tag">
                                 <a class="card-bookmarks__item-tag" ng-repeat="tag in bookmark.tags">
@@ -116,7 +122,7 @@
                         <td class="col-10">
                             <p class="bookmark-counter">{{bookmark.counter}}</p>
                         </td>
-                        <td class="col-10 card-bookmarks__item">{{bookmark.url}}</td>
+                        <td class="col-20 card-bookmarks__item">{{bookmark.url}}</td>
                         <td class="col-20">
                             <div class="container-actions">
                                 <i class="icon-star flaticon-star selected"
