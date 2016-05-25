@@ -76,10 +76,11 @@
     <div class="row__center">
         <div class="card-bookmarks">
             <div class="card-bookmarks__header">
+                <h2 class="card-bookmarks__header-text col-10">Sort By:</h2>
                 <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortTitle()">
                     Title
                 </h2>
-                <h2 class="card-bookmarks__header-text col-20">Description</h2>
+                <h2 class="card-bookmarks__header-text col-10">Description</h2>
                 <h2 class="card-bookmarks__header-text col-10">Tag(s)</h2>
                 <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortLastVisit()">
                     Last Visit
@@ -98,8 +99,9 @@
             <div class="card-bookmarks__content">
                 <table class="table-bookmarks">
                     <tr ng-repeat="bookmark in vm.user.activeFolder.bookmarks | filter : {searchstring : vm.search}">
+                        <td class="col-10 card-bookmarks__item-name"></td>
                         <td class="col-10 card-bookmarks__item-name" ng-click="vm.goToBookmark(bookmark)">{{bookmark.title}}</td>
-                        <td class="col-20 card-bookmarks__description">{{bookmark.description}}</td>
+                        <td class="col-10 card-bookmarks__description">{{bookmark.description}}</td>
                         <td class="col-10">
                             <div class="row row-tag">
                                 <a class="card-bookmarks__item-tag" ng-repeat="tag in bookmark.tags">
