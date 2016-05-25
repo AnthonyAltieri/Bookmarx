@@ -60,12 +60,12 @@
             <div class="container-items">
                 <a class="item" ng-click="addBookmark()">Add Bookmark<i class="flaticon-plus-symbol" id="item__icon-plus"></i></a>
                 <br/>
-                <a class="item" ng-click="importBookmark()">Import Bookmark<i class="flaticon-upload-to-cloud" id="icon-cloud"></i></a>
-                <br/>
-                <input type="file" id="choose-bookmark">
-                <br/>
+                <!--<a class="item" ng-click="importBookmark()">Import Bookmark<i class="flaticon-upload-to-cloud" id="icon-cloud"></i></a>-->
+                <!--<br/>-->
+                <!--<input type="file" id="choose-bookmark">-->
+                <!--<br/>-->
                 <form method="post" action="/bookmark/import" enctype="multipart/form-data" id="import-form-bookmark">
-                    <input class="item" type="submit" value="Import">
+                    <input class="item import-bookmark" type="submit" value="Import Bookmark">
                     <input class="import-choose-bookmark" type="file" name="filename">
                 </form>
             </div>

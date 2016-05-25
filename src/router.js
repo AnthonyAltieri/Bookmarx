@@ -448,10 +448,10 @@ router.post('/bookmark/export', function(req, res) {
     console.log('filename : ' + filename);
     if (fs.existsSync(filename)) {
       console.log('it exists');
-      res.sendFile(__dirname + '/' + filename, null, function() {
-        fs.unlink(filename);
-      });
+      res.sendFile(__dirname + '/' + filename)
+      fs.unlinkSync(filename);
     }
+    res.redirect('/#/dashboard');
   });
 });
 
@@ -484,15 +484,26 @@ router.post('/folder/export', function(req, res) {
   var name = req.body.name;
   var filename = username + name + ' export';
   var path = __dirname + '/public/exports/' + filename;
-  BookmarkIOService.exportFolder(username, name, function(validFolder) {
-    if (validFolder) {
+  BookmarkIOService.exportFolder(username, name, function() {
+    //console.log('isValidFolder : ' + validFolder);
+    //if (validFolder) {
+      console.log('about to check if it exists');
       if (fs.existsSync(path)) {
+        console.log('it does exist, about to send');
         res.sendFile(path);
-        fs.unlinkSync(path);
+        console.log('should have sended')
+        console.log('unliked it')
       }
-      res.redirect('/#/dashboard');
-    }
+      //res.redirect('/#/dashboard');
+    //fs.unlinkSync(path);
+    //}
   });
+  function del() {
+    if (fs.existsSync(path)) {
+      fs.unlinkSync(path);
+
+    }
+  }
 
 });
 

@@ -178,7 +178,7 @@ module.exports.importBookmark = function(username, filename) {
 module.exports.exportFolder = function(username, folder, callback) {
   db.init();
   if (!folder || folder === '') {
-    callback(false);
+    callback();
   }
   console.log('in exportFolder()');
   var selectQueryString = "SELECT * FROM bookmark WHERE username = '" + username + "' AND "
@@ -207,7 +207,8 @@ module.exports.exportFolder = function(username, folder, callback) {
       var bookmark = rows[i];
       fs.appendFileSync(pathToFile, bookmarkToRowString(bookmark));
     }
-    callback(true);
+    console.log('done writing the file');
+    callback();
   });
 };
 

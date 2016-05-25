@@ -654,6 +654,20 @@ nav {
     height: 100%;
     z-index: 1; }
 
+#import-form-bookmark {
+  display: flex;
+  flex-flow: column;
+  justify-content: center; }
+
+.import-bookmark {
+  width: 84% !important; }
+
+.import-choose-bookmark {
+  margin-top: 18px;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto; }
+
 #import-form-folder {
   display: flex;
   flex-flow: row;
