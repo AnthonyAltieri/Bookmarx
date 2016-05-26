@@ -401,7 +401,13 @@ nav {
   border-radius: 3px;
   display: flex;
   justify-content: space-around;
+  overflow:auto;
 }
+
+.sort-arrows{
+  margin-left: 5px;
+}
+
 
 .card-bookmarks__header-text {
   height: $card-bookmarks__header-height;
