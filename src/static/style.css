@@ -298,7 +298,11 @@ nav {
   background: #343838;
   border-radius: 3px;
   display: flex;
-  justify-content: space-around; }
+  justify-content: space-around;
+  overflow: auto; }
+
+.sort-arrows {
+  margin-left: 5px; }
 
 .card-bookmarks__header-text {
   height: 52px;
@@ -309,7 +313,46 @@ nav {
   font-size: .8em;
   text-align: center;
   color: white;
-  cursor: pointer; }
+  cursor: pointer;
+  z-index: 500; }
+
+.sort-down {
+  background: url("/static/SimpleIconSet/svg/down-arrow-sort.svg");
+  background-repeat: no-repeat;
+  padding-left: 10px;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  background-position: 50% 50%;
+  background-size: 15px 15px; }
+
+.sort-up {
+  background: url("/static/SimpleIconSet/svg/up-arrow-sort.svg");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  padding-left: 10px;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  background-size: 15px 15px; }
+
+.sort-arrows {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  padding-left: 10px;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  background-size: 15px 15px; }
+
+.sort {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  padding-left: 10px;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  background-size: 15px 15px; }
 
 .card-bookmarks__content {
   width: 100%;
