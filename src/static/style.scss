@@ -114,7 +114,7 @@ body {
 }
 
 .no-nav {
-  padding-left: 0px !important;
+  padding-left: 0 !important;
 }
 
 nav {
@@ -727,6 +727,7 @@ nav {
       font-size: 48px;
       color: #333;
       text-align: center;
+      margin: 8px auto;
 
     }
 
@@ -734,6 +735,7 @@ nav {
       padding: 8px 4px;
       font-size: 16px;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin-top: 12px;
 
     }
 
@@ -747,6 +749,17 @@ nav {
       justify-content: space-between;
 
     }
+
+    .wrapper-login-input {
+      display: flex;
+      flex-flow: column;
+    }
+
+    .wrapper-signup-input {
+      display: flex;
+      flex-flow: column;
+    }
+
 
     .submit {
       width: 8.6em;
@@ -901,6 +914,10 @@ nav {
 .import-folder-btn {
   margin-top: 15px;
   margin-left: 15px;
+
+}
+
+.no-click {
 
 }
 .export-folder {

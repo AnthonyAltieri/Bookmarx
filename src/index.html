@@ -34,7 +34,7 @@
     <script type="text/javascript" src="/static/js/services/ServerService.js"></script>
     <script type="text/javascript" src="/static/js/services/UtilService.js"></script>
     <script type="text/javascript" src="/static/js/services/FilterService.js"></script>
-
+    <script type="text/javascript" src="/static/js/services/StorageService.js"></script>
 
     <!-- Controllers -->
     <script type="text/javascript" src="/static/js/controllers/NavController.js"></script>
@@ -65,8 +65,10 @@
                 <!--<input type="file" id="choose-bookmark">-->
                 <!--<br/>-->
                 <form method="post" action="/bookmark/import" enctype="multipart/form-data" id="import-form-bookmark">
-                    <input class="item import-bookmark" type="submit" value="Import Bookmark">
-                    <input class="import-choose-bookmark" type="file" name="filename">
+                    <input class="item import-bookmark" type="submit" value="Import Bookmark"
+                           ng-show="vm.showRealBookmarkInput">
+                    <input class="item import-bookmark no-textsel" value="Import Bookmark" ng-hide="vm.showRealBookmarkInput">
+                    <input class="import-choose-bookmark" type="file" name="filename" ng-click="vm.onInputBookmarkChosen()">
                 </form>
             </div>
         </nav>

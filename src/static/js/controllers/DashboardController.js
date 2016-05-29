@@ -7,18 +7,11 @@
 
 
   DashboardController.$inject = ['$rootScope', '$scope', '$state', '$interval', 'localStorageService',
-                                 'ServerService', 'FilterService'];
+                                 'ServerService', 'FilterService', 'StorageService'];
 
   function DashboardController($rootScope, $scope, $state, $interval, localStorageService, ServerService,
-                               FilterService) {
+                               FilterService, StorageService) {
     var vm = this;
-
-    if (localStorageService.cookie.get('username') === null) {
-      humane.log('Please log in again', {addCls: 'humane-flatty-error'});
-      $state.go('login');
-    }
-
-    $rootScope.$broadcast('show-nav');
 
     // Functions
     vm.clearSearch = clearSearch;
@@ -39,8 +32,15 @@
     vm.sortLastVisit = sortLastVisit;
     vm.sortCreationDate = sortCreationDate;
     vm.sortCounter = sortCounter;
+    vm.onInputChosen = onInputChosen;
+    vm.onInputBookmarkChosen = onInputBookmarkChosen;
 
 
+    // Warn user if cookies are not enabled
+    vm.warnCookies = !localStorageService.cookie.isSupported;
+
+    // Set local storage and cookie prefix
+    localStorageService.set('cse136team10');
 
     // Objects
     vm.user = {};
@@ -49,7 +49,14 @@
     vm.user.activeFolder = null;
     vm.user.folders = [];
     vm.user.folderHM = {};
+    vm.folder = {};
+    vm.folder.name = '';
+    vm.session = {};
+    vm.session.bookmarkHM = {};
     vm.bookmarkEdit = {};
+    vm.bookmarkEditOriginal = {};
+    vm.showRealFolderInput = false;
+    vm.showRealBookmarkInput = false;
 
     // true = a->z ; false = z->a
     vm.user.lastTitleSort = false;
@@ -62,14 +69,30 @@
     // true = 0->9 ; false = 9->0
     vm.user.lastSortCounter = false;
 
-    console.log('user');
-    console.log(vm.user);
-
-    // UI Flag Inits
+    // UI flag initialization
     vm.showOverlay = false;
     vm.editBookmarkMode = false;
 
 
+
+    // Show nav
+    $rootScope.$broadcast('show-nav');
+    if (!localStorageService.cookie.get('username')) {
+      humane.log('You have been logged out, log back in', {addCls: 'humane-flatty-error'});
+      $state.go('login');
+      return;
+    }
+
+
+
+    // Get folders from local service if you can
+    if (localStorageService.isSupported) {
+      var localFolderHM = localStorageService.get('folderHM');
+      var localFolders = localStorageService.get('folders');
+      if (localFolderHM) vm.user.folderHM = localFolderHM;
+      if (localFolders) vm.user.folders = localFolders;
+    }
+    // Query for folders
     ServerService.sendPost({username: vm.user.name},
       ROUTE.GET_FOLDERS,
       ROUTE.GET_FOLDERS_SUCCESS,
@@ -113,16 +136,20 @@
       vm.showOverlay = true;
     }
 
-    function clickOverlay(changedTitle) {
+
+    function clickOverlay() {
       if (vm.showOverlay) {
         vm.showOverlay = false;
       }
       if (vm.editBookmarkMode) {
-        if (changedTitle) {
-          vm.editBookmarkMode = false;
-        } else {
-          vm.bookmarkEdit.title = vm.bookmarkEdit.oldTitle;
+        var diffKeys = diffKeysBookmark(vm.bookmarkEdit, vm.bookmarkEditOriginal);
+        console.log('difKeys');
+        console.log(diffKeys);
+        for (var i = 0 ; i < diffKeys.length ; i++){
+          var key = diffKeys[i];
+          vm.bookmarkEdit[key] = vm.bookmarkEditOriginal[key];
         }
+        vm.editBookmarkMode = false;
       }
     }
 
@@ -132,8 +159,15 @@
         console.log('needs to have content');
         return;
       }
+
+      vm.folder.name = '';
+
       var data = {};
-      data.username = localStorageService.cookie.get('username');
+      if (localStorageService.isSupported) {
+        data.username = localStorageService.get('username');
+      } else {
+        data.username = localStorageService.cookie.get('username');
+      }
       data.name = name;
       if (!data.username) {
         humane.log('Something went wrong, log in again', {addCls: 'humane-flatty-error'});
@@ -152,11 +186,14 @@
         // Can't delete all
         return;
       }
-      var username = localStorageService.cookie.get('username');
       var data = {
-        name: vm.user.activeFolder.name,
-        username: username
+        name: vm.user.activeFolder.name
       };
+      if (localStorageService.isSupported) {
+        data.username = localStorageService.get('username');
+      } else {
+        data.username = localStorageService.cookie.get('username');
+      }
       ServerService.sendPost(data,
         ROUTE.DELETE_FOLDER,
         ROUTE.DELETE_FOLDER_SUCCESS,
@@ -166,9 +203,14 @@
 
     function deleteBookmark(bookmark) {
       var data = {
-        bookmark: bookmark,
-        username: localStorageService.cookie.get('username')
+        bookmark: bookmark
       };
+      if (localStorageService.isSupported) {
+        data.username = localStorageService.get('username');
+      } else {
+        data.username = localStorageService.cookie.get('username');
+      }
+
 
       ServerService.sendPost(data,
         ROUTE.DELETE_BOOKMARK,
@@ -225,14 +267,6 @@
       );
     }
 
-    function importBookmark(file) {
-      console.log(file);
-      //ServerService.sendPost({},
-      //  ROUTE.IMPORT_BOOKMARK,
-      //  ROUTE.IMPORT_BOOKMARK_SUCCESS,
-      //  ROUTE.IMPORT_BOOKMARK_FAIL
-      //);
-    }
 
     function editBookmark(bookmark) {
       vm.showOverlay = true;
@@ -252,8 +286,22 @@
       if (!isValidTag(bookmark.tag4)) {
         bookmark.tag4 = '';
       }
+      vm.bookmarkEditOriginal = JSON.parse(JSON.stringify(bookmark));
       vm.bookmarkEdit = bookmark;
       vm.bookmarkEdit.oldTitle = bookmark.title;
+    }
+
+    function diffKeysBookmark(b1, b2) {
+      var diffVals = [];
+      if (b1.title != b2.title) diffVals.push('title');
+      if (b1.url!= b2.url) diffVals.push('url');
+      if (b1.description!= b2.description) diffVals.push('description');
+      if (b1.tag1 != b2.tag1) diffVals.push('tag1');
+      if (b1.tag2 != b2.tag2) diffVals.push('tag2');
+      if (b1.tag3 != b2.tag3) diffVals.push('tag3');
+      if (b1.tag4 != b2.tag4) diffVals.push('tag4');
+      if (b1.folder != b2.folder) diffVals.push('folder');
+      return diffVals;
     }
 
     function saveChanges() {
@@ -262,6 +310,7 @@
       console.log('using this bookmark');
       console.log(bookmark);
       var data = {bookmark: bookmark};
+      vm.editBookmarkMode = false;
       ServerService.sendPost(data,
         ROUTE.UPDATE_BOOKMARK,
         ROUTE.UPDATE_BOOKMARK_SUCCESS,
@@ -329,40 +378,55 @@
       }
     }
 
+    function onInputChosen() {
+      vm.showRealFolderInput = true;
+
+    }
+
+    function onInputBookmarkChosen() {
+      vm.showRealBookmarkInput = true;
+    }
+
 
     // Watchers
     $scope.$on(ROUTE.GET_FOLDERS_SUCCESS, function(event, data) {
-      if (data.error) {
-        humane.log('Server error try again later', {addCls: 'humane-flatty-error'})
+      if (!data || data.error || !data.rows) {
+        console.log('data');
+        console.log(data);
+        humane.log('Server error try again later', {addCls: 'humane-flatty-error'});
         $state.go('login');
         return;
       }
-      console.log('data');
-      console.log(data);
       var rows = data.rows;
-      console.log('Retrieved ' + rows.length + ' folders for user');
-      var allFolder = {
-        name: 'all',
-        isActive: true,
-        bookmarks: []
-      };
-      vm.user.activeFolder = allFolder;
-      vm.user.folders.push(allFolder);
-      vm.user.folderHM['all'] = allFolder;
-      for (var i = 0 ; i < rows.length ; i++) {
-        var folder = {};
-        folder.name = rows[i].name;
-        folder.isActive = false;
-        folder.bookmarks = [];
-        vm.user.folderHM[folder.name] = folder;
-        vm.user.folders.push(folder);
+
+      // If local storage has not already set the all folder make it an set it
+      if (localStorageService.isSupported && !StorageService.getFolders()) {
+        var allFolder = {
+          name: 'all',
+          isActive: true,
+          bookmarks: []
+        };
+        vm.user.activeFolder = allFolder;
+        vm.user.folders.push(allFolder);
+        vm.user.folderHM['all'] = allFolder;
+        for (var i = 0 ; i < rows.length ; i++) {
+          var folder = {};
+          folder.name = rows[i].name;
+          folder.isActive = false;
+          folder.bookmarks = [];
+          vm.user.folderHM[folder.name] = folder;
+          vm.user.folders.push(folder);
+        }
       }
+
+
       ServerService.sendPost({username: vm.user.name},
         ROUTE.GET_BOOKMARKS,
         ROUTE.GET_BOOKMARKS_SUCCESS,
         ROUTE.GET_BOOKMARKS_FAIL
       );
     });
+
     $scope.$on(ROUTE.GET_FOLDERS_FAIL, function() {
       humane.log('Failed to retrieve folders, try to log in again', {addCls: 'humane-flatty-error'});
       $state.go('login');
@@ -374,15 +438,17 @@
         $state.go('login');
         return;
       }
-      console.log('in get_bookmark_success')
-      console.log('data');
-      console.log(data);
-      console.log('vm.user.folders');
-      console.log(vm.user.folders);
       var rows = data.rows;
-      var i;
-      for (i = 0 ; i < rows.length ; i++) {
+
+      vm.user.bookmarkHM = {};
+
+      for (var i = 0 ; i < rows.length ; i++) {
         var bookmark = rows[i];
+
+        // Create a bookmark hashmap
+        vm.user.bookmarkHM[bookmark.title] = bookmark;
+
+        // Create tags member array
         bookmark.tags = [];
         if (bookmark.tag1 !=  'null' && bookmark.tag1.trim('').length != 0) {
           bookmark.tags.push(bookmark.tag1);
@@ -403,8 +469,8 @@
 
         // Create a string for searching
         var searchstring = bookmark.title;
-        for (i = 0 ; i < bookmark.tags.length ; i++) {
-          searchstring += (' ' + bookmark.tags[i] + ' ');
+        for (var x = 0 ; x < bookmark.tags.length ; x++) {
+          searchstring += (' ' + bookmark.tags[x] + ' ');
         }
         bookmark.searchstring = searchstring;
 
@@ -426,6 +492,26 @@
         vm.user.folderHM['all'].bookmarks.push(bookmark);
       }
 
+      // Add to local storage
+      console.log('============================================')
+      console.log('this is folders before set');
+      console.log('vm.user.folders');
+      console.log(vm.user.folders);
+      console.log('local folders');
+      console.log(StorageService.getFolders());
+
+
+      StorageService.setFolders(vm.user.folders);
+      StorageService.setFolderHM(vm.user.folderHM);
+      StorageService.setBookmarkHM(vm.user.bookmarkHM);
+
+      console.log('this is folders after set');
+      console.log('vm.user.folders');
+      console.log(vm.user.folders);
+      console.log('local folders');
+      console.log(StorageService.getFolders());
+      console.log('============================================')
+
       // Send a packet containing the new folders to the NavController
       var packet = {folders: vm.user.folders};
       $rootScope.$broadcast('update-folders', packet);
@@ -442,6 +528,8 @@
         bookmark: bookmark,
         username: vm.user.name
       };
+
+
       ServerService.sendPost(data,
         ROUTE.ADD_BOOKMARK,
         ROUTE.ADD_BOOKMARK_SUCCESS,
@@ -461,14 +549,6 @@
         console.log('title taken');
         return;
       }
-      console.log('in add_bookmark_success');
-      console.log('vm.user.folders');
-      console.log(vm.user.folders);
-      console.log('bookmark');
-      console.log(bookmark);
-      console.log('this is bookmark: ' + bookmark);
-      console.log('this is event');
-      console.log(event);
       bookmark.tags = [];
       if (bookmark.tag1 !=  'null' && bookmark.tag1 != null) {
         bookmark.tags.push(bookmark.tag1);
@@ -508,11 +588,10 @@
       } else {
         bookmark.lastVisit = bookmark.lastVisit.split('T')[0];
       }
-      if (bookmark.folder === 'null') {
+      if (bookmark.folder.trim().length === '' || bookmark.folder === 'null' || !bookmark.folder) {
         vm.user.noFolderBookmarks.push(bookmark);
       } else {
-        if (typeof vm.user.folderHM[bookmark.folder] === 'undefined'
-            || vm.user.folderHM[bookmark.name] === null) {
+        if (!vm.user.folderHM[bookmark.folder]) {
           // This should never happen but silently fail
           console.log('this should never happen');
           console.log('with folder name: ' + bookmark.folder);
@@ -524,6 +603,10 @@
         }
       }
       vm.user.folderHM['all'].bookmarks.push(bookmark);
+
+      // Add to local storage
+      StorageService.addBookmark(bookmark);
+
       $rootScope.$broadcast('added-bookmark', {});
     });
 
@@ -536,6 +619,11 @@
       vm.user.folderHM[folder.name] = folder;
       vm.user.folders.push(folder);
       vm.clickOverlay();
+
+      // Add to local storage
+      StorageService.setFolders(vm.user.folders);
+      StorageService.setFolderHM(vm.user.folderHM);
+
       var packet = {folders: vm.user.folders};
       $rootScope.$broadcast('update-folders', packet);
     });
@@ -565,6 +653,12 @@
           allFolder.bookmarks.splice(i, 1);
         }
       }
+
+      for (var i = 0 ; i < folder.bookmarks.length ; i++) {
+        var focus = folder.bookmarks[i];
+        StorageService.deleteBookmark(focus);
+      }
+
       var packet = {folders: vm.user.folders};
       $rootScope.$broadcast('update-folders', packet);
       vm.user.activeFolder = vm.user.folderHM['all'];
@@ -580,10 +674,9 @@
         $state.go('login');
         return;
       }
-      console.log('in DELETE_BOOKMARK_SUCC');
-      console.log('data');
-      console.log(data);
       var bookmark = data.bookmark;
+
+
       var allFolder = vm.user.folderHM['all'];
       for (var i = 0 ; i < allFolder.bookmarks.length ; i++) {
         var focus = allFolder.bookmarks[i];
@@ -610,6 +703,10 @@
           }
         }
       }
+
+      // Delete in local storage
+      StorageService.deleteBookmark(bookmark);
+
     });
     $scope.$on(ROUTE.DELETE_BOOKMARK_FAIL, function(event, data) {
     });
@@ -620,10 +717,8 @@
         $state.go('login');
         return;
       }
-      console.log('in star bookmark success');
       var bookmark = data.bookmark;
-      console.log('bookmark');
-      console.log(bookmark);
+
       var allFolder = vm.user.folderHM['all'];
       if (allFolder) {
         for (var i = 0 ; i < allFolder.bookmarks.length ; i++) {
@@ -635,7 +730,12 @@
           }
         }
       }
+
+      // Update in local storage
+      StorageService.updateBookmark(bookmark);
+
     });
+
     $scope.$on(ROUTE.STAR_BOOKMARK_FAIL, function(event, data) {
     });
 
@@ -663,18 +763,12 @@
           }
         }
       }
-    });
-    $scope.$on(ROUTE.USED_BOOKMARK_FAIL, function(event, data) {
+
+      // Update in local storage
+      StorageService.updateBookmark(bookmark);
     });
 
-    $scope.$on(ROUTE.CHECK_SESSION_SUCCESS, function(event, data) {
-      if (data.error) {
-        humane.log('Session interrupted, please log back on', {addCls: 'humane-flatty-error'});
-        $state.go('login');
-      }
-    });
-    $scope.$on(ROUTE.CHECK_SESSION_FAIL, function(event, data) {
-    })
+
 
     $scope.$on(ROUTE.UPDATE_BOOKMARK_SUCCESS, function(event, data) {
       console.log('in update_bookmark_success');
@@ -685,26 +779,34 @@
         console.log(vm.bookmarkEdit);
       } else {
         var bookmark = data.bookmark;
-        var focusFolder = bookmark.folder;
-        if (!focusFolder) {
-          var allFolder = vm.user.folderHM['all'];
-          for (var i = 0 ; i < allFolder.bookmarks.lengh ; i++) {
-            var curBookmark = allFolder.bookmarks[i];
-            if (bookmark.title === curBookmark.title) {
-              curBookmark = bookmark;
-              break;
+
+        console.log('vm.bE.f');
+        console.log(vm.bookmarkEdit.folder);
+        console.log('vm.bEO.f');
+        console.log(vm.bookmarkEditOriginal.folder);
+        var sameFolder = (vm.bookmarkEdit.folder === vm.bookmarkEditOriginal.folder);
+        if (!sameFolder) {
+          var oldFolder = vm.user.folderHM[vm.bookmarkEditOriginal.folder];
+          var newFolder = vm.user.folderHM[vm.bookmarkEdit.folder];
+          if (oldFolder && oldFolder != 'all' && oldFolder != '') {
+            for (var i = 0; i < oldFolder.bookmarks.length; i++) {
+              var focusBM = oldFolder.bookmarks[i];
+              if (focusBM.title === bookmark.title) {
+                oldFolder.bookmarks.splice(i, 1);
+                break;
+              }
             }
           }
-        } else {
-          var folder = vm.user.folderHM[focusFolder];
-          for (var i = 0 ; i < folder.bookmarks.length ; i++) {
-            var curBookmark = folder.bookmarks[i];
-            if (bookmark.title === curBookmark.title) {
-              curBookmark = bookmark;
-              break;
-            }
+          if (newFolder && newFolder.name != 'all' && newFolder != ''){
+            newFolder.bookmarks.push(bookmark);
           }
         }
+        console.log('newFolder');
+        console.log(newFolder);
+        console.log('oldFolder');
+        console.log(oldFolder);
+
+
         bookmark.tags = [];
         if (bookmark.tag1 !=  'null' && bookmark.tag1.trim('').length != 0) {
           bookmark.tags.push(bookmark.tag1);
@@ -727,6 +829,10 @@
         bookmark.searchstring = searchString;
         vm.clickOverlay(true)
       }
+
+      // Update in local storage
+      StorageService.updateBookmark(bookmark);
+
     });
 
     $scope.$on(ROUTE.UPDATE_BOOKMARK_FAIL, function(event, data) {

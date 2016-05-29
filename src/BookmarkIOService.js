@@ -89,7 +89,7 @@ module.exports.exportBookmark = function(username, title, callback) {
  * Imports a bookmark file into the MySQL database
  * @param filename - the name of the file with the bookmark rowString
  */
-module.exports.importBookmark = function(username, filename) {
+module.exports.importBookmark = function(username, filename, callback) {
   console.log('inside importBookmark, filename = ' + filename);
   var pathToFile = __dirname + '/public/uploads/' + filename;
   fs.readFile(pathToFile, function(err, data) {
@@ -106,6 +106,7 @@ module.exports.importBookmark = function(username, filename) {
     // Check to see if this is a valid file
     if (splitContent.length != 2 || splitContent[0] != 'BOOKMARK') {
       console.error('ERROR: not a valid file!');
+      callback();
       return;
     }
     var bookmark = rowStringToBookmark(splitContent[1].split('\n')[0]);
@@ -212,7 +213,7 @@ module.exports.exportFolder = function(username, folder, callback) {
   });
 };
 
-module.exports.importFolder = function(username, filename, callback) {
+module.exports.importFolder = function(username, filename, callback, errorCallback) {
   db.init();
   // check to see if the user exists
   var selectQueryString = "SELECT * FROM user WHERE username = '" + username + "';";
@@ -233,6 +234,7 @@ module.exports.importFolder = function(username, filename, callback) {
         fs.unlink(pathToFile);
       }
       console.error('ERROR: this user does not exist');
+      errorCallback();
       return;
     }
     var content = fs.readFileSync(pathToFile).toString();
@@ -278,7 +280,7 @@ module.exports.importFolder = function(username, filename, callback) {
               console.error('ERROR: failed to add folder');
               return;
             }
-          })
+          });
           for (var x = 0 ; x < bookmarkRowStrings.length - 1 ; x++) {
             bookmark = rowStringToBookmark(bookmarkRowStrings[x]);
             console.log('bookmark about to be inserted');

@@ -44,6 +44,7 @@ router.post('/login', function(req, res) {
       // res.header('Expires', '-1');
       // res.header('Pragma', 'no-cache');
       req.session.username = req.body.username;
+      res.cookie('username', req.session.username, {maxAge: 9000000 ,httpOnly: false});
 
       // Set persistent cookie for duration of user-agent
       req.session.cookie.exires = false;
@@ -96,7 +97,7 @@ router.post('/signUp', function(req, res) {
       var values = [username, cryptedPassword, name, lastname];
       qs.insert('user', columns, values, function(err, rows) {
         if (err) throw err;
-        req.user.session = req.body.username;
+        req.session.username = req.body.username;
         res.send({
           msg: ('Created account for user: ' + username),
           success: true,
@@ -127,9 +128,6 @@ router.post('/folder/get', function(req, res) {
     console.log(rows);
 
     var data = { rows: rows };
-    // res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    //   res.header('Expires', '-1');
-    //   res.header('Pragma', 'no-cache');
     res.send(data);
   });
 });
@@ -468,7 +466,10 @@ router.post('/bookmark/import', function(req, res) {
     }
     var filename = req.file.filename;
     var username = req.session.username;
-    BookmarkIOService.importBookmark(username, filename);
+    BookmarkIOService.importBookmark(username, filename, function() {
+      res.redirect('/#/dashboard');
+
+    });
   });
   res.redirect('/#/dashboard');
 
@@ -511,6 +512,7 @@ router.post('/folder/import', function(req, res) {
   upload(req, res, function(err) {
     if (err) throw err;
     if (!req.session || !req.session.username || !req.file) {
+      res.redirect('/#/dashboard');
       return;
     }
     var filename = req.file.filename;
@@ -530,13 +532,13 @@ router.post('/folder/import', function(req, res) {
 
 
 router.post('/session/check', function(req, res) {
-  var data = {};
-  if (!req.session || !req.session.user) {
-    data = {error: true};
+  if (req.body.username && !req.session.username) {
+    req.session.username = req.body.username;
+  } else if (!req.body.username) {
+    res.send({shouldLogOut: true});
   } else {
-    data = {error: false};
+    // do nothing
   }
-  res.send(data);
 });
 
 router.post('/bookmark/update', function(req, res) {
@@ -555,7 +557,7 @@ router.post('/bookmark/update', function(req, res) {
   filter.push(['title', '=',  bookmark.title]);
   qs.select(['*'], 'bookmark', filter, function(err, rows) {
     if (err) throw err;
-    if (rows.length > 0) {
+    if (rows.length > 0 && bookmark.title != bookmark.oldTitle) {
       res.send(null);
       return;
     } else {
@@ -593,6 +595,12 @@ router.post('/bookmark/update', function(req, res) {
       filters.push(['username', '=', username]);
       filters.push('and');
       filters.push(['title', '=', bookmark.oldTitle]);
+
+      console.log('about to update bookmark with');
+      console.log('columnvalues');
+      console.log(columnvalues);
+      console.log('filters');
+      console.log(filters);
 
       qs.update('bookmark', columnvalues, filters, function(err, rows) {
         if (err) throw err;

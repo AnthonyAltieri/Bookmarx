@@ -83,7 +83,7 @@ body {
   padding-left: 244px !important; }
 
 .no-nav {
-  padding-left: 0px !important; }
+  padding-left: 0 !important; }
 
 nav {
   display: flex;
@@ -562,11 +562,13 @@ nav {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 48px;
       color: #333;
-      text-align: center; }
+      text-align: center;
+      margin: 8px auto; }
     .login__content .card-input input {
       padding: 8px 4px;
       font-size: 16px;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin-top: 12px; }
     .login__content .card-input .inputform {
       height: 100%;
       width: 100%;
@@ -575,6 +577,12 @@ nav {
       display: flex;
       flex-flow: column;
       justify-content: space-between; }
+    .login__content .card-input .wrapper-login-input {
+      display: flex;
+      flex-flow: column; }
+    .login__content .card-input .wrapper-signup-input {
+      display: flex;
+      flex-flow: column; }
     .login__content .card-input .submit, .login__content .card-input .createaccount {
       width: 8.6em;
       height: 48px;
