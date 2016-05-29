@@ -89,6 +89,8 @@
       "counterSortMethod" : "sort"
     };
 
+    vm.user.lastSortMethod = "";
+
     // UI Flag Inits
     vm.showOverlay = false;
     vm.editBookmarkMode = false;
@@ -135,15 +137,54 @@
       );
     }
 
+    function sortFolder(sortMethod){
+      if(sortMethod === "sortTitleUp"){
+        vm.user.activeFolder.bookmarks = FilterService.zToATitle(vm.user.activeFolder.bookmarks);
+      }
+      else if(sortMethod === "sortTitleDown"){
+        vm.user.activeFolder.bookmarks = FilterService.aToZTitle(vm.user.activeFolder.bookmarks);
+
+      }
+      else if(sortMethod === "sortUrlUp"){
+        vm.user.activeFolder.bookmarks = FilterService.zToAUrl(vm.user.activeFolder.bookmarks);
+      }
+      else if(sortMethod === "sortUrlDown"){
+        vm.user.activeFolder.bookmarks = FilterService.aToZUrl(vm.user.activeFolder.bookmarks);
+      }
+      else if(sortMethod === "sortLastVisitUp"){
+        vm.user.activeFolder.bookmarks = FilterService.nineToZeroSortLastVisit(vm.user.activeFolder.bookmarks);
+      }
+      else if(sortMethod === "sortLastVisitDown"){
+        vm.user.activeFolder.bookmarks = FilterService.zeroToNineSortLastVisit(vm.user.activeFolder.bookmarks);
+      }
+      else if(sortMethod === "sortCreationDateUp"){
+        vm.user.activeFolder.bookmarks = FilterService.nineToZeroSortLastVisit(vm.user.activeFolder.bookmarks);
+      }
+      else if(sortMethod === "sortCreationDateDown"){
+        vm.user.activeFolder.bookmarks = FilterService.zeroToNineSortCreationDate(vm.user.activeFolder.bookmarks);
+      }
+      else if(sortMethod === "sortCounterUp"){
+        vm.user.activeFolder.bookmarks = FilterService.nineToZeroSortCounter(vm.user.activeFolder.bookmarks);
+      }
+      else if(sortMethod === "sortCounterDown"){
+        vm.user.activeFolder.bookmarks = FilterService.zeroToNineSortCounter(vm.user.activeFolder.bookmarks);
+      }
+    }
+
+    //Find:selectFolder
     function selectFolder(folder) {
       console.log('selected folder');
       console.log(folder);
+      console.log("Last Sort Method: " + vm.user.lastSortMethod);
+
       if (folder.isActive) return;
       if (vm.user.activeFolder != null) {
         vm.user.activeFolder.isActive = false;
       }
+
       vm.user.activeFolder = vm.user.folderHM[folder.name];
       vm.user.activeFolder.isActive = true;
+      sortFolder(vm.user.lastSortMethod);
       console.log('in selectFolder');
       console.log('vm.user.folders');
       console.log(vm.user.folders);
@@ -343,17 +384,20 @@
       || tag === null);
 
     }
-
+    //Find:sort functions
     function sortTitle() {
       // Last sort was a->z
+
       if (vm.user.lastTitleSort) {
         sortArrows("titleSortMethod");
         vm.sort.titleSortMethod = "sort-down";
+        vm.user.lastSortMethod = "sortTitleDown";
         vm.user.lastTitleSort = false;
         vm.user.activeFolder.bookmarks = FilterService.aToZTitle(vm.user.activeFolder.bookmarks);
       } else {
         sortArrows("titleSortMethod");
         vm.sort.titleSortMethod = "sort-up";
+        vm.user.lastSortMethod = "sortTitleUp";
         vm.user.lastTitleSort = true;
         vm.user.activeFolder.bookmarks = FilterService.zToATitle(vm.user.activeFolder.bookmarks);
 
@@ -362,14 +406,17 @@
 
     function sortUrl() {
       // Last sort was a->z
+
       if (vm.user.lastUrlSort) {
         sortArrows("urlSortMethod");
         vm.sort.urlSortMethod = "sort-down";
+        vm.user.lastSortMethod = "sortUrlDown";
         vm.user.lastUrlSort= false;
         vm.user.activeFolder.bookmarks = FilterService.aToZUrl(vm.user.activeFolder.bookmarks);
       } else {
         sortArrows("urlSortMethod");
         vm.sort.urlSortMethod = "sort-up";
+        vm.user.lastSortMethod = "sortUrlUp";
         vm.user.lastUrlSort= true;
         vm.user.activeFolder.bookmarks = FilterService.zToAUrl(vm.user.activeFolder.bookmarks);
       }
@@ -377,42 +424,51 @@
 
     function sortLastVisit() {
       // Last sort was 0->9
+
       if (vm.user.lastSortLastVisit) {
         sortArrows("visitSortMethod");
         vm.sort.visitSortMethod = "sort-down";
+        vm.user.lastSortMethod = "sortLastVisitDown";
         vm.user.lastSortLastVisit = false;
         vm.user.activeFolder.bookmarks = FilterService.zeroToNineSortLastVisit(vm.user.activeFolder.bookmarks);
       } else {
         sortArrows("visitSortMethod");
         vm.sort.visitSortMethod = "sort-up";
+        vm.user.lastSortMethod = "sortLastVisitUp";
         vm.user.lastSortLastVisit = true;
         vm.user.activeFolder.bookmarks = FilterService.nineToZeroSortLastVisit(vm.user.activeFolder.bookmarks);
       }
     }
     function sortCreationDate() {
+
       if (vm.user.lastSortCreationDate) {
         sortArrows("creationSortMethod");
         vm.sort.creationSortMethod = "sort-down";
+        vm.user.lastSortMethod = "sortCreationDateDown";
         vm.user.lastSortCreationDate = false;
         vm.user.activeFolder.bookmarks = FilterService.zeroToNineSortCreationDate(vm.user.activeFolder.bookmarks);
       } else {
         sortArrows("creationSortMethod");
         vm.sort.creationSortMethod = "sort-up";
+        vm.user.lastSortMethod = "sortCreationDateUp";
         vm.user.lastSortCreationDate = true;
         vm.user.activeFolder.bookmarks = FilterService.nineToZeroSortCreationDate(vm.user.activeFolder.bookmarks);
       }
     }
 
     function sortCounter() {
+
       if (vm.user.lastSortCounter) {
         sortArrows("counterSortMethod");
         vm.sort.counterSortMethod = "sort-down";
+        vm.user.lastSortMethod = "sortCounterDown";
         vm.user.lastSortCounter = false;
         vm.user.activeFolder.bookmarks = FilterService.zeroToNineSortCounter(vm.user.activeFolder.bookmarks);
 
       } else {
         sortArrows("counterSortMethod");
         vm.sort.counterSortMethod = "sort-up";
+        vm.user.lastSortMethod = "sortCounterUp";
         vm.user.lastSortCounter = true;
         vm.user.activeFolder.bookmarks = FilterService.nineToZeroSortCounter(vm.user.activeFolder.bookmarks);
       }
