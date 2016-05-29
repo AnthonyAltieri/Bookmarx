@@ -35,7 +35,6 @@
     vm.onInputChosen = onInputChosen;
     vm.onInputBookmarkChosen = onInputBookmarkChosen;
 
-
     // Warn user if cookies are not enabled
     vm.warnCookies = !localStorageService.cookie.isSupported;
 
@@ -44,7 +43,7 @@
 
     // Objects
     vm.user = {};
-    vm.user.name = localStorageService.cookie.get('username');
+    vm.user.name = vm.cookies.username;
     vm.user.noFolderBookmarks = [];
     vm.user.activeFolder = null;
     vm.user.folders = [];
@@ -74,7 +73,6 @@
     vm.editBookmarkMode = false;
 
 
-
     // Show nav
     $rootScope.$broadcast('show-nav');
     if (!localStorageService.cookie.get('username')) {
@@ -82,8 +80,6 @@
       $state.go('login');
       return;
     }
-
-
 
     // Get folders from local service if you can
     if (localStorageService.isSupported) {
@@ -108,7 +104,7 @@
     function clickStar(bookmark) {
       var data = {
         bookmark: bookmark,
-        username: localStorageService.cookie.get('username')
+        username: vm.cookies.username
       };
 
       ServerService.sendPost(data,
@@ -318,6 +314,16 @@
       )
     }
 
+    //$interval(function() {
+    //  var data = {username: vm.cookies.username}
+    //  ServerService.sendPost(data,
+    //    ROUTE.CHECK_SESSION,
+    //    ROUTE.CHECK_SESSION_SUCCESS,
+    //    ROUTE.CHECK_SESSION_FAIL
+    //  );
+    //
+    //}, 10000);
+
     function isValidTag(tag) {
       return !(!tag || tag.trim('').length === 0 || tag === 'null' || tag === 'NULL'
       || tag === null);
@@ -439,7 +445,6 @@
         return;
       }
       var rows = data.rows;
-
       vm.user.bookmarkHM = {};
 
       for (var i = 0 ; i < rows.length ; i++) {
@@ -763,7 +768,6 @@
           }
         }
       }
-
       // Update in local storage
       StorageService.updateBookmark(bookmark);
     });
