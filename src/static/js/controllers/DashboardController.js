@@ -40,10 +40,12 @@
 
     // Set local storage and cookie prefix
     localStorageService.set('cse136team10');
+    
+    
 
     // Objects
     vm.user = {};
-    vm.user.name = vm.cookies.username;
+    vm.user.name = localStorageService.cookie.get('username');
     vm.user.noFolderBookmarks = [];
     vm.user.activeFolder = null;
     vm.user.folders = [];

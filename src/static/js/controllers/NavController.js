@@ -14,6 +14,7 @@
     // Functions
     $scope.hideNavSlider = hideNavSlider;
     $scope.showNavSlider = showNavSlider;
+    $scope.flipNavContainer = flipNavContainer;
     $scope.addBookmark = addBookmark;
     $scope.saveBookmark = saveBookmark;
     $scope.cancelAddBookmark = cancelAddBookmark;
@@ -23,6 +24,15 @@
     // Objects
 
     // Nav
+    $scope.mode = {};
+    $scope.mode.mobileNav = true;
+    $scope.mode.desktopNav = false;
+
+    function flipNavContainer() {
+      $scope.mode.mobileNav = !$scope.mode.mobileNav;
+      $scope.mode.desktopNav = !$scope.mode.desktopNav;
+    }
+
     $rootScope.nav = {};
     $rootScope.nav.isSliderShowing = false;
 
