@@ -24,9 +24,19 @@
     // Objects
 
     // Nav
+    console.log(window.innerWidth);
     $scope.mode = {};
-    $scope.mode.mobileNav = true;
-    $scope.mode.desktopNav = false;
+    if (window.innerWidth > 990) {
+      $scope.mode.mobileNav = false;
+      $scope.mode.desktopNav = true;
+      $scope.hideHamburger = true;
+    }
+    else {
+      $scope.mode.mobileNav = true;
+      $scope.mode.desktopNav = false;
+      $scope.hideHamburger = false;
+    }
+
 
     function flipNavContainer() {
       $scope.mode.mobileNav = !$scope.mode.mobileNav;
