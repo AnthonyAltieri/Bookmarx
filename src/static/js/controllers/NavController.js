@@ -5,16 +5,18 @@
     .module('app')
     .controller('NavController', NavController);
 
-  NavController.$inject = ['$rootScope', '$scope'];
+  NavController.$inject = ['$rootScope', '$scope', '$state', 'localStorageService'];
 
-  function NavController($rootScope, $scope, FolderService) {
+  function NavController($rootScope, $scope, $state, localStorageService) {
     console.log('In NavigationController');
     $scope.hideNav = true;
 
     // Functions
     $scope.hideNavSlider = hideNavSlider;
     $scope.showNavSlider = showNavSlider;
+    $scope.flipNavContainer = flipNavContainer;
     $scope.addBookmark = addBookmark;
+    $scope.logout = logout;
     $scope.saveBookmark = saveBookmark;
     $scope.cancelAddBookmark = cancelAddBookmark;
     $rootScope.loggedIn = loggedIn;
@@ -23,6 +25,31 @@
     // Objects
 
     // Nav
+    $scope.mode = {};
+    if (window.innerWidth > 990) {
+      $scope.mode.mobileNav = false;
+      $scope.mode.desktopNav = true;
+      $scope.hideHamburger = true;
+    }
+    else {
+      $scope.mode.mobileNav = true;
+      $scope.mode.desktopNav = false;
+      $scope.hideHamburger = false;
+    }
+
+    function logout() {
+      loggedout();
+      localStorageService.clearAll();
+      console.log(localStorageService);
+      $state.go('login');
+    }
+
+
+    function flipNavContainer() {
+      $scope.mode.mobileNav = !$scope.mode.mobileNav;
+      $scope.mode.desktopNav = !$scope.mode.desktopNav;
+    }
+
     $rootScope.nav = {};
     $rootScope.nav.isSliderShowing = false;
 
@@ -119,7 +146,7 @@
     function prettyDate(date) {
       var year = date.getYear() + 1900;
       var month = date.getMonth();
-      var day = date.getDay();
+      var day = date.getDate();
 
       return ('' + year + '-' + month + '-' + day);
     }
@@ -153,7 +180,7 @@
 
     $rootScope.$on('added-bookmark', function(event, data) {
       hideNavSlider($scope.navSlider);
-    })
+    });
 
     $rootScope.$on('update-folders', function(event, data) {
       console.log('in update-folders');
@@ -169,7 +196,7 @@
       $scope.add.folders = folders;
       console.log('just updated nav folders to');
       console.log($scope.add);
-    })
+    });
   }
 
 })();

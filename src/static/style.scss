@@ -1,9 +1,11 @@
 $desktop: "(min-width: 767px)";
-//$mobile: "(max-width: 990px)";
+$mobile: "(max-width: 990px)";
 
 @import "SimpleIconSet/font/flaticon.css";
 @import "RatingValidationIcons/font/flaticon.css";
 
+$loginButton: #25788C;
+$loginColor: #C02FE;
 
 $nav__desktop-width: 244px;
 
@@ -98,6 +100,7 @@ body {
 body {
   margin: 0;
   background-color: $color-background;
+  display: flex;
 }
 
 #content {
@@ -114,7 +117,7 @@ body {
 }
 
 .no-nav {
-  padding-left: 0px !important;
+  padding-left: 0 !important;
 }
 
 nav {
@@ -123,17 +126,55 @@ nav {
   position: fixed;
   z-index: 10;
 
+
+
+  .box {
+    visibility: hidden;
+    display: none;
+  }
+
   //@media #{$desktop} {
     width: $nav__desktop-width;
     height: 100vh;
 
   //}
 
-  //@media #{$mobile} {
-  //  width: 100%;
-  //  height: 100%;
-  //
-  //}
+  @media #{$mobile} {
+    width: 100%;
+    height: 100%;
+    //.navTopRow {
+    //  display: flex;
+    //  justify-content: center;
+    //  flex-direction: row nowrap;
+    //  align-items: center;
+    //  position: relative;
+    //}
+
+    .box {
+      height: 22px;
+      width: 40px;
+      border: #333 solid 2px;
+      display: flex;
+      flex-flow: column;
+      justify-content: space-between;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      border-radius: 5px;
+      position: absolute;
+      right: 10px;
+      top: 22px;
+      visibility: visible;
+    }
+
+    .boxline {
+      width: 90%;
+      height: 5px;
+      background: #333;
+      border: 0;
+      border-radius: 4px;
+      margin: 0 auto;
+    }
+  }
 
   background-color: $nav__color-background;
   box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -180,6 +221,12 @@ nav {
     cursor: pointer;
 
     @extend .no-textsel;
+
+    @media #{$mobile} {
+      width: 84%;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 
   #item__icon-plus:before {
@@ -202,6 +249,13 @@ nav {
     background-color: $nav__color-background-active;
     border-color: $nav__color-background-active !important;
     box-shadow: 0 0 !important;
+  }
+
+  .logout {
+    margin-bottom: 20px;
+    background-color: $loginButton;
+    border-color: $loginButton;
+    font-color: $loginColor;
   }
 }
 
@@ -367,6 +421,10 @@ nav {
   display: flex;
   justify-content: space-around;
   align-items: center;
+
+  @media #{$mobile} {
+    width: 60%;
+  }
 
   .card-input__field {
     width: 100%;
@@ -768,14 +826,18 @@ nav {
     margin-right: auto;
     margin-top: 62px;
     background-color: white;
-    box-shadow: 1px 2px 2px 0px rgba(194,194,194,1);
+    box-shadow: 1px 2px 2px 0 rgba(194,194,194,1);
 
+    @media #{$mobile} {
+      width: 300px;
+    }
 
     .header {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 48px;
       color: #333;
       text-align: center;
+      margin: 8px auto;
 
     }
 
@@ -783,6 +845,7 @@ nav {
       padding: 8px 4px;
       font-size: 16px;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin-top: 12px;
 
     }
 
@@ -794,8 +857,21 @@ nav {
       display: flex;
       flex-flow: column;
       justify-content: space-between;
-
+      //@media #{$mobile} {
+      //  width: 300px;
+      //}
     }
+
+    .wrapper-login-input {
+      display: flex;
+      flex-flow: column;
+    }
+
+    .wrapper-signup-input {
+      display: flex;
+      flex-flow: column;
+    }
+
 
     .submit {
       width: 8.6em;
@@ -953,9 +1029,6 @@ nav {
 
 }
 
-.no-click {
-
-}
 .export-folder {
   background: $color-grey;
   border: $color-grey;
@@ -1106,8 +1179,21 @@ nav {
     cursor: pointer;
 
     @extend .no-textsel;
-
   }
 
 }
 
+.no-script {
+  height: 100vh;
+  width: 100wh;
+  background-color: #fafafa;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 500;
+  text-align: center;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0 auto;
+}

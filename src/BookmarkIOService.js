@@ -280,7 +280,7 @@ module.exports.importFolder = function(username, filename, callback, errorCallba
               console.error('ERROR: failed to add folder');
               return;
             }
-          })
+          });
           for (var x = 0 ; x < bookmarkRowStrings.length - 1 ; x++) {
             bookmark = rowStringToBookmark(bookmarkRowStrings[x]);
             console.log('bookmark about to be inserted');

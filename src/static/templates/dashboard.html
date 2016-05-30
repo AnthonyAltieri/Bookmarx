@@ -2,8 +2,8 @@
     <div id="overlay" ng-show="vm.showOverlay">
         <div class="card-addfolder" ng-hide="vm.editBookmarkMode">
             <h1 class="header">Add Folder</h1>
-            <input type="text" ng-model="folder.name" placeholder="Folder name">
-            <a class="folder-add" ng-click="vm.addFolder(folder.name)">Add</a>
+            <input type="text" ng-model="vm.folder.name" placeholder="Folder name">
+            <a class="folder-add" ng-click="vm.addFolder(vm.folder.name)">Add</a>
         </div>
         <div class="card-editbookmark" ng-show="vm.editBookmarkMode">
             <h1 class="header">Edit Bookmark</h1>
