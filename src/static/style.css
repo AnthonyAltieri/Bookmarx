@@ -557,7 +557,7 @@ nav {
     margin-right: auto;
     margin-top: 62px;
     background-color: white;
-    box-shadow: 1px 2px 2px 0px #c2c2c2; }
+    box-shadow: 1px 2px 2px 0 #c2c2c2; }
     .login__content .card-input .header {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 48px;

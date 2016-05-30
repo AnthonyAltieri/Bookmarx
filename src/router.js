@@ -199,7 +199,7 @@ router.post('/user/bookmarks/add', function(req, res) {
       var datestring = '';
       datestring += ((date.getYear() + 1900) + '-');
       datestring += (date.getMonth() + '-');
-      datestring += (date.getDay());
+      datestring += (date.getDate());
 
       values.push(datestring); // creationDate
       values.push(datestring); // lastVisit
@@ -404,7 +404,7 @@ router.post('/bookmark/use', function(req, res) {
 
 
   var date = new Date();
-  var dateString = (date.getYear() + 1900) + '-' + date.getMonth() + '-' + date.getDay();
+  var dateString = (date.getYear() + 1900) + '-' + date.getMonth() + '-' + date.getDate();
   bookmark.lastVisit = dateString;
 
 

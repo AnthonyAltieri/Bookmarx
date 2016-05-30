@@ -59,10 +59,8 @@
         } else {
           // submit sign up
           vm.submitSignUp(vm.signup)
-
         }
       }
-
     };
 
     // Function implementations
