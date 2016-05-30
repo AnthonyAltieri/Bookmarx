@@ -4,6 +4,8 @@ $mobile: "(max-width: 990px)";
 @import "SimpleIconSet/font/flaticon.css";
 @import "RatingValidationIcons/font/flaticon.css";
 
+$loginButton: #25788C;
+$loginColor: #C02FE;
 
 $nav__desktop-width: 244px;
 
@@ -223,7 +225,7 @@ nav {
     @media #{$mobile} {
       width: 84%;
       margin-left: auto;
-      margin-right: auto
+      margin-right: auto;
     }
   }
 
@@ -247,6 +249,13 @@ nav {
     background-color: $nav__color-background-active;
     border-color: $nav__color-background-active !important;
     box-shadow: 0 0 !important;
+  }
+
+  .logout {
+    margin-bottom: 20px;
+    background-color: $loginButton;
+    border-color: $loginButton;
+    font-color: $loginColor;
   }
 }
 
@@ -1122,8 +1131,6 @@ nav {
 
     @extend .no-textsel;
   }
-
-
 
 }
 

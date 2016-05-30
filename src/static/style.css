@@ -177,6 +177,11 @@ nav {
     background-color: #eeeae6;
     border-color: #eeeae6 !important;
     box-shadow: 0 0 !important; }
+  nav .logout {
+    margin-bottom: 20px;
+    background-color: #25788C;
+    border-color: #25788C;
+    font-color: #C02FE; }
 
 #choose-bookmark {
   width: 80%;
@@ -594,14 +599,10 @@ nav {
     margin-right: auto;
     margin-top: 62px;
     background-color: white;
-<<<<<<< HEAD
     box-shadow: 1px 2px 2px 0 #c2c2c2; }
-=======
-    box-shadow: 1px 2px 2px 0px #c2c2c2; }
     @media (max-width: 990px) {
       .login__content .card-input {
         width: 300px; } }
->>>>>>> f756f80f45e0e29dff4abbf50ce963bb95835982
     .login__content .card-input .header {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 48px;
@@ -863,5 +864,19 @@ nav {
     border: 4px solid #E87162;
     border-radius: 6px;
     cursor: pointer; }
+
+.no-script {
+  height: 100vh;
+  width: 100wh;
+  background-color: #fafafa;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 500;
+  text-align: center;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0 auto; }
 
 /*# sourceMappingURL=style.css.map */

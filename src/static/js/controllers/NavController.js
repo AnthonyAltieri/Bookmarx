@@ -5,9 +5,9 @@
     .module('app')
     .controller('NavController', NavController);
 
-  NavController.$inject = ['$rootScope', '$scope'];
+  NavController.$inject = ['$rootScope', '$scope', '$state', 'localStorageService'];
 
-  function NavController($rootScope, $scope, FolderService) {
+  function NavController($rootScope, $scope, $state, localStorageService) {
     console.log('In NavigationController');
     $scope.hideNav = true;
 
@@ -16,6 +16,7 @@
     $scope.showNavSlider = showNavSlider;
     $scope.flipNavContainer = flipNavContainer;
     $scope.addBookmark = addBookmark;
+    $scope.logout = logout;
     $scope.saveBookmark = saveBookmark;
     $scope.cancelAddBookmark = cancelAddBookmark;
     $rootScope.loggedIn = loggedIn;
@@ -34,6 +35,13 @@
       $scope.mode.mobileNav = true;
       $scope.mode.desktopNav = false;
       $scope.hideHamburger = false;
+    }
+
+    function logout() {
+      loggedout();
+      localStorageService.clearAll();
+      console.log(localStorageService);
+      $state.go('login');
     }
 
 
@@ -172,7 +180,7 @@
 
     $rootScope.$on('added-bookmark', function(event, data) {
       hideNavSlider($scope.navSlider);
-    })
+    });
 
     $rootScope.$on('update-folders', function(event, data) {
       console.log('in update-folders');
@@ -188,7 +196,7 @@
       $scope.add.folders = folders;
       console.log('just updated nav folders to');
       console.log($scope.add);
-    })
+    });
   }
 
 })();
