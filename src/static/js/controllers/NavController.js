@@ -40,7 +40,7 @@
     function logout() {
       loggedout();
       localStorageService.clearAll();
-      console.log(localStorageService);
+      localStorageService.cookie.clearAll();
       $state.go('login');
     }
 
