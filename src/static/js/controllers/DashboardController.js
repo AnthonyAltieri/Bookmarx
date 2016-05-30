@@ -7,10 +7,10 @@
 
 
   DashboardController.$inject = ['$rootScope', '$scope', '$state', '$interval', 'localStorageService',
-                                 'ServerService', 'FilterService', 'StorageService'];
+                                 'ServerService', 'FilterService', 'StorageService', 'ServiceWorker'];
 
   function DashboardController($rootScope, $scope, $state, $interval, localStorageService, ServerService,
-                               FilterService, StorageService) {
+                               FilterService, StorageService, ServiceWorker) {
     var vm = this;
 
     // Functions
@@ -73,7 +73,6 @@
     // UI flag initialization
     vm.showOverlay = false;
     vm.editBookmarkMode = false;
-
 
     // Show nav
     $rootScope.$broadcast('show-nav');
@@ -167,6 +166,7 @@
         data.username = localStorageService.cookie.get('username');
       }
       data.name = name;
+      data.bookmarks = [];
       if (!data.username) {
         humane.log('Something went wrong, log in again', {addCls: 'humane-flatty-error'});
         $state.go('login');
@@ -208,7 +208,6 @@
       } else {
         data.username = localStorageService.cookie.get('username');
       }
-
 
       ServerService.sendPost(data,
         ROUTE.DELETE_BOOKMARK,
@@ -396,6 +395,8 @@
     }
 
 
+
+
     // Watchers
     $scope.$on(ROUTE.GET_FOLDERS_SUCCESS, function(event, data) {
       if (!data || data.error || !data.rows) {
@@ -500,24 +501,9 @@
       }
 
       // Add to local storage
-      console.log('============================================')
-      console.log('this is folders before set');
-      console.log('vm.user.folders');
-      console.log(vm.user.folders);
-      console.log('local folders');
-      console.log(StorageService.getFolders());
-
-
       StorageService.setFolders(vm.user.folders);
       StorageService.setFolderHM(vm.user.folderHM);
       StorageService.setBookmarkHM(vm.user.bookmarkHM);
-
-      console.log('this is folders after set');
-      console.log('vm.user.folders');
-      console.log(vm.user.folders);
-      console.log('local folders');
-      console.log(StorageService.getFolders());
-      console.log('============================================')
 
       // Send a packet containing the new folders to the NavController
       var packet = {folders: vm.user.folders};
@@ -584,7 +570,7 @@
       // Make the dates pretty
       var date = new Date();
       var prettyDateString = '' + (date.getYear() + 1900) + '-' + date.getMonth() + '-' +
-        date.getDay();
+        date.getDate();
       if (!bookmark.creationDate) {
         bookmark.creationDate = prettyDateString;
       } else {

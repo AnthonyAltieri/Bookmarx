@@ -138,7 +138,7 @@
     function prettyDate(date) {
       var year = date.getYear() + 1900;
       var month = date.getMonth();
-      var day = date.getDay();
+      var day = date.getDate();
 
       return ('' + year + '-' + month + '-' + day);
     }

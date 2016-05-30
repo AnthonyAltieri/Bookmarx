@@ -594,10 +594,14 @@ nav {
     margin-right: auto;
     margin-top: 62px;
     background-color: white;
+<<<<<<< HEAD
+    box-shadow: 1px 2px 2px 0 #c2c2c2; }
+=======
     box-shadow: 1px 2px 2px 0px #c2c2c2; }
     @media (max-width: 990px) {
       .login__content .card-input {
         width: 300px; } }
+>>>>>>> f756f80f45e0e29dff4abbf50ce963bb95835982
     .login__content .card-input .header {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 48px;
