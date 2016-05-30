@@ -40,6 +40,8 @@
 
     // Set local storage and cookie prefix
     localStorageService.set('cse136team10');
+    
+    
 
     // Objects
     vm.user = {};

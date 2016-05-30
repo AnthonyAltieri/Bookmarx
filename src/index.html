@@ -58,9 +58,17 @@
 <body>
     <div ng-controller="NavController" ng-hide="hideNav">
         <nav id="nav">
-            <h1 class="title">BookMarx</h1>
+            <!--<div id="navTopRow">-->
+                <h1 class="title">BookMarx</h1>
+                <div class="box" ng-click="flipNavContainer()">
+                    <hr class="boxline">
+                    <hr class="boxline">
+                    <hr class="boxline">
+                </div>
+            <!--</div>-->
+
             <hr class="line">
-            <div class="container-items">
+            <div class="container-items" ng-hide="mode.mobileNav" ng-show="mode.desktopNav" class="mobileNav">
                 <a class="item" ng-click="addBookmark()">Add Bookmark<i class="flaticon-plus-symbol" id="item__icon-plus"></i></a>
                 <br/>
                 <!--<a class="item" ng-click="importBookmark()">Import Bookmark<i class="flaticon-upload-to-cloud" id="icon-cloud"></i></a>-->

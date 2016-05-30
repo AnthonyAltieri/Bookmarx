@@ -69,7 +69,8 @@ body {
 
 body {
   margin: 0;
-  background-color: #F2EEEA; }
+  background-color: #F2EEEA;
+  display: flex; }
 
 #content {
   height: 100vh;
@@ -94,6 +95,34 @@ nav {
   height: 100vh;
   background-color: #E87162;
   box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+  nav .box {
+    visibility: hidden;
+    display: none; }
+  @media (max-width: 990px) {
+    nav {
+      width: 100%;
+      height: 100%; }
+      nav .box {
+        height: 22px;
+        width: 40px;
+        border: #333 solid 2px;
+        display: flex;
+        flex-flow: column;
+        justify-content: space-between;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        border-radius: 5px;
+        position: absolute;
+        right: 10px;
+        top: 22px;
+        visibility: visible; }
+      nav .boxline {
+        width: 90%;
+        height: 5px;
+        background: #333;
+        border: 0;
+        border-radius: 4px;
+        margin: 0 auto; } }
   nav .title {
     font-family: "Yellowtail", cursive;
     font-size: 3.2em;
@@ -128,6 +157,11 @@ nav {
     border: 4px solid #F2EEEA;
     border-radius: 6px;
     cursor: pointer; }
+    @media (max-width: 990px) {
+      nav .item {
+        width: 84%;
+        margin-left: auto;
+        margin-right: auto; } }
   nav #item__icon-plus:before {
     font-family: Flaticon;
     font-size: 1em !important;
@@ -274,6 +308,9 @@ nav {
   display: flex;
   justify-content: space-around;
   align-items: center; }
+  @media (max-width: 990px) {
+    .card-input {
+      width: 60%; } }
   .card-input .card-input__field {
     width: 100%;
     height: 100%;
@@ -557,7 +594,14 @@ nav {
     margin-right: auto;
     margin-top: 62px;
     background-color: white;
+<<<<<<< HEAD
     box-shadow: 1px 2px 2px 0 #c2c2c2; }
+=======
+    box-shadow: 1px 2px 2px 0px #c2c2c2; }
+    @media (max-width: 990px) {
+      .login__content .card-input {
+        width: 300px; } }
+>>>>>>> f756f80f45e0e29dff4abbf50ce963bb95835982
     .login__content .card-input .header {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 48px;

@@ -14,6 +14,7 @@
     // Functions
     $scope.hideNavSlider = hideNavSlider;
     $scope.showNavSlider = showNavSlider;
+    $scope.flipNavContainer = flipNavContainer;
     $scope.addBookmark = addBookmark;
     $scope.saveBookmark = saveBookmark;
     $scope.cancelAddBookmark = cancelAddBookmark;
@@ -23,6 +24,25 @@
     // Objects
 
     // Nav
+    console.log(window.innerWidth);
+    $scope.mode = {};
+    if (window.innerWidth > 990) {
+      $scope.mode.mobileNav = false;
+      $scope.mode.desktopNav = true;
+      $scope.hideHamburger = true;
+    }
+    else {
+      $scope.mode.mobileNav = true;
+      $scope.mode.desktopNav = false;
+      $scope.hideHamburger = false;
+    }
+
+
+    function flipNavContainer() {
+      $scope.mode.mobileNav = !$scope.mode.mobileNav;
+      $scope.mode.desktopNav = !$scope.mode.desktopNav;
+    }
+
     $rootScope.nav = {};
     $rootScope.nav.isSliderShowing = false;
 
