@@ -24,7 +24,6 @@
     // Objects
 
     // Nav
-    console.log(window.innerWidth);
     $scope.mode = {};
     if (window.innerWidth > 990) {
       $scope.mode.mobileNav = false;
