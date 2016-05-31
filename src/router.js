@@ -127,7 +127,7 @@ router.post('/signUp', function(req, res) {
         });
 
         var mailOptions = {
-          from: 'bookmarxapp@gmail.com',
+          from: 'Bookmarxapp@gmail.com',
           to: username,
           subject: 'Account Activation',
           text: 'Thank you for joining Bookmarx!\n\n' +
@@ -141,7 +141,7 @@ router.post('/signUp', function(req, res) {
           }
           else{
             res.send({
-              msg: ('Created account for user: ' + username),
+              msg: 'Created account for user: ' + username,
               success: true,
               username: username,
               email: info.response
@@ -715,7 +715,7 @@ router.post('/reset',function(req,res){
                 }
               });
               var mailOptions = {
-                from: 'bookmarxapp@gmail.com',
+                from: 'Bookmarxapp@gmail.com',
                 to: user,
                 subject: 'Password reset',
                 text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
