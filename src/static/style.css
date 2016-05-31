@@ -22,7 +22,7 @@ body {
   width: 100vw;
   height: 100%; }
 
-.no-textsel, nav .item, .icon-clear:before, .icon-edit:before, .icon-star:before, .icon-star__selected:before, .exportbtn, .card-bookmarks__item-tag, .folder-headerbtn, .tile-folder__create, .tile-folder__create .name, .login__content .card-input .submit, .login__content .card-input .createaccount, #overlay .card-addfolder .folder-add, .import-folder, .export-folder, .import-export-btn, .card-editbookmark .folder-update {
+.no-textsel, nav .item, .icon-clear:before, .icon-edit:before, .icon-star:before, .icon-star__selected:before, .exportbtn, .card-bookmarks__item-tag, .folder-headerbtn, .tile-folder__create, .tile-folder__create .name, .login__content .card-input .submit, .login__content .card-input .createaccount, #overlay .card-addfolder .folder-add, .import-folder, .export-folder, .import-export-btn, .card-editbookmark .folder-update, .verify-card .createaccount {
   text-decoration: none;
   user-select: none;
   -webkit-touch-callout: none;
@@ -1004,5 +1004,41 @@ nav {
   color: #333;
   text-decoration: underline;
   cursor: pointer; }
+
+.verify-card {
+  width: 450px;
+  height: 500px;
+  padding: 8px 16px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 62px;
+  background-color: white;
+  box-shadow: 1px 2px 2px 0 #c2c2c2; }
+  .verify-card .header {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 48px;
+    color: #333;
+    text-align: center;
+    margin: 20% auto; }
+  .verify-card .buttons {
+    display: flex;
+    flex-flow: row;
+    padding-bottom: 22px; }
+  .verify-card .createaccount {
+    width: 8.6em;
+    height: 48px;
+    font-size: 1.1em;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 600;
+    text-align: center;
+    padding: 8px 12px;
+    line-height: 48px;
+    margin: 0 auto;
+    color: #fafafa;
+    background-color: #E87162;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.11), 0 1px 5px 0 rgba(0, 0, 0, 0.19);
+    border: 4px solid #E87162;
+    border-radius: 6px;
+    cursor: pointer; }
 
 /*# sourceMappingURL=style.css.map */
