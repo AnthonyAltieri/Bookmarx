@@ -17,6 +17,12 @@
     //}
 
     var vm = this;
+    
+    console.log('========================================');
+    console.log('this is our test');
+    console.log('localStorageService.isSupported: ' + localStorageService.isSupported);
+    console.log('localStorageService.cookie.isSupported: ' + localStorageService.cookie.isSupported);
+    console.log('========================================');
 
     // Set local storage and cookie prefix
     localStorageService.set('cse136team10');
@@ -86,6 +92,7 @@
       if (!localStorageService.cookie.isSupported) {
         console.log("entered if");
         humane.log('You need javascript and cookies enabled', {addCls: 'humane-flatty-info'});
+        $state.go('login'); 
         return;
       }
 
