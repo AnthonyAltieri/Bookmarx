@@ -524,6 +524,12 @@
 
     $rootScope.$on('add-bookmark', function(event, obj) {
       var bookmark = obj.bookmark;
+      console.log(bookmark);
+
+      if ((bookmark.url[0] === 'w') && (bookmark.url[1] === 'w') && (bookmark.url[2] === 'w')) {
+        bookmark.url = 'http://' + bookmark.url;
+      }
+
       var data = {
         bookmark: bookmark,
         username: vm.user.name

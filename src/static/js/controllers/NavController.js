@@ -154,8 +154,9 @@
 
     function checkURL(url) {
       var chars = url.split('');
-      if (chars[0].toLowerCase() != 'h' && chars[1].toLowerCase() != 't' && chars[2].toLowerCase() != 't'
-          && chars[3].toLowerCase() != 'p') {
+      if ((chars[0].toLowerCase() != 'h' && chars[1].toLowerCase() != 't' && chars[2].toLowerCase() != 't'
+          && chars[3].toLowerCase() != 'p') && (chars[0].toLowerCase() != 'w' && chars[1].toLowerCase() != 'w' && chars[2].toLowerCase() != 'w')) {
+        console.log("returning false");
         return false;
       }
       var urlExpression = /((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z0-9\&\.\/\?\:@\-_=#])*/;
