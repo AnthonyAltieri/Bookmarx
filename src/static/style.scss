@@ -11,7 +11,7 @@ $nav__desktop-width: 244px;
 
 $nav__font-title: 'Yellowtail', cursive;
 $nav__font-item: 'Open Sans', sans-serif;
-$font-default: 'Open Sans', sans-serif;
+$font-default: 'Lato', sans-serif;
 $color-grey: #343838;
 $color-background: #F2EEEA;
 $nav__color-background: #E87162;
@@ -21,6 +21,7 @@ $nav__color-item: #5F5E5D;
 $nav_color-background-active: #eeeae6;
 $nav__color-title: #F2EEEA;
 $card-bookmarks__header-height: 52px;
+$nav__height-mobile: 56px;
 
 input:focus {
   outline: none;
@@ -28,6 +29,12 @@ input:focus {
 textarea:focus {
   outline: none;
 }
+
+p { font-family: $font-default }
+h1 { font-family: $font-default }
+h2 { font-family: $font-default }
+input { font-family: $font-default }
+
 
 body {
   width: 100vw;
@@ -110,6 +117,11 @@ body {
   position: fixed;
   padding-left: $nav__desktop-width;
   overflow: auto !important;
+  @media #{$mobile} {
+    padding: 0 !important;
+    height: 100% !important;
+    width: 100vw !important;
+  }
 }
 
 .has-nav {
@@ -175,7 +187,6 @@ nav {
       margin: 0 auto;
     }
   }
-
   background-color: $nav__color-background;
   box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
@@ -413,18 +424,16 @@ nav {
 
 }
 
-.card-input{
+.card-input-search{
   width: 80%;
   background-color: #FAFAFA;
   padding: 8px 18px;
   box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   display: flex;
-  justify-content: space-around;
+  flex-flow: row;
+  justify-content: space-between;
   align-items: center;
 
-  @media #{$mobile} {
-    width: 60%;
-  }
 
   .card-input__field {
     width: 100%;
@@ -748,7 +757,10 @@ nav {
   top: 0px;
   left: 0px;
 
-  padding-top: 82px;
+  @media #{$desktop} {
+    padding-top: 82px;
+
+  }
 
 
   .bar {
@@ -757,6 +769,13 @@ nav {
     position: fixed;
     top: 0px;
     background-color: $nav__color-background-bright;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.11), 0 1px 5px 0 rgba(0, 0, 0, 0.19);
+    z-index: 100;
+
+    @media #{$mobile} {
+      height: $nav__height-mobile;
+
+    }
 
     .header {
       font-size: 64px;
@@ -765,6 +784,12 @@ nav {
       margin: 0;
       line-height: 82px;
       text-align: center;
+
+      @media #{$mobile} {
+        font-size: 2.4em;
+        line-height: $nav__height-mobile;
+
+      }
     }
   }
 
@@ -778,17 +803,29 @@ nav {
     margin-top: 62px;
     background-color: white;
     box-shadow: 1px 2px 2px 0 rgba(194,194,194,1);
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
 
     @media #{$mobile} {
-      width: 300px;
+      width: 100%;
+      height: 100vh;
+      margin: 0;
     }
 
     .header {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 48px;
+      font-family: $font-default;
+      font-size: 30px;
+      font-weight: 300;
       color: #333;
       text-align: center;
       margin: 8px auto;
+
+      @media #{$mobile} {
+        margin-top: $nav__height-mobile + 8px;
+        margin-bottom: 8px;
+        font-size: 26px;
+      }
 
     }
 
@@ -798,31 +835,56 @@ nav {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       margin-top: 12px;
 
+      @media #{$mobile} {
+        outline: none;
+        border: 0;
+        margin-top: 2px !important;
+        background-color: #FAFAFA;
+      }
+
     }
 
     .inputform {
-      height: 100%;
       width: 100%;
-      padding-left: 22px;
-      padding-right: 22px;
       display: flex;
       flex-flow: column;
       justify-content: space-between;
-      //@media #{$mobile} {
-      //  width: 300px;
-      //}
+      overflow: hidden;
+      @media #{$mobile} {
+        justify-content: flex-start;
+        padding-top: 0 !important;
+      }
     }
+
 
     .wrapper-login-input {
       display: flex;
       flex-flow: column;
+
+      input {
+        @media #{$mobile} {
+          top: 52px !important;
+          font-size: 20px;
+          padding-left: 12px;
+          padding-right: 12px;
+
+        }
+      }
     }
 
     .wrapper-signup-input {
       display: flex;
       flex-flow: column;
-    }
 
+      input {
+        @media #{$mobile} {
+          top: 52px !important;
+          font-size: 20px;
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+      }
+    }
 
     .submit {
       width: 8.6em;
@@ -841,10 +903,18 @@ nav {
       border-radius: 6px;
       cursor: pointer;
 
+      @media #{$mobile} {
+        width: 80%;
+        height: 36px;
+        line-height: 36px;
+        padding: 0px 0px;
+        margin-top: 16px;
+      }
+
       @extend .no-textsel;
 
-    }
 
+    }
     .createaccount {
       @extend .submit;
 
@@ -854,11 +924,18 @@ nav {
       display: flex;
       flex-flow: row;
       padding-bottom: 22px;
+      @media #{$mobile} {
+        flex-flow: column;
+        width: 100%;
+        padding-bottom: 14px;
+
+      }
     }
 
 
   }
 }
+
 
 #overlay {
   position: fixed;
@@ -894,6 +971,9 @@ nav {
     .header {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 32px;
+      @media #{$mobile} {
+
+      }
       text-align: center;
     }
 

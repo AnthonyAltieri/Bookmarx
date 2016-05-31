@@ -64,6 +64,23 @@
     };
 
     // Function implementations
+    function initLogin() {
+      vm.login = {
+        username: '',
+        password: ''
+      };
+    }
+
+    function initSignup() {
+      vm.signup = {
+        username: '',
+        password1: '',
+        password2: '',
+        firstname: '',
+        lastname: ''
+      };
+    }
+
     function submitLogin(input) {
       console.log("in submit login");
       if (!localStorageService.cookie.isSupported) {
@@ -153,12 +170,16 @@
     }
 
     function goToLogIn() {
+      initLogin();
+      initSignup();
       activateModeLogIn();
     }
 
     function goToSignUp() {
-      console.log('in goToSignUp');
+      initLogin();
+      initSignup();
       activateModeSignUp();
+
     }
 
     function activateModeLogIn() {
