@@ -29,7 +29,20 @@
             <a class="submit" ng-click="vm.submitSignUp(vm.signup)">Submit</a>
             <a class="createaccount" ng-click="vm.goToLogIn()">Cancel</a>
         </div>
-    </div>
 
+        <div ng-show="vm.modeForgot" class="inputform">
+            <h2 class="header">Sign In</h2>
+            <div class="wrapper-signup-input">
+                <input type="text" ng-model="vm.forgot" placeholder="email">
+            </div>
+            <div class="buttons">
+                <a class="submit" ng-click="vm.submitForgotPw(vm.forgot)">Submit</a>
+                <a class="createaccount" ng-click="vm.goToLogIn()">Cancel</a>
+            </div>
+        </div>
+    </div>
+    <div class = "forgot-pw">
+        <p ng-click="vm.goToForgot()">Forgot Password?</p>
+    </div>
 
 </div>

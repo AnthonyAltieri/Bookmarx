@@ -10,12 +10,22 @@ var cryptService = require('./CryptService.js');
 var BookmarkIOService = require('./BookmarkIOService.js');
 var fs = require('fs');
 var multer = require('multer');
+var nodemailer = require('nodemailer');
+const crypto = require('crypto');
 var upload = multer({
   dest: './public/uploads/'
 }).single('filename');
 
 router.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '/index.html'));
+});
+
+router.get('/forgot',function(req,res){
+  res.sendFile(path.join(__dirname, '/static/templates/forgot.html'));
+});
+
+router.get('/reset', function(req,res){
+  res.sendFile(path.join(__dirname, '/static/templates/reset.html'));
 });
 
 // API
@@ -610,6 +620,86 @@ router.post('/bookmark/update', function(req, res) {
     }
   })
 
+});
+
+router.post('/reset',function(req,res){
+    crypto.randomBytes(20, function (err, buf) {
+      var token = buf.toString('hex');
+      var filter = [];
+      var user = req.body.username
+      filter.push(['username','=', user]);
+
+      qs.select(['*'], 'user', filter, function(err, rows) {
+        if (rows.length != 1) {
+          res.send({
+            user: {},
+            msg: "Couldn't find user",
+            success: false
+          });
+        }
+        else{
+
+          var columnvalues = [];
+          columnvalues.push(['resetpasswordtoken', '=', token]);
+          columnvalues.push(['resetpasswordtimer', '=', Date.now() + 3600000]);
+
+          var filters = [];
+          filters.push(['username', '=', user]);
+          console.log("rows in update pw: " + user + " row length: " + rows.length);
+
+          qs.update('user', columnvalues, filters, function(err, result) {
+            if(err) console.log('EROOOOOOOR');
+            console.log("result: " + result);
+            if (true) {
+              console.log("everything went according to plan in sending email");
+              var mailTransport = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                  user: 'bookmarxapp@gmail.com',
+                  pass: 'cse136team10'
+                }
+              });
+              var mailOptions = {
+                from: 'passwordreset@bookmarx.com',
+                to: user,
+                subject: 'Password reset',
+                text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+              };
+              mailTransport.sendMail(mailOptions, function (err, info) {
+                if (err) {
+                  console.log(error);
+                  res.json({msg: 'errooor sending emial'});
+                } else {
+                  console.log('Message sent; ' + info.response);
+                  res.json({msg: info.response});
+                }
+
+              });
+            }
+          });
+          }
+      });
+  });
+});
+
+router.get('/reset/:token', function(req,res){
+  var filter = [];
+  filter.push(['resetpasswordtoken' , '=', req.params.token]);
+  filter.push(['resetpasswordtimer', '>', Date.now()]);
+  qs.select(['*'], 'user', filter,function(err, rows){
+    if(err){
+      res.json({msg:'Link expired :('});
+      throw(err);
+    }
+    else{
+      res.json({
+        user: rows[0]
+      });
+    }
+  });
 });
 
 function isValidTag(tag) {
