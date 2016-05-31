@@ -76,7 +76,14 @@
 
     // Show nav
     $rootScope.$broadcast('show-nav');
-    if (!localStorageService.cookie.get('username')) {
+    var tryUsername = null;
+    if (localStorageService.isSupported) {
+      tryUsername = localStorageService.get('username');
+    }
+    if (localStorageService.cookie.isSupported) {
+      tryUsername = localStorageService.cookie.get('username');
+    }
+    if (!tryUsername) {
       humane.log('You have been logged out, log back in', {addCls: 'humane-flatty-error'});
       $state.go('login');
       return;

@@ -10,10 +10,6 @@
                 <input type="text" ng-model="vm.login.username" placeholder="Username">
                 <input type="password" ng-model="vm.login.password" placeholder="Password">
             </div>
-            <div class="buttons">
-                <a class="submit" ng-click="vm.submitLogin(vm.login)">Submit</a>
-                <a class="createaccount" ng-click="vm.goToSignUp()">Create Account?</a>
-            </div>
         </div>
         <div ng-show="vm.modeSignUp" class="inputform">
             <h2 class="header">Sign In</h2>
@@ -24,10 +20,14 @@
                 <input type="text" ng-model="vm.signup.firstname" placeholder="First Name">
                 <input type="text" ng-model="vm.signup.lastname" placeholder="Last Name">
             </div>
-            <div class="buttons">
-                <a class="submit" ng-click="vm.submitSignUp(vm.signup)">Submit</a>
-                <a class="createaccount" ng-click="vm.goToLogIn()">Cancel</a>
-            </div>
+        </div>
+        <div class="buttons" ng-show="vm.modeLogIn">
+            <a class="submit" ng-click="vm.submitLogin(vm.login)">Submit</a>
+            <a class="createaccount" ng-click="vm.goToSignUp()">Create Account?</a>
+        </div>
+        <div class="buttons" ng-show="vm.modeSignUp">
+            <a class="submit" ng-click="vm.submitSignUp(vm.signup)">Submit</a>
+            <a class="createaccount" ng-click="vm.goToLogIn()">Cancel</a>
         </div>
     </div>
 
