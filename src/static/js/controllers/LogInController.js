@@ -65,6 +65,13 @@
 
     // Function implementations
     function submitLogin(input) {
+      console.log("in submit login");
+      if (!localStorageService.cookie.isSupported) {
+        console.log("entered if");
+        humane.log('You need javascript and cookies enabled', {addCls: 'humane-flatty-info'});
+        return;
+      }
+
       if (input.username.trim().length === 0) {
         humane.log('Enter a username', {addCls: 'humane-flatty-info'});
         return;
