@@ -4,6 +4,8 @@ $mobile: "(max-width: 990px)";
 @import "SimpleIconSet/font/flaticon.css";
 @import "RatingValidationIcons/font/flaticon.css";
 
+$loginButton: #25788C;
+$loginColor: #C02FE;
 
 $nav__desktop-width: 244px;
 
@@ -234,7 +236,7 @@ nav {
     @media #{$mobile} {
       width: 84%;
       margin-left: auto;
-      margin-right: auto
+      margin-right: auto;
     }
   }
 
@@ -258,6 +260,13 @@ nav {
     background-color: $nav__color-background-active;
     border-color: $nav__color-background-active !important;
     box-shadow: 0 0 !important;
+  }
+
+  .logout {
+    margin-bottom: 20px;
+    background-color: $loginButton;
+    border-color: $loginButton;
+    font-color: $loginColor;
   }
 }
 
@@ -1051,9 +1060,6 @@ nav {
 
 }
 
-.no-click {
-
-}
 .export-folder {
   background: $color-grey;
   border: $color-grey;
@@ -1204,8 +1210,21 @@ nav {
     cursor: pointer;
 
     @extend .no-textsel;
-
   }
 
 }
 
+.no-script {
+  height: 100vh;
+  width: 100wh;
+  background-color: #fafafa;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 500;
+  text-align: center;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0 auto;
+}

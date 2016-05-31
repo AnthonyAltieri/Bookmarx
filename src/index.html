@@ -54,8 +54,27 @@
     <!-- Toast -->
     <script type="text/javascript" src="/static/js/humane.min.js"></script>
     <link href="static/flatty.css" rel="stylesheet" type="text/css">
+
+    <!-- Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-78531534-1', 'auto');
+        ga('require', 'linkid');
+        ga('send', 'pageview');
+
+    </script>
+
 </head>
 <body>
+    <noscript>
+        <div class="no-script">
+            <h1>Please turn on your Javascript, we need it for the website to run. If you are unsure of how to do so, please click <a href="http://lmgtfy.com/?q=How+to+turn+on+javascript+in+browser">here.</a></h1>
+        </div>
+    </noscript>
     <div ng-controller="NavController" ng-hide="hideNav">
         <nav id="nav">
             <!--<div id="navTopRow">-->
@@ -68,7 +87,9 @@
             <!--</div>-->
 
             <hr class="line">
+
             <div class="container-items" ng-hide="mode.mobileNav" ng-show="mode.desktopNav" class="mobileNav">
+                <a class="item logout" ng-click="logout()">Logout</a>
                 <a class="item" ng-click="addBookmark()">Add Bookmark<i class="flaticon-plus-symbol" id="item__icon-plus"></i></a>
                 <br/>
                 <!--<a class="item" ng-click="importBookmark()">Import Bookmark<i class="flaticon-upload-to-cloud" id="icon-cloud"></i></a>-->
