@@ -260,7 +260,7 @@ router.post('/user/bookmarks/add', function(req, res) {
       var date = new Date();
       var datestring = '';
       datestring += ((date.getYear() + 1900) + '-');
-      datestring += (date.getMonth() + '-');
+      datestring += (date.getMonth()+1 + '-');
       datestring += (date.getDate());
 
       values.push(datestring); // creationDate
@@ -492,8 +492,7 @@ router.post('/bookmark/use', function(req, res) {
       res.send(data);
     }
   })
-
-
+  
 });
 
 router.post('/bookmark/export', function(req, res) {
@@ -675,11 +674,11 @@ router.post('/bookmark/update', function(req, res) {
 });
 
 /*** Reset password ***/
-router.post('/reset',function(req,res){
+router.post('/forgot',function(req,res){
     crypto.randomBytes(20, function (err, buf) {
       var token = buf.toString('hex');
       var filter = [];
-      var user = req.body.username
+      var user = req.body.username;
       filter.push(['username','=', user]);
 
       qs.select(['*'], 'user', filter, function(err, rows) {
@@ -745,20 +744,77 @@ router.get('/reset/:token', function(req,res){
   var filter = [];
   filter.push(['resetpasswordtoken' , '=', req.params.token]);
   filter.push(['resetpasswordtimer', '>', Date.now()]);
+  console.log('user: ' + req.user);
   qs.select(['*'], 'user', filter,function(err, rows){
     if(err){
       res.json({msg:'Link expired :('});
+      return res.redirect('/#/login');
       throw(err);
     }
     else{
-      res.json({
-        user: rows[0]
-      });
+     res.render('reset',{
+       user: req.user
+     });
     }
   });
 });
 
-router.post('/verification', function(req,res){
+router.post('/reset/:token', function(req,res){
+  console.log('RESETTING PASSWORD');
+
+  var password = req.body.password;
+  var token = req.params.token;
+  var cryptedPassword;
+  var filter = [];
+  var columnValues =[];
+  var user = req.body.username;
+
+  cryptedPassword = cryptService.hash(user, password);
+  filter.push(['resetpasswordtoken','=',token]);
+  filter.push(['resetpasswordtoken', '>', Date.now()]);
+
+  columnValues.push(['password','=',cryptedPassword]);
+  columnValues.push(['resetpasswordtoken','=', 'NULL']);
+  columnValues.push(['resetpasswordtimer','=','NULL']);
+
+  qs.update('user',columnValues,filter,function(err,result){
+    if(err){
+      console.log('EROOOOOOOR');
+      console.log("result: " + result);
+      res.redirect('/#/login');
+    }
+    else{
+      var mailTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'bookmarxapp@gmail.com',
+          pass: 'cse136team10'
+        }
+      });
+      var mailOptions = {
+        from: 'bookmarxapp@gmail.com',
+        to: user,
+        subject: 'Your password has been changed',
+        text: 'Hello' + user + ', \n\n' +
+          'This is a confirmation that your password for your account has been changed.\n\n' +
+          'If you did not request a password reset, please contact an administrator immediately.\n\n'
+      };
+      mailTransport.sendMail(mailOptions, function (err, info) {
+        if (err) {
+          console.log(error);
+          res.json({msg: 'errooor sending email'});
+        } else {
+          console.log('Message sent; ' + info.response);
+          res.redirect('/#/login');
+        }
+
+      });
+
+      /*console.log('Message sent;' );
+      res.json({msg: 'password changed'});*/
+    }
+  });
+
 
 });
 
