@@ -7,10 +7,10 @@
 
 
   DashboardController.$inject = ['$rootScope', '$scope', '$state', '$interval', 'localStorageService',
-                                 'ServerService', 'FilterService', 'StorageService', 'ServiceWorker'];
+                                 'ServerService', 'FilterService', 'StorageService'];
 
   function DashboardController($rootScope, $scope, $state, $interval, localStorageService, ServerService,
-                               FilterService, StorageService, ServiceWorker) {
+                               FilterService, StorageService) {
     var vm = this;
 
     // Functions

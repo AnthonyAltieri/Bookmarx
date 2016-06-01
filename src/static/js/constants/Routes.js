@@ -1,4 +1,4 @@
-var SERVER_ADDRESS = 'http://localhost:6209';
+var SERVER_ADDRESS = 'http://anthonyraltieri.com';
 
 var ROUTE = {
   LOGIN: (SERVER_ADDRESS + '/login'),
