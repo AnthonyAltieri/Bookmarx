@@ -487,7 +487,7 @@ nav {
   cursor: pointer;
   width: 100%;
   text-align: center;
-  z-index: 500; }
+  z-index: 10; }
   @media (max-width: 990px) {
     .card-bookmarks__header-text {
       width: 100px !important;
