@@ -257,7 +257,17 @@ nav {
     border-color: $loginButton;
     font-color: $loginColor;
   }
+  .reset-pw{
+    margin-top: 20px;
+  }
+
+
 }
+
+.forgot-pw-form{
+  z-index: 10000;
+}
+
 
 #choose-bookmark {
   width: 80%;
@@ -840,7 +850,13 @@ nav {
       color: #333;
       text-align: center;
       margin: 8px auto;
-
+    }
+    .header-changepw{
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 32px;
+      color: #333;
+      text-align: center;
+      margin: 10px auto;
     }
 
     .card-text {
@@ -1245,6 +1261,8 @@ nav {
     text-align: center;
     margin: 20% auto;
   }
+
+
   .buttons {
     display: flex;
     flex-flow: row;

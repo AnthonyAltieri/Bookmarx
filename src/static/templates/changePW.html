@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Change Password</title>
+   <link href="/static/style.css" rel="stylesheet" type="text/css">
+   <script type="text/javascript" src="/static/js/humane.min.js"></script>
+   <link href="/static/flatty.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="login__content">
+   <div class="bar">
+      <h1 class="header">BookMarx</h1>
+   </div>
+   <div class="card-input">
+      <div class="inputform">
+         <h2 class="header-changepw">Change Password</h2>
+         <div class="wrapper-login-input">
+            <label class="card-label"> Email </label>
+            <input id = "email" type="text" placeholder="Email">
+            <label class="card-label"> Current Password </label>
+            <input id = "currentpassword" type="password" placeholder="Current Password">
+            <label class="card-label"> New Password </label>
+            <input id = "password1" type="password" placeholder="New Password">
+            <label class="card-label"> Confirm Password </label>
+            <input id = "password2" type="password" placeholder="Confirm Password">
+         </div>
+         <div id="submit-pw-btn" class="buttons">
+            <a class="submit"> Update Password</a>
+            <a class="createaccount" id="cancel">Cancel</a>
+         </div>
+      </div>
+   </div>
+</div>
+
+<script type="text/javascript" src = "/static/js/ResetController.js"></script>
+</body>
+</html>

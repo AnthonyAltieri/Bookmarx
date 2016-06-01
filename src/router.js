@@ -24,13 +24,17 @@ router.get('/forgot',function(req,res){
   res.sendFile(path.join(__dirname, '/static/templates/forgot.html'));
 });
 
+router.get('/changePW',function(req,res){
+  res.sendFile(path.join(__dirname, '/static/templates/changePW.html'));
+});
+
 router.get('/reset', function(req,res){
   res.sendFile(path.join(__dirname, '/static/templates/reset.html'));
 });
 
 router.get('/verify',function(req,res){
   res.sendFile(path.join(__dirname, '/static/templates/verify.html'));
-})
+});
 
 // API
 router.post('/login', function(req, res) {
@@ -727,7 +731,7 @@ router.post('/forgot',function(req,res){
               mailTransport.sendMail(mailOptions, function (err, info) {
                 if (err) {
                   console.log(error);
-                  res.json({msg: 'errooor sending email'});
+                  res.json({msg: 'error sending email'});
                 } else {
                   console.log('Message sent; ' + info.response);
                   res.json({msg: info.response});
@@ -825,9 +829,40 @@ router.post('/reset/:token', function(req,res){
       res.json({msg: 'password changed'});*/
     }
   });
-
-
 });
+
+router.post('/changePW', function(req,res) {
+  var newPassword = req.body.newPassword;
+  var currentPassword = req.body.currentPassword;
+  var user = req.body.username;
+  var cryptedPassword;
+  var currentCrypted;
+
+  var filter = [];
+  var columnValues =[];
+  currentCrypted = cryptService.hash(user, currentPassword);
+  cryptedPassword = cryptService.hash(user, newPassword);
+
+  filter.push(['password','=',currentCrypted]);
+  filter.push('and');
+  filter.push(['username', '=', user]);
+
+  columnValues.push(['password','=',cryptedPassword]);
+
+  qs.update('user',columnValues,filter,function(err,result){
+    if(err){
+      res.send({msg:'error'});
+    }
+    else if(result.affectedRows != 1){
+      res.send({msg:"Could not find user"});
+    }
+    else{
+      res.send({msg: 'Password successfully changed'});
+    }
+  });
+});
+
+
 
 function isValidTag(tag) {
   return !(!tag || tag.trim('').length === 0 || tag === 'null' || tag === 'NULL'
