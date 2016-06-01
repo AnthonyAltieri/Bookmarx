@@ -241,11 +241,6 @@ nav {
     background-color: #49AD63;
     border-color: #49AD63;
     color: #FAFAFA; }
-  nav .reset-pw {
-    margin-top: 20px; }
-
-.forgot-pw-form {
-  z-index: 10000; }
 
 .small-nav {
   height: 56px !important;
@@ -833,34 +828,15 @@ nav {
       color: #333;
       text-align: center;
       margin: 8px auto; }
-    .login__content .card-input .header-changepw {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 32px;
-      color: #333;
-      text-align: center;
-      margin: 10px auto; }
-    .login__content .card-input .card-text {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 24px;
-      color: #333;
-      text-align: center;
-      margin: 8px auto; }
-    .login__content .card-input .card-label {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 18px;
-      color: #333;
-      margin-top: 4px;
-      margin-bottom: 4px;
-      font-weight: bold; }
-    @media (max-width: 990px) {
-      .login__content .card-input {
-        margin-top: 64px;
-        margin-bottom: 8px;
-        font-size: 26px; } }
-    @media (min-width: 767px) {
-      .login__content .card-input {
-        font-size: 42px;
-        padding: 22px 8px; } }
+      @media (max-width: 990px) {
+        .login__content .card-input .header {
+          margin-top: 64px;
+          margin-bottom: 8px;
+          font-size: 26px; } }
+      @media (min-width: 767px) {
+        .login__content .card-input .header {
+          font-size: 42px;
+          padding: 22px 8px; } }
     .login__content .card-input input {
       padding: 8px 4px;
       font-size: 16px;
@@ -945,6 +921,11 @@ nav {
           flex-flow: column;
           width: 100%;
           padding-bottom: 14px; } }
+    .login__content .card-input .card-text {
+      text-align: center; }
+    .login__content .card-input .card-label {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px; }
 
 #overlay {
   background-color: rgba(0, 0, 0, 0.25); }
