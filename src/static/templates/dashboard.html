@@ -67,7 +67,7 @@
                     <label class="import-folder" id="fileinput-label" for="fileinput">Choose File</label>
                 </form>
 
-            </div>
+                </div>
             <div ng-repeat="folder in vm.user.folders" ng-click="vm.selectFolder(folder)" class="wrap-tile-folder">
                 <div class="tile-folder" ng-class="{'tile-folder-active' : vm.user.activeFolder.name === folder.name}">
                     <i class="flaticon-file icon-file"></i>
@@ -89,10 +89,14 @@
                                 <td class="col-10">
                                     <h2 class="card-bookmarks__header-text" ng-click="vm.sortTitle()">
                                         Title
+                                        <span class="{{vm.sort.titleSortMethod}}">
+                                        </span>
                                     </h2>
                                 </td>
                                 <td class="col-10">
-                                    <h2 class="card-bookmarks__header-text">Description</h2>
+                                    <h2 class="card-bookmarks__header-text">
+                                        Description
+                                    </h2>
                                 </td>
                                 <td class="col-10">
                                     <h2 class="card-bookmarks__header-text">Tag(s)</h2>
@@ -100,21 +104,29 @@
                                 <td class="col-10">
                                     <h2 class="card-bookmarks__header-text" ng-click="vm.sortLastVisit()">
                                         Last Visit
+                                        <span class="{{vm.sort.visitSortMethod}}">
+                                        </span>
                                     </h2>
                                 </td>
                                 <td class="col-10">
                                     <h2 class="card-bookmarks__header-text" ng-click="vm.sortCreationDate()">
                                         Created
+                                        <span class="{{vm.sort.creationSortMethod}}">
+                                        </span>
                                     </h2>
                                 </td>
                                 <td class="col-10">
                                     <h2 class="card-bookmarks__header-text" ng-click="vm.sortCounter()">
                                         Counter
+                                        <span class="{{vm.sort.counterSortMethod}}">
+                                        </span>
                                     </h2>
                                 </td>
                                 <td class="col-20">
                                     <h2 class="card-bookmarks__header-text" ng-click="vm.sortUrl()">
                                         URL
+                                        <span class="{{vm.sort.urlSortMethod}}">
+                                        </span>
                                     </h2>
                                 </td>
                                 <td class="col-20">

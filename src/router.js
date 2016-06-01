@@ -10,6 +10,8 @@ var cryptService = require('./CryptService.js');
 var BookmarkIOService = require('./BookmarkIOService.js');
 var fs = require('fs');
 var multer = require('multer');
+var nodemailer = require('nodemailer');
+const crypto = require('crypto');
 var upload = multer({
   dest: './public/uploads/'
 }).single('filename');
@@ -17,6 +19,18 @@ var upload = multer({
 router.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '/index.html'));
 });
+
+router.get('/forgot',function(req,res){
+  res.sendFile(path.join(__dirname, '/static/templates/forgot.html'));
+});
+
+router.get('/reset', function(req,res){
+  res.sendFile(path.join(__dirname, '/static/templates/reset.html'));
+});
+
+router.get('/verify',function(req,res){
+  res.sendFile(path.join(__dirname, '/static/templates/verify.html'));
+})
 
 // API
 router.post('/login', function(req, res) {
@@ -29,9 +43,10 @@ router.post('/login', function(req, res) {
   filter.push(['username', '=', req.body.username]);
   filter.push('and');
   filter.push(['password', '=', cryptedPassword]);
+  filter.push('and');
+  filter.push(['verified', '=', '1']);
   qs.select(['*'], ['user'], filter, function(err, rows) {
     if (err) throw err;
-
     // If there was not just 1 person found, this attempt has been unsuccessful
     if (rows.length != 1) {
       res.send({
@@ -98,14 +113,61 @@ router.post('/signUp', function(req, res) {
       qs.insert('user', columns, values, function(err, rows) {
         if (err) throw err;
         req.session.username = req.body.username;
-        res.send({
+        /**res.send({
           msg: ('Created account for user: ' + username),
           success: true,
           username: username
-        })
-      })
+        });*/
+        var mailTransport = nodemailer.createTransport({
+          service: 'Gmail',
+          auth: {
+            user: 'bookmarxapp@gmail.com',
+            pass: 'cse136team10'
+          }
+        });
+
+        var mailOptions = {
+          from: 'Bookmarxapp@gmail.com',
+          to: username,
+          subject: 'Account Activation',
+          text: 'Thank you for joining Bookmarx!\n\n' +
+            'Please click on the following link to activate your account:\n\n' +
+            'http://' + req.headers.host + '/verify/' + username + '\n\n'
+        };
+
+        mailTransport.sendMail(mailOptions,function(err,info){
+          if(err){
+            res.json({msg: 'error sending validation email'});
+          }
+          else{
+            res.send({
+              msg: 'Created account for user: ' + username,
+              success: true,
+              username: username,
+              email: info.response
+            });
+          }
+        });
+      });
     }
   })
+});
+
+router.get('/verify/:username', function(req,res){
+  var user = req.params.username;
+  var columnvalues = [];
+  var filter = [];
+  columnvalues.push(['verified','=','1']);
+  filter.push(['username','=',user]);
+  qs.update('user', columnvalues, filter, function(err,result){
+    if(err){
+      res.send({
+        msg: 'There was a problem verifying the account'
+      });
+      throw(err);
+    }
+    res.redirect('/verify');
+  });
 });
 
 router.post('/folder/get', function(req, res) {
@@ -619,17 +681,95 @@ router.post('/bookmark/update', function(req, res) {
 
 });
 
+/*** Reset password ***/
+router.post('/reset',function(req,res){
+    crypto.randomBytes(20, function (err, buf) {
+      var token = buf.toString('hex');
+      var filter = [];
+      var user = req.body.username
+      filter.push(['username','=', user]);
+
+      qs.select(['*'], 'user', filter, function(err, rows) {
+        if (rows.length != 1) {
+          res.send({
+            user: {},
+            msg: "Couldn't find user",
+            success: false
+          });
+        }
+        else{
+
+          var columnvalues = [];
+          columnvalues.push(['resetpasswordtoken', '=', token]);
+          columnvalues.push(['resetpasswordtimer', '=', Date.now() + 3600000]);
+
+          var filters = [];
+          filters.push(['username', '=', user]);
+          console.log("rows in update pw: " + user + " row length: " + rows.length);
+
+          qs.update('user', columnvalues, filters, function(err, result) {
+            if(err) {
+              console.log('EROOOOOOOR');
+              console.log("result: " + result);
+            }
+            else {
+              console.log("everything went according to plan in sending email");
+              var mailTransport = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                  user: 'bookmarxapp@gmail.com',
+                  pass: 'cse136team10'
+                }
+              });
+              var mailOptions = {
+                from: 'Bookmarxapp@gmail.com',
+                to: user,
+                subject: 'Password reset',
+                text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+                'If you did not request this, please ignore this email and your password will remain unchanged.\n\n' +
+                'Do not respond to this automated email'
+              };
+              mailTransport.sendMail(mailOptions, function (err, info) {
+                if (err) {
+                  console.log(error);
+                  res.json({msg: 'errooor sending email'});
+                } else {
+                  console.log('Message sent; ' + info.response);
+                  res.json({msg: info.response});
+                }
+
+              });
+            }
+          });
+          }
+      });
+  });
+});
+
+router.get('/reset/:token', function(req,res){
+  var filter = [];
+  filter.push(['resetpasswordtoken' , '=', req.params.token]);
+  filter.push(['resetpasswordtimer', '>', Date.now()]);
+  qs.select(['*'], 'user', filter,function(err, rows){
+    if(err){
+      res.json({msg:'Link expired :('});
+      throw(err);
+    }
+    else{
+      res.json({
+        user: rows[0]
+      });
+    }
+  });
+});
+
 function isValidTag(tag) {
   return !(!tag || tag.trim('').length === 0 || tag === 'null' || tag === 'NULL'
   || tag === null);
 
 }
-
-
-
-
-
-
 
 module.exports = router;
 

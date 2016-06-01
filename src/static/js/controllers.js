@@ -13,7 +13,7 @@ angular.module('BookMarx.controllers', [])
     vm.hideNavSlider = hideNavSlider;
     vm.showNavSlider = showNavSlider;
 
-    console.log('In NavCtrl')
+    console.log('In NavCtrl');
 
     function hideNavSlider (navSlider) {
         navSlider.classList.remove('nav__slider-show');

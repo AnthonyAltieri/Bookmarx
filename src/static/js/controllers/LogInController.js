@@ -17,6 +17,12 @@
     //}
 
     var vm = this;
+    
+    console.log('========================================');
+    console.log('this is our test');
+    console.log('localStorageService.isSupported: ' + localStorageService.isSupported);
+    console.log('localStorageService.cookie.isSupported: ' + localStorageService.cookie.isSupported);
+    console.log('========================================');
 
     // Set local storage and cookie prefix
     localStorageService.set('cse136team10');
@@ -82,6 +88,14 @@
     }
 
     function submitLogin(input) {
+      console.log("in submit login");
+      if (!localStorageService.cookie.isSupported) {
+        console.log("entered if");
+        humane.log('You need javascript and cookies enabled', {addCls: 'humane-flatty-info'});
+        $state.go('login'); 
+        return;
+      }
+
       if (input.username.trim().length === 0) {
         humane.log('Enter a username', {addCls: 'humane-flatty-info'});
         return;
@@ -217,7 +231,7 @@
       }
     });
     $scope.$on(ROUTE.LOGIN_FAIL, function(event, data) {
-      humane.log('Error logging inin, try again', {addCls: 'humane-flatty-error'});
+      humane.log('Error logging in, try again', {addCls: 'humane-flatty-error'});
       console.log(event);
       console.log('msg: ' + data.msg);
     });
