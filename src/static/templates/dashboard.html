@@ -63,12 +63,13 @@
                     <input class="import-folder" type="submit" value="Import" ng-show="vm.showRealFolderInput">
                     <input class="import-folder no-textsel" value="Import" ng-hide="vm.showRealFolderInput">
                     <input class="import-folder-btn" type="file" name="filename"  ng-click="vm.onInputChosen()"
-                        readonly>
+                        readonly id="fileinput">
+                    <label class="import-folder" id="fileinput-label" for="fileinput">Choose File</label>
                 </form>
 
             </div>
             <div ng-repeat="folder in vm.user.folders" ng-click="vm.selectFolder(folder)" class="wrap-tile-folder">
-                <div class="tile-folder" ng-class="{'tile-folder-active' : folder.isActive}">
+                <div class="tile-folder" ng-class="{'tile-folder-active' : vm.user.activeFolder.name === folder.name}">
                     <i class="flaticon-file icon-file"></i>
                     <p class="name">{{folder.name}}</p>
                 </div>
@@ -80,81 +81,100 @@
         </div>
     </div>
     <div class="row__center">
-        <div class="card-bookmarks">
-            <div class="card-bookmarks__header">
-                <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortTitle()">
-                    Title
-                </h2>
-                <h2 class="card-bookmarks__header-text col-10">Description</h2>
-                <h2 class="card-bookmarks__header-text col-10">Tag(s)</h2>
-                <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortLastVisit()">
-                    Last Visit
-                </h2>
-                <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortCreationDate()">
-                    Created
-                </h2>
-                <h2 class="card-bookmarks__header-text col-10" ng-click="vm.sortCounter()">
-                    Counter
-                </h2>
-                <h2 class="card-bookmarks__header-text col-20" ng-click="vm.sortUrl()">
-                    URL
-                </h2>
-                <h2 class="card-bookmarks__header-text col-20">Actions</h2>
-            </div>
-            <div class="card-bookmarks__content">
-                <table class="table-bookmarks">
-                    <tr ng-repeat="bookmark in vm.user.activeFolder.bookmarks | filter : {searchstring : vm.search}">
-                        <td class="col-10 card-bookmarks__item-name" ng-click="vm.goToBookmark(bookmark)">{{bookmark.title}}</td>
-                        <td class="col-10 card-bookmarks__description">{{bookmark.description}}</td>
-                        <td class="col-10">
-                            <div class="row row-tag">
-                                <a class="card-bookmarks__item-tag" ng-repeat="tag in bookmark.tags">
-                                    {{tag}}
-                                </a>
-                            </div>
-                        </td>
-                        <td class="col-10">
-                            <p class="bookmark-date">{{bookmark.lastVisit}}</p>
-                        </td>
-                        <td class="col-10">
-                            <p class="bookmark-date">{{bookmark.creationDate}}</p>
-                        </td>
-                        <td class="col-10">
-                            <p class="bookmark-counter">{{bookmark.counter}}</p>
-                        </td>
-                        <td class="col-20 card-bookmarks__item">{{bookmark.url}}</td>
-                        <td class="col-20">
-                            <div class="container-actions">
-                                <i class="icon-star flaticon-star selected"
-                                   ng-hide="bookmark.star === '1' || bookmark.star === 1"
-                                   ng-click="vm.clickStar(bookmark)"></i>
-                                <i class="icon-star__selected flaticon-star"
-                                   ng-show="bookmark.star === '1' || bookmark.star === 1"
-                                   ng-click="vm.clickStar(bookmark)"></i>
-                                <i class="flaticon-letter-x icon-clear" ng-click="vm.deleteBookmark(bookmark)"></i>
-                                <i class="flaticon-edit icon-edit" ng-click="vm.editBookmark(bookmark)"></i>
-                                <form method="post" action="/bookmark/export/">
-                                    <input class="hidden" name="username" value="{{bookmark.username}}" readonly>
-                                    <input class="hidden" name="title" value="{{bookmark.title}}" readonly>
-                                    <input class="hidden" name="url" value="{{bookmark.url}}" readonly>
-                                    <input class="hidden" name="description" value="{{bookmark.description}}" readonlly>
-                                    <input class="hidden" name="star" value="{{bookmark.star}}" readonly>
-                                    <input class="hidden" name="tag1" value="{{bookmark.tag1}}" readonly>
-                                    <input class="hidden" name="tag2" value="{{bookmark.tag2}}" readonly>
-                                    <input class="hidden" name="tag3" value="{{bookmark.tag3}}" readonly>
-                                    <input class="hidden" name="tag4" value="{{bookmark.tag4}}" readonly>
-                                    <input class="hidden" name="creationDate" value="{{bookmark.creationDate}}" readonly>
-                                    <input class="hidden" name="lastVisit" value="{{bookmark.lastVisit}}" readonly>
-                                    <input class="hidden" name="counter" value="{{bookmark.counter}}" readonly>
-                                    <input class="hidden" name="folder" value="{{bookmark.folder}}" readonly>
-                                    <input type="submit" class="import-export-btn" name="export" value="Export">
-                                </form>
-                                <!--<a class="exportbtn" ng-hide="vm.user.activeFolder === null"-->
-                                   <!--ng-click="vm.exportBookmark(bookmark)">export</a>-->
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+        <div class="mobile-pane">
+            <div class="card-bookmarks">
+                <div class="card-bookmarks__content">
+                    <table class="table-bookmarks">
+                        <tr class="card-bookmarks__header">
+                                <td class="col-10">
+                                    <h2 class="card-bookmarks__header-text" ng-click="vm.sortTitle()">
+                                        Title
+                                    </h2>
+                                </td>
+                                <td class="col-10">
+                                    <h2 class="card-bookmarks__header-text">Description</h2>
+                                </td>
+                                <td class="col-10">
+                                    <h2 class="card-bookmarks__header-text">Tag(s)</h2>
+                                </td>
+                                <td class="col-10">
+                                    <h2 class="card-bookmarks__header-text" ng-click="vm.sortLastVisit()">
+                                        Last Visit
+                                    </h2>
+                                </td>
+                                <td class="col-10">
+                                    <h2 class="card-bookmarks__header-text" ng-click="vm.sortCreationDate()">
+                                        Created
+                                    </h2>
+                                </td>
+                                <td class="col-10">
+                                    <h2 class="card-bookmarks__header-text" ng-click="vm.sortCounter()">
+                                        Counter
+                                    </h2>
+                                </td>
+                                <td class="col-20">
+                                    <h2 class="card-bookmarks__header-text" ng-click="vm.sortUrl()">
+                                        URL
+                                    </h2>
+                                </td>
+                                <td class="col-20">
+                                    <h2 class="card-bookmarks__header-text">Actions</h2>
+                                </td>
+
+                        </tr>
+                        <tr ng-repeat="bookmark in vm.user.activeFolder.bookmarks | filter : {searchstring : vm.search}">
+                            <td class="col-10 card-bookmarks__item-name" ng-click="vm.goToBookmark(bookmark)">{{bookmark.title}}</td>
+                            <td class="col-10 card-bookmarks__description">{{bookmark.description}}</td>
+                            <td class="col-10">
+                                <div class="row row-tag">
+                                    <a class="card-bookmarks__item-tag" ng-repeat="tag in bookmark.tags">
+                                        {{tag}}
+                                    </a>
+                                </div>
+                            </td>
+                            <td class="col-10">
+                                <p class="bookmark-date">{{bookmark.lastVisit}}</p>
+                            </td>
+                            <td class="col-10">
+                                <p class="bookmark-date">{{bookmark.creationDate}}</p>
+                            </td>
+                            <td class="col-10">
+                                <p class="bookmark-counter">{{bookmark.counter}}</p>
+                            </td>
+                            <td class="col-20 card-bookmarks__item">{{bookmark.url}}</td>
+                            <td class="col-20">
+                                <div class="container-actions">
+                                    <i class="icon-star flaticon-star selected"
+                                       ng-hide="bookmark.star === '1' || bookmark.star === 1"
+                                       ng-click="vm.clickStar(bookmark)"></i>
+                                    <i class="icon-star__selected flaticon-star"
+                                       ng-show="bookmark.star === '1' || bookmark.star === 1"
+                                       ng-click="vm.clickStar(bookmark)"></i>
+                                    <i class="flaticon-letter-x icon-clear" ng-click="vm.deleteBookmark(bookmark)"></i>
+                                    <i class="flaticon-edit icon-edit" ng-click="vm.editBookmark(bookmark)"></i>
+                                    <form method="post" action="/bookmark/export/">
+                                        <input class="hidden" name="username" value="{{bookmark.username}}" readonly>
+                                        <input class="hidden" name="title" value="{{bookmark.title}}" readonly>
+                                        <input class="hidden" name="url" value="{{bookmark.url}}" readonly>
+                                        <input class="hidden" name="description" value="{{bookmark.description}}" readonlly>
+                                        <input class="hidden" name="star" value="{{bookmark.star}}" readonly>
+                                        <input class="hidden" name="tag1" value="{{bookmark.tag1}}" readonly>
+                                        <input class="hidden" name="tag2" value="{{bookmark.tag2}}" readonly>
+                                        <input class="hidden" name="tag3" value="{{bookmark.tag3}}" readonly>
+                                        <input class="hidden" name="tag4" value="{{bookmark.tag4}}" readonly>
+                                        <input class="hidden" name="creationDate" value="{{bookmark.creationDate}}" readonly>
+                                        <input class="hidden" name="lastVisit" value="{{bookmark.lastVisit}}" readonly>
+                                        <input class="hidden" name="counter" value="{{bookmark.counter}}" readonly>
+                                        <input class="hidden" name="folder" value="{{bookmark.folder}}" readonly>
+                                        <input type="submit" class="import-export-btn" name="export" value="Export">
+                                    </form>
+                                    <!--<a class="exportbtn" ng-hide="vm.user.activeFolder === null"-->
+                                    <!--ng-click="vm.exportBookmark(bookmark)">export</a>-->
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -198,8 +198,15 @@ router.post('/user/bookmarks/add', function(req, res) {
       var date = new Date();
       var datestring = '';
       datestring += ((date.getYear() + 1900) + '-');
-      datestring += (date.getMonth() + '-');
-      datestring += (date.getDate());
+      datestring += ((((date.getMonth() + 1).toString().length === 1)
+        ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-');
+      datestring += (((date.getDate().toString().length === 1)
+        ? '0' + date.getDate() : date.getDate()));
+
+      console.log('datestring');
+      console.log(datestring);
+      console.log('date.getDate()');
+      console.log(date.getDate());
 
       values.push(datestring); // creationDate
       values.push(datestring); // lastVisit

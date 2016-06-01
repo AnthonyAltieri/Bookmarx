@@ -112,8 +112,22 @@
     function clickStar(bookmark) {
       var data = {
         bookmark: bookmark,
-        username: vm.cookies.username
       };
+      var validSystem = false;
+      if (localStorageService.isSupported) {
+        data.username = localStorageService.get('username');
+        validSystem = true;
+      }
+      if (localStorageService.cookie.isSupported) {
+        data.username = localStorageService.cookie.get('username');
+        validSystem = true;
+      }
+
+      if (!validSystem) {
+        humane.log('Server error, log in again');
+        $state.go('login');
+
+      }
 
       ServerService.sendPost(data,
         ROUTE.STAR_BOOKMARK,
@@ -123,17 +137,27 @@
     }
 
     function selectFolder(folder) {
-      console.log('selected folder');
-      console.log(folder);
-      if (folder.isActive) return;
-      if (vm.user.activeFolder != null) {
-        vm.user.activeFolder.isActive = false;
+      //console.log('selected folder');
+      //console.log(folder);
+      //if (folder.isActive) return;
+      //if (vm.user.activeFolder != null) {
+      //  vm.user.activeFolder.isActive = false;
+      //}
+      //vm.user.activeFolder = vm.user.folderHM[folder.name];
+      //vm.user.activeFolder.isActive = true;
+
+
+      for (var i = 0 ; i < vm.user.folders.length ; i++) {
+        var focus = vm.user.folders[i];
+        if (folder.name === focus.name) {
+          focus.isActive = true;
+          vm.user.activeFolder = focus;
+        } else {
+          focus.isActive = false;
+        }
+
       }
-      vm.user.activeFolder = vm.user.folderHM[folder.name];
-      vm.user.activeFolder.isActive = true;
-      console.log('in selectFolder');
-      console.log('vm.user.folders');
-      console.log(vm.user.folders);
+
     }
 
     function beginCreateFolder() {
@@ -364,10 +388,10 @@
       // Last sort was 0->9
       if (vm.user.lastSortLastVisit) {
         vm.user.lastSortLastVisit = false;
-        vm.user.activeFolder.bookmarks = FilterService.zeroToNineLSortLastVisit(vm.user.activeFolder.bookmarks);
+        vm.user.activeFolder.bookmarks = FilterService.zeroToNineSortLastVisit(vm.user.activeFolder.bookmarks);
       } else {
         vm.user.lastSortLastVisit = true;
-        vm.user.activeFolder.bookmarks = FilterService.nineToZeroLSortLastVisit(vm.user.activeFolder.bookmarks);
+        vm.user.activeFolder.bookmarks = FilterService.nineToZeroSortLastVisit(vm.user.activeFolder.bookmarks);
       }
     }
 
@@ -576,8 +600,9 @@
 
       // Make the dates pretty
       var date = new Date();
-      var prettyDateString = '' + (date.getYear() + 1900) + '-' + date.getMonth() + '-' +
-        date.getDate();
+      var prettyDateString = '' + (date.getYear() + 1900) + '-' +
+        (((date.getMonth() + 1).toString().length === 1) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-' +
+        ((date.getDate().toString().length === 1) ? '0' + date.getDate() : date.getDate());
       if (!bookmark.creationDate) {
         bookmark.creationDate = prettyDateString;
       } else {

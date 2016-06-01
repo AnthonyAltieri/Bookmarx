@@ -4,8 +4,8 @@ $mobile: "(max-width: 990px)";
 @import "SimpleIconSet/font/flaticon.css";
 @import "RatingValidationIcons/font/flaticon.css";
 
-$loginButton: #25788C;
-$loginColor: #C02FE;
+$loginButton: #49AD63;
+$loginColor: #FAFAFA;
 
 $nav__desktop-width: 244px;
 
@@ -73,10 +73,21 @@ body {
 }
 
 .col-10 {
-  width: 10% !important;
-  min-width: 10% !important;
-  max-width: 10% !important;
-  padding: 0 !important;
+  @media #{$desktop} {
+    min-width: 10% !important;
+    max-width: 10% !important;
+    padding: 0 !important;
+    width: 10% !important;
+  }
+
+  @media #{$mobile} {
+    min-width: 120px !important;
+    max-width: 120px !important;
+    padding: 2px;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+  }
 }
 .col-33 {
   width: 33.33% !important;
@@ -98,10 +109,20 @@ body {
   padding: 0 !important;
 }
 .col-20 {
-  width: 20% !important;
-  min-width: 20% !important;
-  max-width: 20% !important;
-  padding: 0 !important;
+  @media #{$desktop} {
+    width: 20% !important;
+    min-width: 20% !important;
+    max-width: 20% !important;
+    padding: 0 !important;
+  }
+  @media #{$mobile} {
+    min-width: 240px !important;
+    max-width: 240px !important;
+    padding: 2px;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+  }
 }
 
 body {
@@ -110,17 +131,20 @@ body {
   display: flex;
 }
 
+@media #{$mobile} {
+  overflow-x: scroll;
+}
+
 #content {
   height: 100vh;
   width: 100%;
-  min-width: 1110px;
   position: fixed;
   padding-left: $nav__desktop-width;
   overflow: auto !important;
   @media #{$mobile} {
     padding: 0 !important;
     height: 100% !important;
-    width: 100vw !important;
+    overflow-x: hidden !important;
   }
 }
 
@@ -154,13 +178,9 @@ nav {
   @media #{$mobile} {
     width: 100%;
     height: 100%;
-    //.navTopRow {
-    //  display: flex;
-    //  justify-content: center;
-    //  flex-direction: row nowrap;
-    //  align-items: center;
-    //  position: relative;
-    //}
+    box-shadow: 2px 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+
+    z-index: 300;
 
     .box {
       height: 22px;
@@ -174,9 +194,16 @@ nav {
       border-radius: 5px;
       position: absolute;
       right: 10px;
-      top: 22px;
+      top: 14px;
       visibility: visible;
+      box-shadow: 2px 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+      cursor: pointer;
     }
+
+    .box:active {
+      box-shadow: none;
+    }
+
 
     .boxline {
       width: 90%;
@@ -199,6 +226,12 @@ nav {
     text-align: center;
     color: $color-grey;
     background-color: $nav__color-background-bright;
+
+    @media #{$mobile} {
+      font-size: 2.5em;
+      line-height: 52px;
+
+    }
   }
 
   .line {
@@ -214,6 +247,25 @@ nav {
     flex-flow: column;
     justify-content: space-between;
     padding-top: 64px;
+
+    @media #{$mobile} {
+      height: 100%;
+      justify-content: flex-start;
+      padding-top: 12px;
+
+      input {
+        margin-top: 34px;
+        background: #fafafa;
+        padding: 16px 12px;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      a {
+        font-size: 20px;
+      }
+
+    }
   }
 
   .item {
@@ -266,8 +318,13 @@ nav {
     margin-bottom: 20px;
     background-color: $loginButton;
     border-color: $loginButton;
-    font-color: $loginColor;
+    color: $loginColor;
   }
+}
+
+.small-nav {
+  height: $nav__height-mobile !important;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 #choose-bookmark {
@@ -281,7 +338,15 @@ nav {
 }
 
 .nav__slider-hide {
-  left: 0px !important;
+  @media #{$desktop}{
+    left: 0px !important;
+  }
+
+  @media #{$mobile} {
+    display: none;
+    visibility: hidden;
+  }
+
 
 }
 
@@ -307,7 +372,6 @@ nav {
 
 .nav__slider-save {
   position: relative;
-  top: 164px;
   margin: 0 auto;
   font-family: $nav__font-item;
   font-weight: 600;
@@ -319,6 +383,11 @@ nav {
   border: 4px solid #E24A37;
   border-radius: 6px;
   cursor: pointer;
+
+  @media #{$mobile} {
+    width: 184px !important;
+    margin-bottom: 12px;
+  }
 }
 
 .nav__slider-save:hover {
@@ -344,11 +413,27 @@ nav {
   display: flex;
   flex-flow: row;
   justify-content: center;
+  margin-top: 12px;
+
+  select {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    background: #fafafa;
+    border-radius: 5px;
+  }
 }
 .container-save {
   display: flex;
   flex-flow: row;
   justify-content: center;
+
+  @media #{$mobile} {
+    flex-flow: column;
+    margin-top: 80px;
+    a {
+      width: 300px;
+    }
+  }
 
 }
 
@@ -368,24 +453,63 @@ nav {
 }
 
 .nav__slider {
-  width: $nav__desktop-width;
-  height: 100vh;
+  overflow: auto !important;
   background-color: #FAFAFA;
-  z-index: 1;
-
-  position: fixed;
-  top: 0px;
-  left: 0px;
-
-  overflow: auto;
+  @media #{$desktop} {
+    width: $nav__desktop-width;
+    height: 100vh;
+    z-index: 1;
 
 
-  transition-proptery: left;
-  transition-duration: 0.5s;
-  -webkit-transition-property: left;
-  -webkit-transition-duration: 0.5s;
+    display: flex;
+    flex-flow: column;
 
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding-top: 37px;
+
+    position: fixed;
+    top: 0px;
+    left: 0px;
+
+
+
+    transition-proptery: left;
+    transition-duration: 0.5s;
+    -webkit-transition-property: left;
+    -webkit-transition-duration: 0.5s;
+
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+  @media #{$mobile} {
+    position: absolute;
+    width: auto;
+    height: auto;
+    padding-top: 18px;
+
+    overflow: hidden;
+
+    left: 0 !important;
+    right: 0;
+    top: 0;
+    bottom: 0;
+
+    z-index: 100;
+
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+
+    h2 {
+      font-weight: 300;
+    }
+
+    input {
+      padding: 8px 12px;
+      border-radius: 5px;
+      font-family: $font-default
+    }
+
+  }
 }
 
 
@@ -398,29 +522,54 @@ nav {
   z-index: 1;
   padding: 12px;
   cursor: pointer;
+
+  @media #{$mobile} {
+    top: 74px;
+  }
+
 }
 
 
 .nav__slider-form {
-  position: relative;
-  top: 132px;
+  @media #{$desktop} {
+
+  }
+
+  @media #{$mobile} {
+
+  }
 }
 #nav__slider-input-description {
   height: 82px;
   resize: none;
 }
 .nav__slider-title {
-  position: absolute;
-  top: 30px;
-  font-family: $font-default;
-  font-size: 26px;
-  text-align: center;
-  color: $nav__color-item;
+  @media #{$desktop} {
+    top: 30px;
+    font-family: $font-default;
+    font-size: 26px;
+    text-align: center;
+    color: $nav__color-item;
+
+  }
+
+  @media #{$mobile} {
+    position: static;
+    margin-top: $nav__height-mobile + 4px;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+  }
 }
 
 .stage {
-  margin-left: $nav__desktop-width;
-  padding: 12px 12px;
+  @media #{$desktop} {
+    margin-left: $nav__desktop-width;
+    padding: 12px 12px;
+  }
+  @media #{$mobile} {
+    padding-top: $nav__height-mobile;
+  }
 
 }
 
@@ -460,14 +609,34 @@ nav {
   border-radius: 3px;
   box-shadow: 2px 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
+  @media #{$mobile} {
+    overflow-x: auto;
+
+  }
+
+}
+
+.mobile-pane {
+  width: 100%;
+
+
 }
 
 .card-bookmarks__header {
   height: $card-bookmarks__header-height;
-  background: $color-grey;
+  background-color: $color-grey !important;
   border-radius: 3px;
   display: flex;
-  justify-content: space-around;
+  flex-flow: row;
+  @media #{$desktop} {
+    justify-content: space-around;
+  }
+  overflow-y: hidden;
+
+  @media #{$mobile} {
+    width: 100% !important;
+  }
+
 }
 
 .card-bookmarks__header-text {
@@ -480,6 +649,15 @@ nav {
   text-align: center;
   color: white;
   cursor: pointer;
+
+  width: 100%;
+  text-align: center;
+
+
+  @media #{$mobile} {
+    width: 100px !important;
+    min-width: 100px !important;
+  }
 }
 
 .card-bookmarks__content {
@@ -502,6 +680,10 @@ nav {
     display: flex;
     flex-flow: column;
     justify-content: center;
+
+    @media #{$mobile} {
+      width: 100px !important;
+    }
   }
 
   tr {
@@ -612,6 +794,25 @@ nav {
   display: flex;
   flex-flow: row;
   justify-content: flex-start;
+
+  @media #{$mobile} {
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+
+    form {
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 8px;
+    }
+  }
+
+  input {
+
+  }
 }
 
 .card-bookmarks__item {
@@ -663,10 +864,17 @@ nav {
   line-height: 50px;
   padding-left: 12px;
   padding-right: 12px;
+  text-align: center;
   color: #fafafa;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin-top: 16px;
   cursor: pointer;
+
+  @media #{$mobile} {
+    width: 76%;
+    margin: auto;
+  }
+
   @extend .no-textsel;
 }
 
@@ -681,14 +889,21 @@ nav {
 #delete-folder {
   background-color: red;
   margin-left: 12px;
+
+  @media #{$mobile} {
+    margin-left: auto;
+    margin-right: auto;
+
+  }
 }
 
 .header-folders {
   font-family: $font-default;
   font-size: 2.2em;
-  margin-top: 12px;
-  margin-right: 42px;
-  padding-left: 24px;
+  margin-left:12px;
+  margin-right:12px;
+  margin-top: 8px;
+  margin-bottom: 0;
   color: #333;
 }
 .wrap-tile-folder {
@@ -797,7 +1012,6 @@ nav {
   .card-input {
     width: 450px;
     height: 500px;
-    padding: 8px 16px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 62px;
@@ -825,6 +1039,11 @@ nav {
         margin-top: $nav__height-mobile + 8px;
         margin-bottom: 8px;
         font-size: 26px;
+      }
+
+      @media #{$desktop} {
+        font-size: 42px;
+        padding: 22px 8px;
       }
 
     }
@@ -861,13 +1080,22 @@ nav {
       display: flex;
       flex-flow: column;
 
+      @media #{$desktop} {
+        margin-top: 48px;
+      }
+
       input {
+        padding-left: 12px;
+        padding-right: 12px;
+
+        @media #{$desktop} {
+          margin-left: 22px;
+          margin-right: 22px;
+        }
+
         @media #{$mobile} {
           top: 52px !important;
           font-size: 20px;
-          padding-left: 12px;
-          padding-right: 12px;
-
         }
       }
     }
@@ -877,11 +1105,16 @@ nav {
       flex-flow: column;
 
       input {
+        padding-left: 12px;
+        padding-right: 12px;
+
+        @media #{$desktop} {
+          margin-left: 22px;
+          margin-right: 22px;
+        }
         @media #{$mobile} {
           top: 52px !important;
           font-size: 20px;
-          padding-left: 12px;
-          padding-right: 12px;
         }
       }
     }
@@ -938,35 +1171,72 @@ nav {
 
 
 #overlay {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
 
-  //@media #{$desktop} {
-    left: $nav__desktop-width;
-  //}
-  height: 100vh;
   background-color: rgba(0, 0, 0, 0.25);
-  z-index: 80;
+  @media #{$desktop} {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
 
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
+    left: $nav__desktop-width;
+    height: 100vh;
+    z-index: 80;
+
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+  }
+
+  @media #{$mobile} {
+    position: fixed;
+    left:0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+
+    height: 100vh;
+    width: 100vw;
+
+
+  }
+
+
 
 
   .card-addfolder {
-    width: 380px;
-    height: 350px;
-    position: relative;
-    padding: 14px 20px;
-    margin: auto;
-    background-color: white;
-    box-shadow: 1px 2px 2px 0px rgba(194,194,194,1);
-    z-index: 100;
     display: flex;
     flex-flow: column;
-    justify-content: space-between;
+    z-index: 100;
+
+    @media #{$desktop} {
+      width: 380px;
+      height: 350px;
+      position: relative;
+      padding: 14px 20px;
+      margin: auto;
+      background-color: white;
+      box-shadow: 1px 2px 2px 0px rgba(194,194,194,1);
+      justify-content: space-between;
+    }
+
+    @media #{$mobile} {
+      width: 90%;
+      height: 300px;
+      background-color: white;
+      position: fixed;
+      top: 20%;
+      left: 5%;
+      right: 5%;
+      justify-content: space-around;
+
+      input {
+        margin-right: 4px;
+        margin-left: 4px;
+      }
+
+    }
+
 
     .header {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -1018,7 +1288,7 @@ nav {
 #import-form-bookmark{
   display: flex;
   flex-flow: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .import-bookmark {
   width: 84% !important;
@@ -1035,9 +1305,23 @@ nav {
 #import-form-folder {
   display: flex;
   flex-flow: row;
-  margin-left: 12px;
+  @media #{$desktop} {
+    margin-left: 12px;
+  }
+  @media #{$mobile} {
+    width: 85%;
+  }
   margin-top: 16px;
   height: 50px;
+
+}
+#fileinput {
+  width: 0.1px;
+  height: 0.1px;
+  line-height: 100%;
+}
+#fileinput-label {
+  text-align: center;
 }
 .import-folder {
   background: $color-grey;
@@ -1049,14 +1333,24 @@ nav {
   padding-left: 12px;
   padding-right: 12px;
   color: #fafafa;
+  text-align: center;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1em;
   cursor: pointer;
   @extend .no-textsel;
 }
 .import-folder-btn {
+  width: 200px;
   margin-top: 15px;
   margin-left: 15px;
+  background: #888;
+  border-radius: 5px;
+  position: relative;
+  bottom: 8px;
+  font-family: $font-default;
+  font-size: 12px;
+  line-height: 34px;
+  color: white;
 
 }
 
@@ -1073,6 +1367,17 @@ nav {
   font-size: 1em;
   margin-top: 16px;
   cursor: pointer;
+
+  @media #{$mobile} {
+    margin-bottom: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 76%;
+    text-align: center;
+
+  }
+
+
   @extend .no-textsel;
 
 }
@@ -1216,7 +1521,7 @@ nav {
 
 .no-script {
   height: 100vh;
-  width: 100wh;
+  width: 100vh;
   background-color: #fafafa;
   position: absolute;
   top: 0;

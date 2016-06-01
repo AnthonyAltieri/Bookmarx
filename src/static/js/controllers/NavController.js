@@ -5,16 +5,16 @@
     .module('app')
     .controller('NavController', NavController);
 
-  NavController.$inject = ['$rootScope', '$scope', '$state', 'localStorageService'];
+  NavController.$inject = ['$rootScope', '$scope', '$state', '$document', 'localStorageService'];
 
-  function NavController($rootScope, $scope, $state, localStorageService) {
+  function NavController($rootScope, $scope, $state, $document, localStorageService) {
     console.log('In NavigationController');
     $scope.hideNav = true;
 
     // Functions
     $scope.hideNavSlider = hideNavSlider;
     $scope.showNavSlider = showNavSlider;
-    $scope.flipNavContainer = flipNavContainer;
+    $scope.flipNavContainer = clickBox;
     $scope.addBookmark = addBookmark;
     $scope.logout = logout;
     $scope.saveBookmark = saveBookmark;
@@ -26,15 +26,26 @@
 
     // Nav
     $scope.mode = {};
-    if (window.innerWidth > 990) {
-      $scope.mode.mobileNav = false;
-      $scope.mode.desktopNav = true;
-      $scope.hideHamburger = true;
-    }
-    else {
-      $scope.mode.mobileNav = true;
-      $scope.mode.desktopNav = false;
-      $scope.hideHamburger = false;
+    $scope.mode.addBookmark = false;
+
+
+    window.onresize = function () {
+      adjustWindowMode();
+    };
+    adjustWindowMode();
+
+
+    function adjustWindowMode() {
+      if (window.innerWidth > 990) {
+        $scope.mode.mobileNav = false;
+        $scope.mode.desktopNav = true;
+        $scope.hideHamburger = true;
+      }
+      else {
+        $scope.mode.mobileNav = false;
+        $scope.mode.desktopNav = false;
+        $scope.hideHamburger = false;
+      }
     }
 
     function logout() {
@@ -45,9 +56,15 @@
     }
 
 
-    function flipNavContainer() {
-      $scope.mode.mobileNav = !$scope.mode.mobileNav;
-      $scope.mode.desktopNav = !$scope.mode.desktopNav;
+    function clickBox() {
+      $scope.mode.addBookmark = false;
+      if($scope.mode.mobileNav) {
+        $scope.mode.mobileNav = false;
+        $scope.mode.desktopNav = true;
+      } else {
+        $scope.mode.mobileNav = true;
+        $scope.mode.desktopNav = false;
+      }
     }
 
     $rootScope.nav = {};
@@ -76,6 +93,7 @@
 
     function addBookmark(add) {
       console.log('in addBookmark');
+      $scope.mode.addBookmark = true;
       if (!$rootScope.isSliderShowing) {
         $scope.showNavSlider($scope.navSlider)
       }
@@ -131,6 +149,7 @@
       if ($rootScope.nav.isSliderShowing) {
         $scope.hideNavSlider($scope.navSlider);
       }
+      $scope.mode.addBookmark = false;
     }
 
     function loggedIn() {
@@ -180,6 +199,7 @@
 
     $rootScope.$on('added-bookmark', function(event, data) {
       hideNavSlider($scope.navSlider);
+      $scope.mode.addBookmark = false;
     });
 
     $rootScope.$on('update-folders', function(event, data) {

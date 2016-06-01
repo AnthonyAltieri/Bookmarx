@@ -14,6 +14,12 @@
     self.zToATitle = zToATitle;
     self.aToZUrl = aToZUrl;
     self.zToAUrl = zToAUrl;
+    self.zeroToNineSortCreationDate = zeroToNineSortCreationDate;
+    self.nineToZeroSortCreationDate = nineToZeroSortCreationDate;
+    self.zeroToNineSortCounter = zeroToNineSortCounter;
+    self.nineToZeroSortCounter = nineToZeroSortCounter;
+    self.zeroToNineSortLastVisit = zeroToNineSortLastVisit;
+    self.nineToZeroSortLastVisit = nineToZeroSortLastVisit;
 
     function aToZTitle(bookmarks) {
       var titleToBookmarkHM = {};

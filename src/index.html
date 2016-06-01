@@ -76,7 +76,7 @@
         </div>
     </noscript>
     <div ng-controller="NavController" ng-hide="hideNav">
-        <nav id="nav">
+        <nav id="nav" ng-class="{'small-nav'  : mode.mobileNav }">
             <!--<div id="navTopRow">-->
                 <h1 class="title">BookMarx</h1>
                 <div class="box" ng-click="flipNavContainer()">
@@ -90,6 +90,7 @@
 
             <div class="container-items" ng-hide="mode.mobileNav" ng-show="mode.desktopNav" class="mobileNav">
                 <a class="item logout" ng-click="logout()">Logout</a>
+                <br/>
                 <a class="item" ng-click="addBookmark()">Add Bookmark<i class="flaticon-plus-symbol" id="item__icon-plus"></i></a>
                 <br/>
                 <!--<a class="item" ng-click="importBookmark()">Import Bookmark<i class="flaticon-upload-to-cloud" id="icon-cloud"></i></a>-->
@@ -104,7 +105,7 @@
                 </form>
             </div>
         </nav>
-        <div id="nav__slider" class="nav__slider nav__slider-hide">
+        <div id="nav__slider" class="nav__slider nav__slider-hide" ng-show="mode.mobileNav || mode.addBookmark">
             <i class="flaticon-left-arrow nav__slider-back" ng-click="cancelAddBookmark()"></i>
             <h2 class="nav__slider-title">Enter Bookmark Information</h2>
             <form class="nav__slider-form">
@@ -125,6 +126,7 @@
                 <p class="nav__slider-text-folder">Select Folder</p>
                 <br/>
                 <div class="container-select">
+                    <h3 class="choose-label" ng-show="mode.mobile.add">Choose</h3>
                     <select class="nav__slider-select-folders" ng-model="add.folder">
                         <option ng-repeat="folder in add.folders" value="{{folder.name}}">{{folder.name}}</option>
                     </select>
@@ -133,9 +135,12 @@
             </form>
             <div class="container-save">
                 <a class="nav__slider-save" ng-click="saveBookmark(add)">Save Bookmark</a>
+                <a class="nav__slider-save" ng-click="cancelAddBookmark()" ng-show="mode.mobileNav">
+                    Cancel
+                </a>
             </div>
         </div>
     </div>
-    <div id="content" class="no-nav" ui-view></div>
+    <div id="content" class="no-nav" ui-view ng-hide="mode.mode.addBookmark"></div>
 </body>
 </html>
