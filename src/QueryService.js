@@ -50,7 +50,6 @@ module.exports = function QueryService(database, utilService) {
         var isTupule = !(i % 2);
         if (isTupule) {
           var filter = filters[i];
-          console.log(filter);
 
           queryString += filter[0];
           queryString += ' ';
@@ -67,7 +66,6 @@ module.exports = function QueryService(database, utilService) {
       }
     }
     queryString += ';';
-    console.log('select qs: ' + queryString);
     this._db.query(queryString, callback)
   }
 
@@ -85,7 +83,6 @@ module.exports = function QueryService(database, utilService) {
       var isTupule = !(i % 2);
       if (isTupule) {
         var filter = filters[i];
-        console.log(filter);
 
         queryString += filter[0];
         queryString += ' ';
@@ -101,7 +98,6 @@ module.exports = function QueryService(database, utilService) {
       }
     }
     queryString += ';';
-    console.log('devare qs: ' + queryString);
     this._db.query(queryString, callback);
   }
 
@@ -135,16 +131,10 @@ module.exports = function QueryService(database, utilService) {
     }
     queryString += ')';
     queryString += ';';
-    console.log('insert qs: ' + queryString);
     this._db.query(queryString, callback);
   }
 
   function update(tableName, columnvalues, filters, callback) {
-    console.log('inside update');
-    console.log('columnvalues');
-    console.log(columnvalues);
-    console.log('filters');
-    console.log(filters);
     var queryString = 'UPDATE';
     queryString += ' ';
     queryString += tableName;
@@ -153,7 +143,6 @@ module.exports = function QueryService(database, utilService) {
     queryString += ' ';
     for (var i = 0 ; i < columnvalues.length ; i++) {
       var columnvalue = columnvalues[i];
-      console.log(columnvalues);
 
       queryString += columnvalue[0];
       queryString += ' ';
@@ -175,7 +164,6 @@ module.exports = function QueryService(database, utilService) {
       var isTupule = !(i % 2);
       if (isTupule) {
         var filter = filters[i];
-        console.log(filter);
 
         queryString += filter[0];
         queryString += ' ';
@@ -191,7 +179,6 @@ module.exports = function QueryService(database, utilService) {
       }
     }
     queryString += ';';
-    console.log('update qs: ' + queryString);
     this._db.query(queryString, callback);
   }
 

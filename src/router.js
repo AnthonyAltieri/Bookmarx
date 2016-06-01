@@ -98,9 +98,7 @@ router.post('/signUp', function(req, res) {
   var filter = [];
   filter.push(['username', '=', req.body.username]);
 
-  console.log('about to hash');
   var cryptedPassword = cryptService.hash(req.body.username, req.body.password);
-  console.log('cryptedPassword: ' + cryptedPassword);
 
   qs.select(['*'], ['user'], filter, function(err, rows) {
     if (err) throw rows;
@@ -131,7 +129,7 @@ router.post('/signUp', function(req, res) {
         });
 
         var mailOptions = {
-          from: 'bookmarxapp@gmail.com',
+          from: 'Bookmarxapp@gmail.com',
           to: username,
           subject: 'Account Activation',
           text: 'Thank you for joining Bookmarx!\n\n' +
@@ -146,7 +144,7 @@ router.post('/signUp', function(req, res) {
           else{
             console.log('Account created');
             res.send({
-              msg: ('Created account for user: ' + username),
+              msg: 'Created account for user: ' + username,
               success: true,
               username: username,
               email: info.response
@@ -191,8 +189,6 @@ router.post('/folder/get', function(req, res) {
   qs.select(['*'], ['folder'], filter, function(err, rows) {
     if (err) throw err;
 
-    console.log('just got the folders for user: ' + username);
-    console.log(rows);
 
     var data = { rows: rows };
     res.send(data);
@@ -215,8 +211,6 @@ router.post('/user/bookmarks/get', function(req, res) {
   qs.select(['*'], ['bookmark'], filter, function(err, rows) {
     if (err) throw err;
 
-    console.log('just got the bookmarks for user: ' + username);
-    console.log(rows);
 
     var data = { rows: rows };
     // res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
@@ -246,8 +240,6 @@ router.post('/user/bookmarks/add', function(req, res) {
   filter.push(['title', '=', bookmark.title]);
   qs.select(['*'], 'bookmark', filter, function(err, rows) {
     if (err) throw err;
-    console.log('rows select');
-    console.log(rows);
     if (rows.length > 0) {
       res.send(null);
       return;
@@ -265,27 +257,29 @@ router.post('/user/bookmarks/add', function(req, res) {
       var date = new Date();
       var datestring = '';
       datestring += ((date.getYear() + 1900) + '-');
+      /*
+<<<<<<< HEAD
       datestring += (date.getMonth()+1 + '-');
       datestring += (date.getDate());
+======= */
+      datestring += ((((date.getMonth() + 1).toString().length === 1)
+        ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-');
+      datestring += (((date.getDate().toString().length === 1)
+        ? '0' + date.getDate() : date.getDate()));
 
       values.push(datestring); // creationDate
       values.push(datestring); // lastVisit
       values.push(0); // counter
       values.push(bookmark.folder);
 
-      console.log('bookmark');
-      console.log(bookmark);
 
       qs.insert('bookmark', columns, values, function(err, result) {
         if (err) throw err;
         if (result.affectedRows === 1) {
           // Everything went according to plan
           var data = {bookmark: bookmark};
-          console.log('trying to send data bookmark add');
-          console.log(data);
           res.send(data);
         } else {
-          console.log('something went wrong affectedRows should have been 1');
         }
       });
 
@@ -320,7 +314,6 @@ router.post('/folder/add', function(req, res) {
       res.header('Pragma', 'no-cache');
       res.send(data);
     } else {
-      console.log('something went wrong affectedRows should have been 1');
     }
 
   });
@@ -363,8 +356,6 @@ router.post('/folder/delete', function(req, res) {
         res.send(data);
       });
     } else {
-      console.log('something went wrong there should have only been'
-        + 'one folder deleted');
     }
 
   })
@@ -414,16 +405,12 @@ router.post('/bookmark/star', function(req, res) {
   var username = req.body.username;
 
   var columnvalues = [];
-  console.log('in bookmark/star');
-  console.log(bookmark);
   if (bookmark.star === '1') {
     columnvalues.push(['star', '=', '0'])
   } else {
     columnvalues.push(['star', '=', '1'])
   }
   var filter = [];
-  console.log('columnvalues');
-  console.log(columnvalues);
   filter.push(['username', '=', username]);
   filter.push('and');
   filter.push(['title', '=', bookmark.title]);
@@ -444,7 +431,6 @@ router.post('/bookmark/star', function(req, res) {
 
 router.post('/cookie/enableit', function(req, res) {
   var cookiesEnabled = req.body.cookiesEnabled;
-  console.log('cookiesEnabled: ' + cookiesEnabled);
   if (cookiesEnabled) {
     // Do nothing
   } else {
@@ -462,12 +448,10 @@ router.post('/bookmark/use', function(req, res) {
   var username = req.session.username;
   var title = bookmark.title;
   var count = parseInt(bookmark.counter);
-  console.log('count: ' + count);
   var newCount = (count + 1) + '';
 
   // Update bookmarks counter
   bookmark.counter = newCount;
-  console.log('newCount: ' + newCount);
 
 
   var date = new Date();
@@ -509,9 +493,7 @@ router.post('/bookmark/export', function(req, res) {
   var username = req.session.username;
   BookmarkIOService.exportBookmark(username, title, function() {
     var filename = username + ' ' + title + ' export';
-    console.log('filename : ' + filename);
     if (fs.existsSync(filename)) {
-      console.log('it exists');
       res.sendFile(__dirname + '/' + filename)
       fs.unlinkSync(filename);
     }
@@ -554,12 +536,8 @@ router.post('/folder/export', function(req, res) {
   BookmarkIOService.exportFolder(username, name, function() {
     //console.log('isValidFolder : ' + validFolder);
     //if (validFolder) {
-      console.log('about to check if it exists');
       if (fs.existsSync(path)) {
-        console.log('it does exist, about to send');
         res.sendFile(path);
-        console.log('should have sended')
-        console.log('unliked it')
       }
       //res.redirect('/#/dashboard');
     //fs.unlinkSync(path);
@@ -583,8 +561,6 @@ router.post('/folder/import', function(req, res) {
     }
     var filename = req.file.filename;
     var username = req.session.username;
-    console.log('filename');
-    console.log(filename);
     BookmarkIOService.importFolder(username, filename, function() {
       if (fs.existsSync(path.join(__dirname, 'public/uploads/' + filename))) {
         fs.unlinkSync(path.join(__dirname, 'public/uploads/' + filename));
@@ -662,11 +638,6 @@ router.post('/bookmark/update', function(req, res) {
       filters.push('and');
       filters.push(['title', '=', bookmark.oldTitle]);
 
-      console.log('about to update bookmark with');
-      console.log('columnvalues');
-      console.log(columnvalues);
-      console.log('filters');
-      console.log(filters);
 
       qs.update('bookmark', columnvalues, filters, function(err, rows) {
         if (err) throw err;
@@ -702,15 +673,11 @@ router.post('/forgot',function(req,res){
 
           var filters = [];
           filters.push(['username', '=', user]);
-          console.log("rows in update pw: " + user + " row length: " + rows.length);
 
           qs.update('user', columnvalues, filters, function(err, result) {
             if(err) {
-              console.log('EROOOOOOOR');
-              console.log("result: " + result);
             }
             else {
-              console.log("everything went according to plan in sending email");
               var mailTransport = nodemailer.createTransport({
                 service: 'Gmail',
                 auth: {
@@ -719,7 +686,7 @@ router.post('/forgot',function(req,res){
                 }
               });
               var mailOptions = {
-                from: 'bookmarxapp@gmail.com',
+                from: 'Bookmarxapp@gmail.com',
                 to: user,
                 subject: 'Password reset',
                 text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
@@ -730,10 +697,8 @@ router.post('/forgot',function(req,res){
               };
               mailTransport.sendMail(mailOptions, function (err, info) {
                 if (err) {
-                  console.log(error);
                   res.json({msg: 'error sending email'});
                 } else {
-                  console.log('Message sent; ' + info.response);
                   res.json({msg: info.response});
                 }
 
@@ -862,8 +827,10 @@ router.post('/changePW', function(req,res) {
   });
 });
 
+/*
 
-
+=======
+>>>>>>> master*/
 function isValidTag(tag) {
   return !(!tag || tag.trim('').length === 0 || tag === 'null' || tag === 'NULL'
   || tag === null);

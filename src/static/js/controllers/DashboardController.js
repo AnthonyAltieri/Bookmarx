@@ -86,9 +86,18 @@
     vm.showOverlay = false;
     vm.editBookmarkMode = false;
 
+    $rootScope.addingBookmark = false;
+
     // Show nav
     $rootScope.$broadcast('show-nav');
-    if (!localStorageService.cookie.get('username')) {
+    var tryUsername = null;
+    if (localStorageService.isSupported) {
+      tryUsername = localStorageService.get('username');
+    }
+    if (localStorageService.cookie.isSupported) {
+      tryUsername = localStorageService.cookie.get('username');
+    }
+    if (!tryUsername) {
       humane.log('You have been logged out, log back in', {addCls: 'humane-flatty-error'});
       $state.go('login');
       return;
@@ -117,8 +126,22 @@
     function clickStar(bookmark) {
       var data = {
         bookmark: bookmark,
-        username: vm.cookies.username
       };
+      var validSystem = false;
+      if (localStorageService.isSupported) {
+        data.username = localStorageService.get('username');
+        validSystem = true;
+      }
+      if (localStorageService.cookie.isSupported) {
+        data.username = localStorageService.cookie.get('username');
+        validSystem = true;
+      }
+
+      if (!validSystem) {
+        humane.log('Server error, log in again');
+        $state.go('login');
+
+      }
 
       ServerService.sendPost(data,
         ROUTE.STAR_BOOKMARK,
@@ -163,21 +186,26 @@
 
     //Find:selectFolder
     function selectFolder(folder) {
-      console.log('selected folder');
-      console.log(folder);
-      console.log("Last Sort Method: " + vm.user.lastSortMethod);
+      //console.log('selected folder');
+      //console.log(folder);
+      //if (folder.isActive) return;
+      //if (vm.user.activeFolder != null) {
+      //  vm.user.activeFolder.isActive = false;
+      //}
+      //vm.user.activeFolder = vm.user.folderHM[folder.name];
+      //vm.user.activeFolder.isActive = true;
 
-      if (folder.isActive) return;
-      if (vm.user.activeFolder != null) {
-        vm.user.activeFolder.isActive = false;
+
+      for (var i = 0 ; i < vm.user.folders.length ; i++) {
+        var focus = vm.user.folders[i];
+        if (folder.name === focus.name) {
+          focus.isActive = true;
+          vm.user.activeFolder = focus;
+        } else {
+          focus.isActive = false;
+        }
+
       }
-
-      vm.user.activeFolder = vm.user.folderHM[folder.name];
-      vm.user.activeFolder.isActive = true;
-      sortFolder(vm.user.lastSortMethod);
-      console.log('in selectFolder');
-      console.log('vm.user.folders');
-      console.log(vm.user.folders);
     }
 
     function beginCreateFolder() {
@@ -191,8 +219,6 @@
       }
       if (vm.editBookmarkMode) {
         var diffKeys = diffKeysBookmark(vm.bookmarkEdit, vm.bookmarkEditOriginal);
-        console.log('difKeys');
-        console.log(diffKeys);
         for (var i = 0 ; i < diffKeys.length ; i++){
           var key = diffKeys[i];
           vm.bookmarkEdit[key] = vm.bookmarkEditOriginal[key];
@@ -204,7 +230,6 @@
     function addFolder(name) {
       if (!name || name.trim('').length === 0) {
         humane.log('You need some content for your name', {addCls:'humane-flatty-error'});
-        console.log('needs to have content');
         return;
       }
 
@@ -268,15 +293,10 @@
     }
 
     function prettyDate(date) {
-      console.log('about to make this date pretty');
-      console.log(date);
-      console.log('here is the pretty one');
-      console.log(date.split('T')[0]);
       return date.split('T')[0];
     }
 
     function goToBookmark(bookmark) {
-      console.log('goToBookmark');
       var data = {
         bookmark: bookmark
       };
@@ -353,10 +373,7 @@
     }
 
     function saveChanges() {
-      console.log('saveChanges');
       var bookmark = vm.bookmarkEdit;
-      console.log('using this bookmark');
-      console.log(bookmark);
       var data = {bookmark: bookmark};
       vm.editBookmarkMode = false;
       ServerService.sendPost(data,
@@ -494,8 +511,6 @@
     // Watchers
     $scope.$on(ROUTE.GET_FOLDERS_SUCCESS, function(event, data) {
       if (!data || data.error || !data.rows) {
-        console.log('data');
-        console.log(data);
         humane.log('Server error try again later', {addCls: 'humane-flatty-error'});
         $state.go('login');
         return;
@@ -611,20 +626,29 @@
 
     $rootScope.$on('add-bookmark', function(event, obj) {
       var bookmark = obj.bookmark;
+
+      if ((bookmark.url[0] === 'w') && (bookmark.url[1] === 'w') && (bookmark.url[2] === 'w')) {
+        bookmark.url = 'http://' + bookmark.url;
+      }
+
       var data = {
         bookmark: bookmark,
         username: vm.user.name
       };
 
 
-      ServerService.sendPost(data,
-        ROUTE.ADD_BOOKMARK,
-        ROUTE.ADD_BOOKMARK_SUCCESS,
-        ROUTE.ADD_BOOKMARK_FAIL
-      );
+      if (!$rootScope.addingBookmark) {
+        ServerService.sendPost(data,
+          ROUTE.ADD_BOOKMARK,
+          ROUTE.ADD_BOOKMARK_SUCCESS,
+          ROUTE.ADD_BOOKMARK_FAIL
+        );
+      }
+      $rootScope.addingBookmark = true;
     });
 
     $scope.$on(ROUTE.ADD_BOOKMARK_SUCCESS, function(event, data) {
+      $rootScope.addingBookmark = false;
       if (data.error) {
         humane.log('Server error try again later', {addCls: 'humane-flatty-error'})
         $state.go('login');
@@ -633,7 +657,6 @@
       var bookmark = data.bookmark;
       if (!bookmark) {
         humane.log('This title has been already used, try another', {addCls: 'humane-flatty-error'});
-        console.log('title taken');
         return;
       }
       bookmark.tags = [];
@@ -663,8 +686,9 @@
 
       // Make the dates pretty
       var date = new Date();
-      var prettyDateString = '' + (date.getYear() + 1900) + '-' + date.getMonth() + '-' +
-        date.getDate();
+      var prettyDateString = '' + (date.getYear() + 1900) + '-' +
+        (((date.getMonth() + 1).toString().length === 1) ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-' +
+        ((date.getDate().toString().length === 1) ? '0' + date.getDate() : date.getDate());
       if (!bookmark.creationDate) {
         bookmark.creationDate = prettyDateString;
       } else {
@@ -680,10 +704,6 @@
       } else {
         if (!vm.user.folderHM[bookmark.folder]) {
           // This should never happen but silently fail
-          console.log('this should never happen');
-          console.log('with folder name: ' + bookmark.folder);
-          console.log('with vm.user.folderHM');
-          console.log(vm.user.folderHM);
         } else {
           var folder = vm.user.folderHM[bookmark.folder];
           folder.bookmarks.push(bookmark);
@@ -721,9 +741,6 @@
         $state.go('login');
         return;
       }
-      console.log('in DELETE_FOLDER_SUCC');
-      console.log('data');
-      console.log(data);
       var folder = data.folder;
       vm.user.folderHM[folder.name] = null;
       for (var i = 0 ; i < vm.user.folders.length ; i++) {
@@ -741,9 +758,11 @@
         }
       }
 
-      for (var i = 0 ; i < folder.bookmarks.length ; i++) {
-        var focus = folder.bookmarks[i];
-        StorageService.deleteBookmark(focus);
+      if (folder.name != '' || folder.name.toString().toLowerCase() != 'all') {
+        for (var i = 0 ; i < folder.bookmarks.length ; i++) {
+          var focus = folder.bookmarks[i];
+          StorageService.deleteBookmark(focus);
+        }
       }
 
       var packet = {folders: vm.user.folders};
@@ -778,8 +797,6 @@
         // Do nothing
       }  else {
         var focusFolder = vm.user.folderHM[folderName];
-        console.log('focusFolder');
-        console.log(focusFolder);
         if (focusFolder) {
           for ( var i = 0 ; i < focusFolder.bookmarks.length ; i++) {
             var focus = focusFolder.bookmarks[i];
@@ -810,8 +827,6 @@
       if (allFolder) {
         for (var i = 0 ; i < allFolder.bookmarks.length ; i++) {
           if (bookmark.title === allFolder.bookmarks[i].title) {
-            console.log('the boomark used to be');
-            console.log(allFolder.bookmarks[i]);
             allFolder.bookmarks[i].star = (bookmark.star === '0') ? '1' : '0';
             break;
           }
@@ -857,19 +872,12 @@
 
 
     $scope.$on(ROUTE.UPDATE_BOOKMARK_SUCCESS, function(event, data) {
-      console.log('in update_bookmark_success');
       if (!data) {
         humane.log('That title is invalid or has already been used, try another one', {addCls:'humane-flatty-error'});
         vm.clickOverlay(false)
-        console.log('vm.bookmarkEdit');
-        console.log(vm.bookmarkEdit);
       } else {
         var bookmark = data.bookmark;
 
-        console.log('vm.bE.f');
-        console.log(vm.bookmarkEdit.folder);
-        console.log('vm.bEO.f');
-        console.log(vm.bookmarkEditOriginal.folder);
         var sameFolder = (vm.bookmarkEdit.folder === vm.bookmarkEditOriginal.folder);
         if (!sameFolder) {
           var oldFolder = vm.user.folderHM[vm.bookmarkEditOriginal.folder];
@@ -887,10 +895,6 @@
             newFolder.bookmarks.push(bookmark);
           }
         }
-        console.log('newFolder');
-        console.log(newFolder);
-        console.log('oldFolder');
-        console.log(oldFolder);
 
 
         bookmark.tags = [];

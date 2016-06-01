@@ -17,6 +17,7 @@
     //}
 
     var vm = this;
+    
 
     // Set local storage and cookie prefix
     localStorageService.set('cse136team10');
@@ -73,7 +74,30 @@
     };
 
     // Function implementations
+    function initLogin() {
+      vm.login = {
+        username: '',
+        password: ''
+      };
+    }
+
+    function initSignup() {
+      vm.signup = {
+        username: '',
+        password1: '',
+        password2: '',
+        firstname: '',
+        lastname: ''
+      };
+    }
+
     function submitLogin(input) {
+      if (!localStorageService.cookie.isSupported) {
+        humane.log('You need javascript and cookies enabled', {addCls: 'humane-flatty-info'});
+        $state.go('login'); 
+        return;
+      }
+
       if (input.username.trim().length === 0) {
         humane.log('Enter a username', {addCls: 'humane-flatty-info'});
         return;
@@ -88,7 +112,6 @@
         username: input.username.trim().toLocaleLowerCase(),
         password: input.password
       };
-      console.log(form);
       ServerService.sendPost(form,
         ROUTE.LOGIN,
         ROUTE.LOGIN_SUCCESS,
@@ -100,45 +123,38 @@
       if(!input) {
         // Do something, probably toast
         humane.log('You need to enter a username', {addCls: 'humane-flatty-info'});
-        console.log('No username content');
         return;
       }
       // Make sure there is content in all of the fields
       if (!input.username || input.username.trim().length === 0) {
         // Do something, probably toast
         humane.log('You need to enter a username', {addCls: 'humane-flatty-info'});
-        console.log('No username content');
         return;
       }
       if (!input.password1 || input.password1.trim().length === 0) {
         // Do something, probably toast
         humane.log('You need to enter a password', {addCls: 'humane-flatty-info'});
-        console.log('No password1 content');
         return;
       }
       if (!input.password2 || input.password2.trim().length === 0) {
         // Do something, probably toast
         humane.log('You need to confirm the password', {addCls: 'humane-flatty-info'});
-        console.log('No password2 content');
         return;
       }
       if (!input.firstname || input.firstname.trim().length === 0) {
         // Do something, probably toast
         humane.log('You need to enter your First Name', {addCls: 'humane-flatty-info'});
-        console.log('No firstname content');
         return;
       }
       if (!input.lastname || input.lastname.trim().length === 0) {
         // Do something, probably toast
         humane.log('You need to enter your Last Name', {addCls: 'humane-flatty-info'});
-        console.log('No lastname content');
         return;
       }
       // Make sure the passwords match
       if (input.password1 != input.password2) {
         // Do something, probably toast
         humane.log("Your passwords don't match!", {addCls: 'humane-flatty-info'});
-        console.log("Passwords don't match");
         return;
       }
       var data = {
@@ -174,12 +190,16 @@
     }
 
     function goToLogIn() {
+      initLogin();
+      initSignup();
       activateModeLogIn();
     }
 
     function goToSignUp() {
-      console.log('in goToSignUp');
+      initLogin();
+      initSignup();
       activateModeSignUp();
+
     }
 
     function goToForgotPW(){
@@ -248,10 +268,6 @@
     });
 
     $scope.$on(ROUTE.LOGIN_SUCCESS, function(event, data) {
-      console.log(event);
-      console.log('msg: ' + data.msg);
-      console.log('data');
-      console.log(data);
       if (data.msg === "Couldn't find one user") {
         humane.log('No account found for these credentials', {addCls: 'humane-flatty-log'});
         return;
@@ -275,13 +291,11 @@
       }
     });
     $scope.$on(ROUTE.LOGIN_FAIL, function(event, data) {
-      humane.log('Error logging inin, try again', {addCls: 'humane-flatty-error'});
-      console.log(event);
-      console.log('msg: ' + data.msg);
+      humane.log('Error logging in, try again', {addCls: 'humane-flatty-error'});
     });
 
     $scope.$on(ROUTE.SIGNUP_SUCCESS, function(event, data) {
-      console.log(event);
+
       console.log('msg: ' + data.msg);
       if (data.msg === "This username is taken") {
         humane.log('This username is taken', {addCls: 'humane-flatty-log'});
@@ -290,10 +304,10 @@
         activateModeVerifyEmail();
       }
 
+      //goToLogIn();
+
     });
     $scope.$on(ROUTE.SIGNUP_FAIL, function(event, data) {
-      console.log(event);
-      console.log('msg: ' + data.msg);
     });
 
   }
