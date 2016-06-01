@@ -4,7 +4,7 @@ body {
     background-color: #fafafa;
 }
 
-.error-box {
+/*.error-box {
     width: 400px;
     height: 400px;
     margin: 126px auto;
@@ -21,4 +21,55 @@ body {
     color: white;
     width: 100%;
     text-align: center;
+}*/
+
+* {
+  box-sizing: border-box;
 }
+body {
+  font-size: 1.50rem;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 150%;
+  text-shadow: 0 2px 2px #a9a9a9;
+}
+
+section {
+  color: #fff;
+  text-align: center;
+}
+
+div {
+  height: 100%;
+}
+body{
+    background: url("./images/bookmark.jpg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+article {
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 4.00rem;
+  color: #E24A37;
+  margin: 0 0 0.75rem 0;
+}
+
+/* Pattern styles */
+.container {
+  display: table;
+  width: 100%;
+}
+
+
+
+
+

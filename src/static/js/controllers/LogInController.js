@@ -30,12 +30,21 @@
 
     vm.modeLogIn = true;
     vm.modeSignUp = false;
+    vm.modeForgotPW = false;
+    vm.modeForgotConfirm = false;
+    vm.modeVerifyEmail = false;
 
     // Functions
     vm.submitLogin = submitLogin;
     vm.goToSignUp = goToSignUp;
     vm.goToLogIn = goToLogIn;
+    vm.goToForgotPW = goToForgotPW;
+    vm.submitForgotPW = submitForgotPW;
     vm.submitSignUp = submitSignUp;
+
+    vm.forgot = {
+      username: ''
+    };
 
     // Objects Initialization
     vm.login = {
@@ -161,6 +170,25 @@
       );
     }
 
+    function submitForgotPW(input){
+      if (!input.username || input.username.trim().length === 0) {
+        // Do something, probably toast
+        humane.log('You need to enter a username', {addCls: 'humane-flatty-info'});
+        console.log('No username content');
+        return;
+      }
+
+      var data = {
+        username: input.username
+      };
+
+      ServerService.sendPost(data,
+        ROUTE.FORGOT,
+        ROUTE.FORGOT_SUCCESS,
+        ROUTE.FORGOT_FAIL
+      );
+    }
+
     function goToLogIn() {
       initLogin();
       initSignup();
@@ -174,19 +202,70 @@
 
     }
 
+    function goToForgotPW(){
+      console.log('forgot password');
+      activateModeForgotPW();
+    }
+
     function activateModeLogIn() {
       vm.modeLogIn = true;
       vm.modeSignUp = false;
+      vm.modeForgotPW = false;
+      vm.modeForgotConfirm = false;
+      vm.modeVerifyEmail = false;
     }
 
     function activateModeSignUp() {
       vm.modeLogIn = false;
       vm.modeSignUp = true;
+      vm.modeForgotPW = false;
+      vm.modeVerifyEmail = false;
+      vm.modeForgotConfirm = false;
+    }
+
+    function activateModeForgotPW(){
+      vm.modeLogIn = false;
+      vm.modeSignUp = false;
+      vm.modeForgotPW = true;
+      vm.modeVerifyEmail = false;
+      vm.modeForgotConfirm = false;
+    }
+
+    function activateModeForgotConfirm(){
+      vm.modeLogIn = false;
+      vm.modeSignUp = false;
+      vm.modeForgotPW = false;
+      vm.modeVerifyEmail = false;
+      vm.modeForgotConfirm = true;
+    }
+
+    function activateModeVerifyEmail(){
+      vm.modeLogIn = false;
+      vm.modeSignUp = false;
+      vm.modeForgotPW = false;
+      vm.modeForgotConfirm = false;
+      vm.modeVerifyEmail = true;
     }
 
     localStorageService.clearAll();
 
     // Watchers
+
+    $scope.$on(ROUTE.FORGOT_SUCCESS, function(event, data){
+      console.log(event);
+      console.log('msg: ' + data.msg);
+      console.log('data');
+      console.log(data);
+
+      if (data.msg === "Couldn't find user") {
+        humane.log('No account found for these credentials', {addCls: 'humane-flatty-log'});
+        return;
+      }
+      else{
+        activateModeForgotConfirm();
+      }
+
+    });
 
     $scope.$on(ROUTE.LOGIN_SUCCESS, function(event, data) {
       if (data.msg === "Couldn't find one user") {
@@ -217,7 +296,15 @@
 
     $scope.$on(ROUTE.SIGNUP_SUCCESS, function(event, data) {
 
-      goToLogIn();
+      console.log('msg: ' + data.msg);
+      if (data.msg === "This username is taken") {
+        humane.log('This username is taken', {addCls: 'humane-flatty-log'});
+        return;
+      }else{
+        activateModeVerifyEmail();
+      }
+
+      //goToLogIn();
 
     });
     $scope.$on(ROUTE.SIGNUP_FAIL, function(event, data) {

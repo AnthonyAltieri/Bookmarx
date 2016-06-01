@@ -9,7 +9,8 @@
 
   function NavController($rootScope, $scope, $state, $document, localStorageService) {
     $scope.hideNav = true;
-
+    $scope.showPasswordForm =  false;
+    $scope.hideDashboard = true;
     // Functions
     $scope.hideNavSlider = hideNavSlider;
     $scope.showNavSlider = showNavSlider;
@@ -18,6 +19,7 @@
     $scope.logout = logout;
     $scope.saveBookmark = saveBookmark;
     $scope.cancelAddBookmark = cancelAddBookmark;
+    $scope.changepw = changepw;
     $rootScope.loggedIn = loggedIn;
     $rootScope.loggedOut = loggedout;
 
@@ -52,6 +54,10 @@
       localStorageService.clearAll();
       localStorageService.cookie.clearAll();
       $state.go('login');
+    }
+
+    function changepw(){
+
     }
 
 

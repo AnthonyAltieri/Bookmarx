@@ -20,6 +20,7 @@ var mySession = session({
 });
 
 
+
 app.use(mySession);
 
 app.use(bodyParser.urlencoded({extended:true}));
@@ -28,6 +29,9 @@ app.disable('x-powered-by');
 
 
 app.use('/static', express.static(path.join(__dirname, '/static')));
+app.set('views', __dirname + '/static/templates');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
 app.use('/', router);
 

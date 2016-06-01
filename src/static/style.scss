@@ -170,8 +170,8 @@ nav {
   }
 
   //@media #{$desktop} {
-    width: $nav__desktop-width;
-    height: 100vh;
+  width: $nav__desktop-width;
+  height: 100vh;
 
   //}
 
@@ -1200,7 +1200,7 @@ nav {
       @extend .submit;
 
     }
-    
+
     .buttons {
       display: flex;
       flex-flow: row;
@@ -1212,6 +1212,16 @@ nav {
 
       }
     }
+
+    .card-text{
+      text-align: center;
+    }
+
+    .card-label{
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+    }
+
 
 
   }
@@ -1486,7 +1496,7 @@ nav {
   margin: auto;
   background-color: white;
   box-shadow: 1px 2px 2px 0px rgba(194,194,194,1);
-  z-index: 100;
+  z-index: 1000;
 
   display: flex;
   flex-flow: column;

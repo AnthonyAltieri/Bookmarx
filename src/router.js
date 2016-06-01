@@ -24,13 +24,17 @@ router.get('/forgot',function(req,res){
   res.sendFile(path.join(__dirname, '/static/templates/forgot.html'));
 });
 
+router.get('/changePW',function(req,res){
+  res.sendFile(path.join(__dirname, '/static/templates/changePW.html'));
+});
+
 router.get('/reset', function(req,res){
   res.sendFile(path.join(__dirname, '/static/templates/reset.html'));
 });
 
 router.get('/verify',function(req,res){
   res.sendFile(path.join(__dirname, '/static/templates/verify.html'));
-})
+});
 
 // API
 router.post('/login', function(req, res) {
@@ -138,6 +142,7 @@ router.post('/signUp', function(req, res) {
             res.json({msg: 'error sending validation email'});
           }
           else{
+            console.log('Account created');
             res.send({
               msg: 'Created account for user: ' + username,
               success: true,
@@ -252,11 +257,15 @@ router.post('/user/bookmarks/add', function(req, res) {
       var date = new Date();
       var datestring = '';
       datestring += ((date.getYear() + 1900) + '-');
+      /*
+<<<<<<< HEAD
+      datestring += (date.getMonth()+1 + '-');
+      datestring += (date.getDate());
+======= */
       datestring += ((((date.getMonth() + 1).toString().length === 1)
         ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-');
       datestring += (((date.getDate().toString().length === 1)
         ? '0' + date.getDate() : date.getDate()));
-
 
       values.push(datestring); // creationDate
       values.push(datestring); // lastVisit
@@ -473,7 +482,6 @@ router.post('/bookmark/use', function(req, res) {
     }
   })
 
-
 });
 
 router.post('/bookmark/export', function(req, res) {
@@ -642,11 +650,11 @@ router.post('/bookmark/update', function(req, res) {
 });
 
 /*** Reset password ***/
-router.post('/reset',function(req,res){
+router.post('/forgot',function(req,res){
     crypto.randomBytes(20, function (err, buf) {
       var token = buf.toString('hex');
       var filter = [];
-      var user = req.body.username
+      var user = req.body.username;
       filter.push(['username','=', user]);
 
       qs.select(['*'], 'user', filter, function(err, rows) {
@@ -689,7 +697,7 @@ router.post('/reset',function(req,res){
               };
               mailTransport.sendMail(mailOptions, function (err, info) {
                 if (err) {
-                  res.json({msg: 'errooor sending email'});
+                  res.json({msg: 'error sending email'});
                 } else {
                   res.json({msg: info.response});
                 }
@@ -706,19 +714,123 @@ router.get('/reset/:token', function(req,res){
   var filter = [];
   filter.push(['resetpasswordtoken' , '=', req.params.token]);
   filter.push(['resetpasswordtimer', '>', Date.now()]);
+  console.log('user: ' + req.user);
   qs.select(['*'], 'user', filter,function(err, rows){
     if(err){
-      res.json({msg:'Link expired :('});
+      return res.redirect('/#/login');
       throw(err);
     }
+    else if(rows.length === 0 ){
+      console.log('Link expired or password already reset');
+      return res.redirect('/#/login');
+    }
     else{
-      res.json({
-        user: rows[0]
-      });
+     res.render('reset',{
+       user: req.user
+     });
     }
   });
 });
 
+router.post('/reset/:token', function(req,res){
+  console.log('RESETTING PASSWORD');
+
+  var password = req.body.password;
+  var token = req.params.token;
+  var cryptedPassword;
+  var filter = [];
+  var columnValues =[];
+  var user = req.body.username;
+
+  cryptedPassword = cryptService.hash(user, password);
+
+  filter.push(['resetpasswordtoken','=',token]);
+  filter.push('and');
+  filter.push(['resetpasswordtoken', '>', Date.now()]);
+  filter.push('and');
+  filter.push(['username', '=', user]);
+
+  columnValues.push(['password','=',cryptedPassword]);
+  columnValues.push(['resetpasswordtoken','=', 'NULL']);
+  columnValues.push(['resetpasswordtimer','=','NULL']);
+
+  qs.update('user',columnValues,filter,function(err,result){
+    console.log('RESULT: ' + result);
+    if(err){
+      console.log('Error');
+      console.log("result: " + result);
+      res.redirect('/#/login');
+    }
+    else if(result.affectedRows != 1){
+      res.send({msg:"Could not find user"});
+    }
+    else{
+      var mailTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'bookmarxapp@gmail.com',
+          pass: 'cse136team10'
+        }
+      });
+      var mailOptions = {
+        from: 'bookmarxapp@gmail.com',
+        to: user,
+        subject: 'Your password has been changed',
+        text: 'Hello' + user + ', \n\n' +
+          'This is a confirmation that your password for your account has been changed.\n\n' +
+          'If you did not request a password reset, please contact an administrator immediately.\n\n'
+      };
+      mailTransport.sendMail(mailOptions, function (err, info) {
+        if (err) {
+          console.log(err);
+          res.json({msg: 'error sending email'});
+        } else {
+          res.send({msg: 'Password succesfully changed'});
+        }
+
+      });
+
+      /*console.log('Message sent;' );
+      res.json({msg: 'password changed'});*/
+    }
+  });
+});
+
+router.post('/changePW', function(req,res) {
+  var newPassword = req.body.newPassword;
+  var currentPassword = req.body.currentPassword;
+  var user = req.body.username;
+  var cryptedPassword;
+  var currentCrypted;
+
+  var filter = [];
+  var columnValues =[];
+  currentCrypted = cryptService.hash(user, currentPassword);
+  cryptedPassword = cryptService.hash(user, newPassword);
+
+  filter.push(['password','=',currentCrypted]);
+  filter.push('and');
+  filter.push(['username', '=', user]);
+
+  columnValues.push(['password','=',cryptedPassword]);
+
+  qs.update('user',columnValues,filter,function(err,result){
+    if(err){
+      res.send({msg:'error'});
+    }
+    else if(result.affectedRows != 1){
+      res.send({msg:"Could not find user"});
+    }
+    else{
+      res.send({msg: 'Password successfully changed'});
+    }
+  });
+});
+
+/*
+
+=======
+>>>>>>> master*/
 function isValidTag(tag) {
   return !(!tag || tag.trim('').length === 0 || tag === 'null' || tag === 'NULL'
   || tag === null);
