@@ -7,10 +7,6 @@ var qs = new QueryService(db);
 
 console.log('Insert TEST');
 qs.insert('user', ['name', 'username'], ['trump', 'imbad'], function(error, rows) {
-  console.log('error');
-  console.log(error);
-  console.log('rows');
-  console.log(JSON.stringify(rows));
 });
 
 

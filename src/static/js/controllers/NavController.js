@@ -8,7 +8,6 @@
   NavController.$inject = ['$rootScope', '$scope', '$state', '$document', 'localStorageService'];
 
   function NavController($rootScope, $scope, $state, $document, localStorageService) {
-    console.log('In NavigationController');
     $scope.hideNav = true;
 
     // Functions
@@ -92,7 +91,6 @@
     }
 
     function addBookmark(add) {
-      console.log('in addBookmark');
       $scope.mode.addBookmark = true;
       if (!$rootScope.isSliderShowing) {
         $scope.showNavSlider($scope.navSlider)
@@ -119,8 +117,6 @@
       if (!$scope.add.description || $scope.add.description.trim('').length === 0) {
         $scope.add.description = 'none';
       }
-      console.log('$scope.add');
-      console.log($scope.add);
       var bookmark = {
         name: $scope.add.name,
         title: $scope.add.title,
@@ -175,7 +171,6 @@
       var chars = url.split('');
       if ((chars[0].toLowerCase() != 'h' && chars[1].toLowerCase() != 't' && chars[2].toLowerCase() != 't'
           && chars[3].toLowerCase() != 'p') && (chars[0].toLowerCase() != 'w' && chars[1].toLowerCase() != 'w' && chars[2].toLowerCase() != 'w')) {
-        console.log("returning false");
         return false;
       }
       var urlExpression = /((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z0-9\&\.\/\?\:@\-_=#])*/;
@@ -204,9 +199,6 @@
     });
 
     $rootScope.$on('update-folders', function(event, data) {
-      console.log('in update-folders');
-      console.log('data');
-      console.log(data);
       var folders = [];
       for (var i = 0 ; i < data.folders.length ; i++) {
         var folder = data.folders[i];
@@ -215,8 +207,6 @@
         }
       }
       $scope.add.folders = folders;
-      console.log('just updated nav folders to');
-      console.log($scope.add);
     });
   }
 

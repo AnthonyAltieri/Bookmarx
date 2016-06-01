@@ -13,7 +13,6 @@ angular.module('BookMarx.controllers', [])
     vm.hideNavSlider = hideNavSlider;
     vm.showNavSlider = showNavSlider;
 
-    console.log('In NavCtrl');
 
     function hideNavSlider (navSlider) {
         navSlider.classList.remove('nav__slider-show');
@@ -41,7 +40,6 @@ angular.module('BookMarx.controllers', [])
     };
 
     $scope.folders = initFolders.init();
-    console.log($scope.folders);
 
 })
 
@@ -61,7 +59,6 @@ angular.module('BookMarx.controllers', [])
 
 
     $scope.folders = initFolders.init();
-    console.log($scope.folders);
     $rootScope.folders = vm.folders;
     $rootScope.$broadcast('init-folders');
 
