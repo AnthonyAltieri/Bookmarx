@@ -5,13 +5,17 @@
     .module('app')
     .controller('NavController', NavController);
 
-  NavController.$inject = ['$rootScope', '$scope', '$state', '$document', 'localStorageService'];
+  NavController.$inject = ['$rootScope', '$scope', '$state', '$document', 'localStorageService', 'ServerService'];
 
-  function NavController($rootScope, $scope, $state, $document, localStorageService) {
+  function NavController($rootScope, $scope, $state, $document, localStorageService, ServerService) {
     $scope.hideNav = true;
-    $scope.showPasswordForm =  false;
+    $scope.editPasswordMode =  false;
     $scope.hideDashboard = true;
+
     // Functions
+    $scope.submitPassword = submitPassword;
+    $scope.closePasswordForm = closePasswordForm;
+    $scope.editPassword = editPassword;
     $scope.hideNavSlider = hideNavSlider;
     $scope.showNavSlider = showNavSlider;
     $scope.flipNavContainer = clickBox;
@@ -19,11 +23,17 @@
     $scope.logout = logout;
     $scope.saveBookmark = saveBookmark;
     $scope.cancelAddBookmark = cancelAddBookmark;
-    $scope.changepw = changepw;
     $rootScope.loggedIn = loggedIn;
     $rootScope.loggedOut = loggedout;
 
+
     // Objects
+    $scope.password = {
+      username: '',
+      currentPassword: '',
+      password1: '',
+      password2: ''
+    };
 
     // Nav
     $scope.mode = {};
@@ -56,10 +66,6 @@
       $state.go('login');
     }
 
-    function changepw(){
-
-    }
-
 
     function clickBox() {
       $scope.mode.addBookmark = false;
@@ -71,6 +77,69 @@
         $scope.mode.desktopNav = false;
       }
     }
+
+    function editPassword(){
+      $scope.editPasswordMode = true;
+    }
+
+    function closePasswordForm(){
+      $scope.editPasswordMode = false;
+    }
+
+    function submitPassword(data){
+      console.log(data);
+      if(!data.username || data.username.trim().length === 0){
+        humane.log('You need to enter a username', {addCls: 'humane-flatty-info'});
+        console.log('No username content');
+        return;
+      }
+      if(!data.password1 || data.password1.trim().length === 0){
+        humane.log('You need to enter a password', {addCls: 'humane-flatty-info'});
+        return;
+      }
+      if(!data.currentPassword || data.currentPassword.trim().length === 0){
+        humane.log('You need to enter a password', {addCls: 'humane-flatty-info'});
+        return;
+      }
+      else if(!data.password2 || data.password2.trim().length === 0) {
+        humane.log('You need to confirm a password', {addCls: 'humane-flatty-info'});
+        return;
+      }
+      else if (data.password1 != data.password2) {
+        // Do something, probably toast
+        humane.log("Your passwords don't match!", {addCls: 'humane-flatty-info'});
+        console.log("Passwords don't match");
+        return;
+      }
+
+      var postData ={
+        username : data.username,
+        currentPassword : data.currentPassword,
+        newPassword: data.password1
+      }
+
+      ServerService.sendPost(postData,
+        ROUTE.CHANGE_PW,
+        ROUTE.CHANGE_PW_SUCCESS,
+        ROUTE.CHANGE_PW_FAIL
+      );
+
+    }
+
+    $scope.$on(ROUTE.CHANGE_PW_FAIL, function(event, data) {
+      humane.log('Error changing password, try again', {addCls: 'humane-flatty-error'});
+    });
+
+    $scope.$on(ROUTE.CHANGE_PW_SUCCESS, function(event, data) {
+      console.log(data);
+      if(data.msg === 'Could not find user') {
+        humane.log('Wrong credentials, please try again', {addCls: 'humane-flatty-error'});
+      }
+      if(data.msg === 'Password successfully changed'){
+        humane.log('Password succesfully changed', {addCls: 'humane-flatty-error'});
+        $scope.editPasswordMode = false;
+      }
+    });
 
     $rootScope.nav = {};
     $rootScope.nav.isSliderShowing = false;

@@ -796,10 +796,15 @@ router.post('/reset/:token', function(req,res){
   });
 });
 
-router.post('/changePW', function(req,res) {
+router.post('/changePassword', function(req,res) {
+  console.log('changing password')
   var newPassword = req.body.newPassword;
   var currentPassword = req.body.currentPassword;
   var user = req.body.username;
+  console.log('current password is: ' + currentPassword);
+  console.log('changing password to: ' + newPassword);
+  console.log('usernae : ' + user);
+
   var cryptedPassword;
   var currentCrypted;
 
@@ -807,6 +812,7 @@ router.post('/changePW', function(req,res) {
   var columnValues =[];
   currentCrypted = cryptService.hash(user, currentPassword);
   cryptedPassword = cryptService.hash(user, newPassword);
+  console.log('current crypted: ' + currentCrypted);
 
   filter.push(['password','=',currentCrypted]);
   filter.push('and');
@@ -816,12 +822,15 @@ router.post('/changePW', function(req,res) {
 
   qs.update('user',columnValues,filter,function(err,result){
     if(err){
+      console.log('error');
       res.send({msg:'error'});
     }
     else if(result.affectedRows != 1){
+      console.log('could not find user');
       res.send({msg:"Could not find user"});
     }
     else{
+      console.log('password changed!');
       res.send({msg: 'Password successfully changed'});
     }
   });

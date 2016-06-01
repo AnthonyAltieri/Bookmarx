@@ -1015,7 +1015,7 @@ nav {
 .login__content {
   width: 100vw;
   height: 100vh;
-
+  z-index: 1000;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -1057,6 +1057,7 @@ nav {
   }
 
 
+
   .card-input {
     width: 450px;
     height: 500px;
@@ -1068,7 +1069,7 @@ nav {
     display: flex;
     flex-flow: column;
     justify-content: space-between;
-
+    z-index: 100000000000;
     @media #{$mobile} {
       width: 100%;
       height: 100vh;
