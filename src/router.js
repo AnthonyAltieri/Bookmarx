@@ -140,6 +140,7 @@ router.post('/signUp', function(req, res) {
             res.json({msg: 'error sending validation email'});
           }
           else{
+            console.log('Account created');
             res.send({
               msg: ('Created account for user: ' + username),
               success: true,
@@ -492,7 +493,7 @@ router.post('/bookmark/use', function(req, res) {
       res.send(data);
     }
   })
-  
+
 });
 
 router.post('/bookmark/export', function(req, res) {
@@ -747,9 +748,12 @@ router.get('/reset/:token', function(req,res){
   console.log('user: ' + req.user);
   qs.select(['*'], 'user', filter,function(err, rows){
     if(err){
-      res.json({msg:'Link expired :('});
       return res.redirect('/#/login');
       throw(err);
+    }
+    else if(rows.length === 0 ){
+      console.log('Link expired or password already reset');
+      return res.redirect('/#/login');
     }
     else{
      res.render('reset',{
@@ -770,18 +774,26 @@ router.post('/reset/:token', function(req,res){
   var user = req.body.username;
 
   cryptedPassword = cryptService.hash(user, password);
+
   filter.push(['resetpasswordtoken','=',token]);
+  filter.push('and');
   filter.push(['resetpasswordtoken', '>', Date.now()]);
+  filter.push('and');
+  filter.push(['username', '=', user]);
 
   columnValues.push(['password','=',cryptedPassword]);
   columnValues.push(['resetpasswordtoken','=', 'NULL']);
   columnValues.push(['resetpasswordtimer','=','NULL']);
 
   qs.update('user',columnValues,filter,function(err,result){
+    console.log('RESULT: ' + result);
     if(err){
-      console.log('EROOOOOOOR');
+      console.log('Error');
       console.log("result: " + result);
       res.redirect('/#/login');
+    }
+    else if(result.affectedRows != 1){
+      res.send({msg:"Could not find user"});
     }
     else{
       var mailTransport = nodemailer.createTransport({
@@ -801,11 +813,10 @@ router.post('/reset/:token', function(req,res){
       };
       mailTransport.sendMail(mailOptions, function (err, info) {
         if (err) {
-          console.log(error);
-          res.json({msg: 'errooor sending email'});
+          console.log(err);
+          res.json({msg: 'error sending email'});
         } else {
-          console.log('Message sent; ' + info.response);
-          res.redirect('/#/login');
+          res.send({msg: 'Password succesfully changed'});
         }
 
       });

@@ -33,11 +33,23 @@
       /*var responseOutput = document.getElementById("responseOutput");
       responseOutput.innerHTML = xhr.responseText;*/
       console.log('password reset!');
+      var response = JSON.parse(xhr.responseText.toString());
+      console.log(xhr.JSON);
+      console.log(response.msg);
+      if(response.msg === 'Could not find user'){
+        humane.log('Could not find matching username, or link expired', {addCls: 'humane-flatty-info'});
+        return;
+      }
+      else{
+        console.log('why still here');
+        location.href = '/';
+      }
     }
   }
 
   function validateForm(){
     console.log('validating form');
+    //event.preventDefault();
     var password1 = document.getElementById('password1').value;
     var password2 = document.getElementById('password2').value;
     var email = document.getElementById('email').value;
@@ -45,19 +57,22 @@
     if(!email || email.trim().length === 0){
       humane.log('You need to enter a username', {addCls: 'humane-flatty-info'});
       console.log('No username content');
+      return;
     }
     if(!password1 || password1.trim().length === 0){
       humane.log('You need to enter a password', {addCls: 'humane-flatty-info'});
+      return;
     }
     else if(!password2 || password2.trim().length === 0) {
       humane.log('You need to confirm a password', {addCls: 'humane-flatty-info'});
+      return;
     }
     else if (password1 != password2) {
       // Do something, probably toast
       humane.log("Your passwords don't match!", {addCls: 'humane-flatty-info'});
       console.log("Passwords don't match");
+      return;
     }
-
     document.getElementById('password1').value = '';
     document.getElementById('password2').value = '';
     document.getElementById('email').value = '';
@@ -70,46 +85,4 @@
   document.getElementById('submit-btn').addEventListener('click',function(){
     validateForm();
   });
-  /*LogInController.$inject = ['$scope', 'ServerService'];
-
-  function ResetController(ServerService) {
-    var vm = this;
-
-    vm.resetPassword = resetPassword;
-
-    vm.reset = {
-      password: ''
-    };
-
-    function submitReset(input){
-      if (!input.password1 || input.password1.trim().length === 0) {
-        // Do something, probably toast
-        humane.log('You need to enter a password', {addCls: 'humane-flatty-info'});
-        console.log('No password1 content');
-        return;
-      }
-      if (!input.password2 || input.password2.trim().length === 0) {
-        // Do something, probably toast
-        humane.log('You need to confirm the password', {addCls: 'humane-flatty-info'});
-        console.log('No password2 content');
-        return;
-      }
-
-      if (input.password1 != input.password2) {
-        // Do something, probably toast
-        humane.log("Your passwords don't match!", {addCls: 'humane-flatty-info'});
-        console.log("Passwords don't match");
-        return;
-      }
-
-      var data = {
-        password: input.password
-      };
-      ServerService.sendPost(data,
-        window.location.href,
-        ROUTE.SIGNUP_SUCCESS,
-        ROUTE.SIGNUP_FAIL
-      );
-    }
-  }*/
 })();

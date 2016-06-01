@@ -231,8 +231,20 @@
 
     // Watchers
 
-    $scope.$on(ROUTE.FORGOT_SUCCESS, function(){
-      activateModeForgotConfirm();
+    $scope.$on(ROUTE.FORGOT_SUCCESS, function(event, data){
+      console.log(event);
+      console.log('msg: ' + data.msg);
+      console.log('data');
+      console.log(data);
+
+      if (data.msg === "Couldn't find user") {
+        humane.log('No account found for these credentials', {addCls: 'humane-flatty-log'});
+        return;
+      }
+      else{
+        activateModeForgotConfirm();
+      }
+
     });
 
     $scope.$on(ROUTE.LOGIN_SUCCESS, function(event, data) {
@@ -271,8 +283,12 @@
     $scope.$on(ROUTE.SIGNUP_SUCCESS, function(event, data) {
       console.log(event);
       console.log('msg: ' + data.msg);
-
-      activateModeVerifyEmail();
+      if (data.msg === "This username is taken") {
+        humane.log('This username is taken', {addCls: 'humane-flatty-log'});
+        return;
+      }else{
+        activateModeVerifyEmail();
+      }
 
     });
     $scope.$on(ROUTE.SIGNUP_FAIL, function(event, data) {
