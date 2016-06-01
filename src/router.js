@@ -11,6 +11,7 @@ var BookmarkIOService = require('./BookmarkIOService.js');
 var fs = require('fs');
 var multer = require('multer');
 var nodemailer = require('nodemailer');
+var ses = require('nodemailer-ses-transport');
 const crypto = require('crypto');
 var upload = multer({
   dest: './public/uploads/'
@@ -18,22 +19,6 @@ var upload = multer({
 
 router.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '/index.html'));
-});
-
-router.get('/forgot',function(req,res){
-  res.sendFile(path.join(__dirname, '/static/templates/forgot.html'));
-});
-
-router.get('/changePW',function(req,res){
-  res.sendFile(path.join(__dirname, '/static/templates/changePW.html'));
-});
-
-router.get('/reset', function(req,res){
-  res.sendFile(path.join(__dirname, '/static/templates/reset.html'));
-});
-
-router.get('/verify',function(req,res){
-  res.sendFile(path.join(__dirname, '/static/templates/verify.html'));
 });
 
 // API
@@ -120,16 +105,14 @@ router.post('/signUp', function(req, res) {
           success: true,
           username: username
         });*/
-        var mailTransport = nodemailer.createTransport({
-          service: 'Gmail',
-          auth: {
-            user: 'bookmarxapp@gmail.com',
-            pass: 'cse136team10'
-          }
-        });
+        var mailTransport = nodemailer.createTransport(ses({
+          accessKeyId: 'AKIAJ3APYU632MA3TM3Q',
+          secretAccessKey: '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',
+          region: 'https://email-smtp.us-west2.amazonaws.com'
+        }));
 
         var mailOptions = {
-          from: 'Bookmarxapp@gmail.com',
+          from: 'dakong94@gmail.com',
           to: username,
           subject: 'Account Activation',
           text: 'Thank you for joining Bookmarx!\n\n' +
@@ -139,6 +122,7 @@ router.post('/signUp', function(req, res) {
 
         mailTransport.sendMail(mailOptions,function(err,info){
           if(err){
+            console.log(err);
             res.json({msg: 'error sending validation email'});
           }
           else{
@@ -741,7 +725,7 @@ router.post('/reset/:token', function(req,res){
   var filter = [];
   var columnValues =[];
   var user = req.body.username;
-
+  console.log("NEW PASSWORD: " + password);
   cryptedPassword = cryptService.hash(user, password);
 
   filter.push(['resetpasswordtoken','=',token]);
@@ -776,7 +760,7 @@ router.post('/reset/:token', function(req,res){
         from: 'bookmarxapp@gmail.com',
         to: user,
         subject: 'Your password has been changed',
-        text: 'Hello' + user + ', \n\n' +
+        text: 'Hello ' + user + ', \n\n' +
           'This is a confirmation that your password for your account has been changed.\n\n' +
           'If you did not request a password reset, please contact an administrator immediately.\n\n'
       };

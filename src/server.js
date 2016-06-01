@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
     res.type('txt').send('404 Not Found');
   }
 
-})
+});
 
 app.use(function(req, res, next) {
   res.status(500);
@@ -63,7 +63,23 @@ app.use(function(req, res, next) {
     res.type('txt').send('500');
   }
 
-})
+});
+
+app.get('/changePW',function(req,res){
+  res.render(path.join(__dirname, '/static/templates/changePW.html'));
+  console.log("directory name: " + __dirname);
+});
+
+app.get('/reset', function(req,res){
+  res.render(path.join(__dirname, '/static/templates/reset.html'));
+  console.log("directory name: " + __dirname);
+});
+
+app.get('/verify',function(req,res){
+  res.render(path.join(__dirname, '/static/templates/verify.html'));
+  console.log("directory name: " + __dirname);
+});
+
 
 app.listen(6209, function() {
   console.log('listening on port 6209');
