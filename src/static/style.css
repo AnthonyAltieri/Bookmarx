@@ -1142,7 +1142,7 @@ nav {
   margin: auto;
   background-color: white;
   box-shadow: 1px 2px 2px 0px #c2c2c2;
-  z-index: 100;
+  z-index: 1000;
   display: flex;
   flex-flow: column; }
   .card-editbookmark .header {

@@ -507,7 +507,6 @@
 
 
 
-
     // Watchers
     $scope.$on(ROUTE.GET_FOLDERS_SUCCESS, function(event, data) {
       if (!data || data.error || !data.rows) {
