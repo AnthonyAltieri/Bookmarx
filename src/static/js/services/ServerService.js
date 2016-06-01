@@ -12,8 +12,6 @@
     self.sendPost = sendPost;
 
     function sendPost(param, url, successMessage, failureMessage ) {
-      console.log('in sendPost');
-      console.log(param);
       $http.post(url, param)
         .success(function (data) {
           $rootScope.$broadcast(successMessage, data);

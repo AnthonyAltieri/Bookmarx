@@ -758,9 +758,11 @@
         }
       }
 
-      for (var i = 0 ; i < folder.bookmarks.length ; i++) {
-        var focus = folder.bookmarks[i];
-        StorageService.deleteBookmark(focus);
+      if (folder.name != '' || folder.name.toString().toLowerCase() != 'all') {
+        for (var i = 0 ; i < folder.bookmarks.length ; i++) {
+          var focus = folder.bookmarks[i];
+          StorageService.deleteBookmark(focus);
+        }
       }
 
       var packet = {folders: vm.user.folders};

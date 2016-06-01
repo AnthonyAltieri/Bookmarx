@@ -41,7 +41,7 @@
         $scope.hideHamburger = true;
       }
       else {
-        $scope.mode.mobileNav = false;
+        $scope.mode.mobileNav = true;
         $scope.mode.desktopNav = false;
         $scope.hideHamburger = false;
       }
@@ -92,6 +92,7 @@
 
     function addBookmark(add) {
       $scope.mode.addBookmark = true;
+      if (window.innerWidth <= 990) clickBox();
       if (!$rootScope.isSliderShowing) {
         $scope.showNavSlider($scope.navSlider)
       }
