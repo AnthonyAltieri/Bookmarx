@@ -35,26 +35,27 @@
             <div class = "wrapper-signup-input">
                 <input type="text" ng-model="vm.forgot.username" placeholder="Username">
             </div>
-            <div class="buttons">
-                <a class="submit" ng-click="vm.submitForgotPW(vm.forgot)">Submit</a>
-                <a class="createaccount" ng-click="vm.goToLogIn()">Cancel</a>
-            </div>
+        </div>
+        <div class="buttons" ng-show="vm.modeForgotPW">
+            <a class="submit" ng-click="vm.submitForgotPW(vm.forgot)">Submit</a>
+            <a class="createaccount" ng-click="vm.goToLogIn()">Cancel</a>
         </div>
 
         <div ng-show="vm.modeForgotConfirm" class="inputform">
             <h2 class="header"> Password Reset </h2>
             <p class="card-text"> Instructions to Reset your password has been sent to your Email! </p>
-            <div class = "buttons">
-                <a class="createaccount" ng-click="vm.goToLogIn()">OK</a>
-            </div>
+
+        </div>
+        <div class = "buttons" ng-show="vm.modeForgotConfirm">
+            <a class="createaccount" ng-click="vm.goToLogIn()">OK</a>
         </div>
 
         <div ng-show="vm.modeVerifyEmail" class="inputform">
             <h2 class="header"> Email Verify </h2>
             <p class="card-text"> An Email has been sent to verify your account! </p>
-            <div class = "buttons">
-                <a class="createaccount" ng-click="vm.goToLogIn()">OK</a>
-            </div>
+        </div>
+        <div class = "buttons" ng-show="vm.modeVerifyEmail">
+            <a class="createaccount" ng-click="vm.goToLogIn()">OK</a>
         </div>
 
     </div>

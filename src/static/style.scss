@@ -170,8 +170,8 @@ nav {
   }
 
   //@media #{$desktop} {
-    width: $nav__desktop-width;
-    height: 100vh;
+  width: $nav__desktop-width;
+  height: 100vh;
 
   //}
 
@@ -320,15 +320,6 @@ nav {
     border-color: $loginButton;
     color: $loginColor;
   }
-  .reset-pw{
-    margin-top: 20px;
-  }
-
-
-}
-
-.forgot-pw-form{
-  z-index: 10000;
 }
 
 .small-nav {
@@ -1063,8 +1054,6 @@ nav {
 
       }
     }
-
-
   }
 
 
@@ -1093,31 +1082,7 @@ nav {
       color: #333;
       text-align: center;
       margin: 8px auto;
-    }
-    .header-changepw{
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 32px;
-      color: #333;
-      text-align: center;
-      margin: 10px auto;
-    }
 
-    .card-text {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 24px;
-      color: #333;
-      text-align: center;
-      margin: 8px auto;
-    }
-
-    .card-label {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 18px;
-      color: #333;
-      margin-top: 4px;
-      margin-bottom: 4px;
-      font-weight: bold;
-    }
       @media #{$mobile} {
         margin-top: $nav__height-mobile + 8px;
         margin-bottom: 8px;
@@ -1129,6 +1094,7 @@ nav {
         padding: 22px 8px;
       }
 
+    }
 
     input {
       padding: 8px 4px;
@@ -1234,7 +1200,7 @@ nav {
       @extend .submit;
 
     }
-    
+
     .buttons {
       display: flex;
       flex-flow: row;
@@ -1246,6 +1212,16 @@ nav {
 
       }
     }
+
+    .card-text{
+      text-align: center;
+    }
+
+    .card-label{
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+    }
+
 
 
   }
@@ -1487,7 +1463,9 @@ nav {
   left: -17px;
   cursor: pointer;
   @extend .no-textsel;
+
 }
+
 #import-folder {
   margin-left: 12px;
   margin-right: 12px;
@@ -1650,8 +1628,6 @@ nav {
     text-align: center;
     margin: 20% auto;
   }
-
-
   .buttons {
     display: flex;
     flex-flow: row;
