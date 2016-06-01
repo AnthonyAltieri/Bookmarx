@@ -71,6 +71,22 @@
     vm.user.lastSortCounter = false;
 
 
+    vm.modeMobile = false;
+    window.onresize = function () {
+      console.log('window.innerWidth: ' + window.innerWidth);
+      if (window.innerWidth <= 990) {
+        vm.modeMobile = true;
+      } else {
+        vm.modeMobile = false;
+      }
+
+    }
+    if (window.innerWidth <= 990) {
+      vm.modeMobile = true;
+    } else {
+      vm.modeMobile = false;
+    }
+
     vm.sort = {
       "titleSortMethod": "sort",
       "urlSortMethod" : "sort",
@@ -337,6 +353,10 @@
 
 
     function editBookmark(bookmark) {
+      if (vm.modeMobile) {
+        humane.log('This feature is currently unavailable on mobile');
+        return;
+      }
       vm.showOverlay = true;
       vm.editBookmarkMode = true;
       if (!bookmark.description || bookmark.description.trim().length === 0) {
