@@ -7,14 +7,14 @@
         <div ng-show="vm.modeLogIn" class="inputform">
             <h2 class="header">Log In</h2>
             <div class="wrapper-login-input">
-                <input type="text" ng-model="vm.login.username" placeholder="Username">
+                <input type="email" ng-model="vm.login.username" placeholder="Email">
                 <input type="password" ng-model="vm.login.password" placeholder="Password">
             </div>
         </div>
         <div ng-show="vm.modeSignUp" class="inputform">
             <h2 class="header">Sign In</h2>
             <div class="wrapper-signup-input">
-                <input type="text" ng-model="vm.signup.username" placeholder="Username">
+                <input type="email" ng-model="vm.signup.username" placeholder="Email">
                 <input type="password" ng-model="vm.signup.password1" placeholder="Password">
                 <input type="password" ng-model="vm.signup.password2" placeholder="Confirm Password">
                 <input type="text" ng-model="vm.signup.firstname" placeholder="First Name">
@@ -33,7 +33,7 @@
         <div ng-show="vm.modeForgotPW" class="inputform">
             <h2 class= "header"> Enter your Email </h2>
             <div class = "wrapper-signup-input">
-                <input type="text" ng-model="vm.forgot.username" placeholder="Username">
+                <input type="email" ng-model="vm.forgot.username" placeholder="Email">
             </div>
         </div>
         <div class="buttons" ng-show="vm.modeForgotPW">

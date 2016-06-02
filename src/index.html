@@ -99,8 +99,8 @@
                     <input class="item import-bookmark no-textsel" value="Import Bookmark" ng-hide="vm.showRealBookmarkInput">
                     <input class="import-choose-bookmark" type="file" name="filename" ng-click="vm.onInputBookmarkChosen()">
                 </form>
-
-                <a class="item forgot-pw" href="/changePW">Change Password</a>
+                <a class="item forgot-pw" ng-click="editPassword()">Change Password</a>
+                <!--<a class="item forgot-pw" href="/changePW">Change Password</a>-->
             </div>
         </nav>
         <div id="nav__slider" class="nav__slider nav__slider-hide" ng-show="mode.mobileNav || mode.addBookmark">
@@ -137,6 +137,24 @@
                     Cancel
                 </a>
             </div>
+        </div>
+        <div class="card-password" ng-show = 'editPasswordMode'>
+        <div class="card-input">
+            <div class="inputform">
+                <h2 class="header">Change Password</h2>
+                <div class="wrapper-pw-input">
+                    <input id = "email" type="text" ng-model ="password.username" placeholder="Email">
+                    <input id = "currentpassword" type="password" ng-model ="password.currentPassword" placeholder="Current Password">
+                    <input id = "password1" type="password" ng-model ="password.password1" placeholder="New Password">
+                    <input id = "password2" type="password" ng-model ="password.password2" placeholder="Confirm Password">
+                </div>
+
+            </div>
+            <div id="submit-pw-btn" class="buttons">
+                <a class="submit" ng-click="submitPassword(password)"> Update Password</a>
+                <a class="cancel-btn" ng-click="closePasswordForm()">Cancel</a>
+            </div>
+        </div>
         </div>
     </div>
     <div id="content" class="no-nav" ui-view ng-hide="mode.mode.addBookmark"></div>

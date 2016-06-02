@@ -173,7 +173,6 @@ router.post('/folder/get', function(req, res) {
   qs.select(['*'], ['folder'], filter, function(err, rows) {
     if (err) throw err;
 
-
     var data = { rows: rows };
     res.send(data);
   });
@@ -241,11 +240,7 @@ router.post('/user/bookmarks/add', function(req, res) {
       var date = new Date();
       var datestring = '';
       datestring += ((date.getYear() + 1900) + '-');
-      /*
-<<<<<<< HEAD
-      datestring += (date.getMonth()+1 + '-');
-      datestring += (date.getDate());
-======= */
+
       datestring += ((((date.getMonth() + 1).toString().length === 1)
         ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-');
       datestring += (((date.getDate().toString().length === 1)
@@ -258,7 +253,14 @@ router.post('/user/bookmarks/add', function(req, res) {
 
 
       qs.insert('bookmark', columns, values, function(err, result) {
-        if (err) throw err;
+        if (err){
+          console.log('duplicate');
+          res.send({
+            msg:'Error',
+            success:'False'
+          });
+          throw(err);
+        }
         if (result.affectedRows === 1) {
           // Everything went according to plan
           var data = {bookmark: bookmark};
@@ -780,10 +782,15 @@ router.post('/reset/:token', function(req,res){
   });
 });
 
-router.post('/changePW', function(req,res) {
+router.post('/changePassword', function(req,res) {
+  console.log('changing password')
   var newPassword = req.body.newPassword;
   var currentPassword = req.body.currentPassword;
   var user = req.body.username;
+  console.log('current password is: ' + currentPassword);
+  console.log('changing password to: ' + newPassword);
+  console.log('usernae : ' + user);
+
   var cryptedPassword;
   var currentCrypted;
 
@@ -791,6 +798,7 @@ router.post('/changePW', function(req,res) {
   var columnValues =[];
   currentCrypted = cryptService.hash(user, currentPassword);
   cryptedPassword = cryptService.hash(user, newPassword);
+  console.log('current crypted: ' + currentCrypted);
 
   filter.push(['password','=',currentCrypted]);
   filter.push('and');
@@ -800,12 +808,15 @@ router.post('/changePW', function(req,res) {
 
   qs.update('user',columnValues,filter,function(err,result){
     if(err){
+      console.log('error');
       res.send({msg:'error'});
     }
     else if(result.affectedRows != 1){
+      console.log('could not find user');
       res.send({msg:"Could not find user"});
     }
     else{
+      console.log('password changed!');
       res.send({msg: 'Password successfully changed'});
     }
   });
