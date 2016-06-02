@@ -83,6 +83,7 @@
     }
 
     function closePasswordForm(){
+      clearChangePW();
       $scope.editPasswordMode = false;
     }
 
@@ -116,14 +117,13 @@
         username : data.username,
         currentPassword : data.currentPassword,
         newPassword: data.password1
-      }
+      };
 
       ServerService.sendPost(postData,
         ROUTE.CHANGE_PW,
         ROUTE.CHANGE_PW_SUCCESS,
         ROUTE.CHANGE_PW_FAIL
       );
-
     }
 
     $scope.$on(ROUTE.CHANGE_PW_FAIL, function(event, data) {
@@ -137,9 +137,19 @@
       }
       if(data.msg === 'Password successfully changed'){
         humane.log('Password succesfully changed', {addCls: 'humane-flatty-error'});
+        clearChangePW();
         $scope.editPasswordMode = false;
       }
     });
+
+    function clearChangePW(){
+      $scope.password = {
+        username: '',
+        currentPassword: '',
+        password1: '',
+        password2: ''
+      };
+    }
 
     $rootScope.nav = {};
     $rootScope.nav.isSliderShowing = false;

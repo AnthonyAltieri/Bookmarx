@@ -141,11 +141,11 @@
                 </a>
             </div>
         </div>
-        <div class="login__content card-password" ng-show = 'editPasswordMode'>
+        <div class="card-password" ng-show = 'editPasswordMode'>
         <div class="card-input">
             <div class="inputform">
                 <h2 class="header">Change Password</h2>
-                <div class="wrapper-login-input">
+                <div class="wrapper-pw-input">
                     <input id = "email" type="text" ng-model ="password.username" placeholder="Email">
                     <input id = "currentpassword" type="password" ng-model ="password.currentPassword" placeholder="Current Password">
                     <input id = "password1" type="password" ng-model ="password.password1" placeholder="New Password">
@@ -155,7 +155,7 @@
             </div>
             <div id="submit-pw-btn" class="buttons">
                 <a class="submit" ng-click="submitPassword(password)"> Update Password</a>
-                <a class="createaccount" id="cancel" ng-click="closePasswordForm()">Cancel</a>
+                <a class="cancel-btn" ng-click="closePasswordForm()">Cancel</a>
             </div>
         </div>
         </div>

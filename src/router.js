@@ -189,7 +189,6 @@ router.post('/folder/get', function(req, res) {
   qs.select(['*'], ['folder'], filter, function(err, rows) {
     if (err) throw err;
 
-
     var data = { rows: rows };
     res.send(data);
   });
@@ -257,11 +256,7 @@ router.post('/user/bookmarks/add', function(req, res) {
       var date = new Date();
       var datestring = '';
       datestring += ((date.getYear() + 1900) + '-');
-      /*
-<<<<<<< HEAD
-      datestring += (date.getMonth()+1 + '-');
-      datestring += (date.getDate());
-======= */
+
       datestring += ((((date.getMonth() + 1).toString().length === 1)
         ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '-');
       datestring += (((date.getDate().toString().length === 1)
@@ -274,7 +269,14 @@ router.post('/user/bookmarks/add', function(req, res) {
 
 
       qs.insert('bookmark', columns, values, function(err, result) {
-        if (err) throw err;
+        if (err){
+          console.log('duplicate');
+          res.send({
+            msg:'Error',
+            success:'False'
+          });
+          throw(err);
+        }
         if (result.affectedRows === 1) {
           // Everything went according to plan
           var data = {bookmark: bookmark};

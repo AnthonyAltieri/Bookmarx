@@ -22,7 +22,7 @@ body {
   width: 100vw;
   height: 100%; }
 
-.no-textsel, nav .item, .icon-clear:before, .icon-edit:before, .icon-star:before, .icon-star__selected:before, .exportbtn, .card-bookmarks__item-tag, .folder-headerbtn, .tile-folder__create, .tile-folder__create .name, .login__content .card-input .submit, .login__content .card-input .createaccount, #overlay .card-addfolder .folder-add, .import-folder, .export-folder, .import-export-btn, .card-editbookmark .folder-update, .verify-card .createaccount {
+.no-textsel, nav .item, .icon-clear:before, .icon-edit:before, .icon-star:before, .icon-star__selected:before, .exportbtn, .card-bookmarks__item-tag, .folder-headerbtn, .tile-folder__create, .tile-folder__create .name, .login__content .card-input .submit, .login__content .card-input .createaccount, .card-password .card-input .submit, .card-password .card-input .cancel-btn, #overlay .card-addfolder .folder-add, .import-folder, .export-folder, .import-export-btn, .card-editbookmark .folder-update, .verify-card .createaccount {
   text-decoration: none;
   user-select: none;
   -webkit-touch-callout: none;
@@ -891,7 +891,7 @@ nav {
           .login__content .card-input .wrapper-signup-input input {
             top: 52px !important;
             font-size: 20px; } }
-    .login__content .card-input .submit, .login__content .card-input .createaccount {
+    .login__content .card-input .submit, .login__content .card-input .createaccount, .login__content .card-password .card-input .cancel-btn, .card-password .login__content .card-input .cancel-btn {
       width: 8.6em;
       height: 48px;
       font-size: 1.1em;
@@ -908,7 +908,7 @@ nav {
       border-radius: 6px;
       cursor: pointer; }
       @media (max-width: 990px) {
-        .login__content .card-input .submit, .login__content .card-input .createaccount {
+        .login__content .card-input .submit, .login__content .card-input .createaccount, .login__content .card-password .card-input .cancel-btn, .card-password .login__content .card-input .cancel-btn {
           width: 80%;
           height: 36px;
           line-height: 36px;
@@ -928,6 +928,118 @@ nav {
     .login__content .card-input .card-label {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 14px; }
+
+.card-password {
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 0px;
+  background-color: rgba(0, 0, 0, 0.5); }
+  .card-password .card-input {
+    width: 450px;
+    height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 150px;
+    background-color: white;
+    box-shadow: 1px 2px 2px 0 #c2c2c2;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    z-index: 100000000000; }
+    @media (max-width: 990px) {
+      .card-password .card-input {
+        width: 100%;
+        height: 100vh;
+        margin: 0; } }
+    .card-password .card-input .header {
+      font-family: "Lato", sans-serif;
+      font-size: 30px;
+      font-weight: 300;
+      color: #333;
+      text-align: center;
+      margin: 8px auto; }
+      @media (max-width: 990px) {
+        .card-password .card-input .header {
+          margin-top: 64px;
+          margin-bottom: 8px;
+          font-size: 26px; } }
+      @media (min-width: 767px) {
+        .card-password .card-input .header {
+          font-size: 42px;
+          padding: 22px 8px; } }
+    .card-password .card-input input {
+      padding: 8px 4px;
+      font-size: 16px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin-top: 12px; }
+      @media (max-width: 990px) {
+        .card-password .card-input input {
+          outline: none;
+          border: 0;
+          margin-top: 2px !important;
+          background-color: #FAFAFA; } }
+    .card-password .card-input .inputform {
+      width: 100%;
+      display: flex;
+      flex-flow: column;
+      justify-content: space-between;
+      overflow: hidden; }
+      @media (max-width: 990px) {
+        .card-password .card-input .inputform {
+          justify-content: flex-start;
+          padding-top: 0 !important; } }
+    .card-password .card-input .wrapper-pw-input {
+      display: flex;
+      flex-flow: column; }
+      @media (min-width: 767px) {
+        .card-password .card-input .wrapper-pw-input {
+          margin-top: 48px; } }
+      .card-password .card-input .wrapper-pw-input input {
+        padding-left: 12px;
+        padding-right: 12px; }
+        @media (min-width: 767px) {
+          .card-password .card-input .wrapper-pw-input input {
+            margin-left: 22px;
+            margin-right: 22px; } }
+        @media (max-width: 990px) {
+          .card-password .card-input .wrapper-pw-input input {
+            top: 52px !important;
+            font-size: 20px; } }
+    .card-password .card-input .submit, .card-password .login__content .card-input .createaccount, .login__content .card-password .card-input .createaccount, .card-password .card-input .cancel-btn {
+      width: 8.6em;
+      height: 48px;
+      font-size: 1.1em;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 600;
+      text-align: center;
+      padding: 8px 12px;
+      line-height: 48px;
+      margin: 0 auto;
+      color: #fafafa;
+      background-color: #E87162;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.11), 0 1px 5px 0 rgba(0, 0, 0, 0.19);
+      border: 4px solid #E87162;
+      border-radius: 6px;
+      cursor: pointer; }
+      @media (max-width: 990px) {
+        .card-password .card-input .submit, .card-password .login__content .card-input .createaccount, .login__content .card-password .card-input .createaccount, .card-password .card-input .cancel-btn {
+          width: 80%;
+          height: 36px;
+          line-height: 36px;
+          padding: 0px 0px;
+          margin-top: 16px; } }
+    .card-password .card-input .buttons {
+      display: flex;
+      flex-flow: row;
+      padding-bottom: 22px; }
+      @media (max-width: 990px) {
+        .card-password .card-input .buttons {
+          flex-flow: column;
+          width: 100%;
+          padding-bottom: 14px; } }
 
 #overlay {
   background-color: rgba(0, 0, 0, 0.25); }

@@ -92,14 +92,19 @@
     }
 
     function submitLogin(input) {
+
       if (!localStorageService.cookie.isSupported) {
         humane.log('You need javascript and cookies enabled', {addCls: 'humane-flatty-info'});
         $state.go('login'); 
         return;
       }
 
+      if(input.username === undefined){
+        humane.log('Please input a valid email', {addCls: 'humane-flatty-info'});
+        return;
+      }
       if (input.username.trim().length === 0) {
-        humane.log('Enter a username', {addCls: 'humane-flatty-info'});
+        humane.log('Enter an email', {addCls: 'humane-flatty-info'});
         return;
       }
       if (input.password.trim().length === 0) {
@@ -123,6 +128,10 @@
       if(!input) {
         // Do something, probably toast
         humane.log('You need to enter a username', {addCls: 'humane-flatty-info'});
+        return;
+      }
+      if(input.username === undefined){
+        humane.log('Please input a valid email', {addCls: 'humane-flatty-info'});
         return;
       }
       // Make sure there is content in all of the fields
@@ -171,6 +180,10 @@
     }
 
     function submitForgotPW(input){
+      if(input.username === undefined){
+        humane.log('Please input a valid email', {addCls: 'humane-flatty-info'});
+        return;
+      }
       if (!input.username || input.username.trim().length === 0) {
         // Do something, probably toast
         humane.log('You need to enter a username', {addCls: 'humane-flatty-info'});
