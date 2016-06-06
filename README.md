@@ -1,5 +1,5 @@
 # Bookmarx
-My Ajax version of our 136 assignment
+Final iteration of the project for CSE 136
 
 Contributions To This Iteration:  
 Daniel Kong - Forgot Password functionality and look, email verification functionality and look, placed carot icons on the bookmark sorting. A lot of debugging and consulting.
