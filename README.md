@@ -4,7 +4,7 @@ Final iteration of the project for CSE 136
 Contributions To This Iteration:  
 Daniel Kong - Forgot Password functionality and look, email verification functionality and look, placed carot icons on the bookmark sorting. A lot of debugging and consulting.
   
-Abbas Dharamsey - Hamburger functionaility for mobile view, kicks users to login when there is no active session. Helped design mobile view, data analytics. A lot of debugging and consulting.  
+Abbas Dharamsey - Hamburger functionaility for mobile view, logout functionality as well as kicks users to login when there is no active session. Helped design mobile view, data analytics. A lot of debugging and consulting.  
   
 Anders Trier - Server side hosting, Nginx proxying, logging server actions, automatic re-launching of node instance on crash. A lot of debugging and consulting.  
   
